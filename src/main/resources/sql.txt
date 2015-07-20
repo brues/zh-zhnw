@@ -1,0 +1,1 @@
+select (billingDate)<('2015-04-30') from invoices
