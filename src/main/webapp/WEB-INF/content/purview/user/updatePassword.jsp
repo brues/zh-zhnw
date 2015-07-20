@@ -35,6 +35,7 @@
 
 
         <script>
+
             function change(){
                 $.ajax({
                     url:"${pageContext.request.contextPath}/user/passwordOk",
@@ -43,8 +44,12 @@
                     type:"post",
                     success:function(data){
                         if($("#newpassword").val()==null||$.trim($("#newpassword").val()).length==0){
+                            $("#password").val("");
+                            $("#newpassword").val("");
                             $("#nullbtn").click();
                         }else if(data=="0"){
+                            $("#password").val("");
+                            $("#newpassword").val("");
                             $("#cuobtn").click();
                         }else if(data=="1"){
                             $("#chageForm").submit();
@@ -64,7 +69,7 @@
                 </div>
                 <div class="form-group">
                     <label for="newpassword">新密码：</label>
-                    <input type="password" class="form-control" name="password" id="newpassword" placeholder="New Password" required>
+                    <input type="password" class="form-control" name="password" id="newpassword" placeholder="New Password"  required>
                 </div>
                 <input type="button" value="确定" onclick="change()" class="btn btn-primary" style="width: 100%;height: 50px;">
             </form>
@@ -106,5 +111,6 @@
                 </div>
             </div>
         </div></div></div></div>
+
     </body>
 </html>

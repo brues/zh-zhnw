@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * Created by guoyibin on 15/4/8.
  *
- * 登录跳转控制类
+ *  主页面
  */
 @ClearInterceptor
 public class MainController extends Controller {
@@ -24,15 +24,15 @@ public class MainController extends Controller {
 
 
         if (getSessionAttr("zhnw_loginUser")!=null){
-            User user0 = getSessionAttr("zhnw_loginUser");
+            User user = getSessionAttr("zhnw_loginUser");
 
-            String sql1 = "select * from purview p where p.zhId = "+user0.get("zhId")+" and p.parentId=1 and " +
+            String sql1 = "select * from purview p where p.parentId=1 and " +
                     "p.id in (select a.purviewId from actorPurview a where " +
-                    "a.actorId in (select u.actorId from userActor u where u.userId="+user0.get("id")+") )";
+                    "a.actorId in (select u.actorId from userActor u where u.userId="+user.get("id")+") )";
 
-            String sql2 = "select * from purview p where p.zhId = "+user0.get("zhId")+" and p.isLeaf=1 and " +
+            String sql2 = "select * from purview p where p.isLeaf=1 and " +
                     "p.id in (select a.purviewId from actorPurview a where " +
-                    "a.actorId in (select u.actorId from userActor u where u.userId="+user0.get("id")+") )";
+                    "a.actorId in (select u.actorId from userActor u where u.userId="+user.get("id")+") )";
 
             List<Purview> purviewList = Purview.me.find(sql1);
             List<Purview> purviews  = Purview.me.find(sql2);
@@ -54,11 +54,11 @@ public class MainController extends Controller {
                     User user = userList.get(0);
                     setSessionAttr("zhnw_loginUser", user);
 
-                    String sql1 = "select * from purview p where p.zhId = "+user.get("zhId")+" and p.parentId=1 and " +
+                    String sql1 = "select * from purview p where p.parentId=1 and " +
                             "p.id in (select a.purviewId from actorPurview a where " +
                             "a.actorId in (select u.actorId from userActor u where u.userId="+user.get("id")+") )";
 
-                    String sql2 = "select * from purview p where p.zhId = "+user.get("zhId")+" and p.isLeaf=1 and " +
+                    String sql2 = "select * from purview p where p.isLeaf=1 and " +
                             "p.id in (select a.purviewId from actorPurview a where " +
                             "a.actorId in (select u.actorId from userActor u where u.userId="+user.get("id")+") )";
 

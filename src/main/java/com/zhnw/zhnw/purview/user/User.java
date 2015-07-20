@@ -13,8 +13,8 @@ import java.util.List;
 public class User extends Model<User> {
     public static final User me = new User();
 
-    public Page<User> paginate(String currentPage, String pageSize, String userName, String trueName, String actorName) {
-        String sql = " from user where 1=1 ";
+    public Page<User> paginate(String currentPage, String pageSize, String userName, String trueName, String actorName, User user) {
+        String sql = " from user where zhId="+user.get("zhId")+" ";
         if (userName!=null&&!userName.trim().equalsIgnoreCase("")){
             sql+=" and userName like '%"+userName+"%'";
         }
@@ -30,12 +30,9 @@ public class User extends Model<User> {
         return paginate(Integer.parseInt(currentPage), Integer.parseInt(pageSize), " select * ", sql);
     }
 
-    public boolean quchongfu(String name) {
-        List<User> users = find("select * from user where userName='"+name+"'");
-        if (users.size()>0)
-            return true;
-        return false;
-    }
+
+
+
 
     public boolean quchongfuupdate(String id, String name) {
         List<User> users = find("select * from user where id!="+id+" and userName='"+name+"'");

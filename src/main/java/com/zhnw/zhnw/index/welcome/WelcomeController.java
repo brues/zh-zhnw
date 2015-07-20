@@ -10,13 +10,20 @@ import java.text.ParseException;
 /**
  * Created by guoyibin on 15/4/8.
  *
- *
+ * 欢迎页面
  */
 public class WelcomeController extends Controller {
 
+
+    /**
+     * 欢迎页面：展示项目结束后，十天内没有发票的，或者有发票，十天内没有付款的项目
+     *
+     * */
     public void index() throws ParseException {
+
         String currentPage = getPara("currentPage");
         String  pageSize = getPara("pageSize");
+
         String  selectClientSouName = getPara("selectClientSouName");
         String  selectBTypeSouName = getPara("selectBTypeSouName");
         String  selectContractSouName = getPara("selectContractSouName");
@@ -29,7 +36,7 @@ public class WelcomeController extends Controller {
 
 
         User user = getSessionAttr("zhnw_loginUser");
-        Page<Project> projectPage  = Project.me.unpaid(currentPage, pageSize, selectClientSouName, selectBTypeSouName, selectContractSouName, days, user);
+        Page<Project> projectPage  = Project.me.welcome(currentPage, pageSize, selectClientSouName, selectBTypeSouName, selectContractSouName, days, user);
 
         setAttr("projectList",projectPage.getList());
         setAttr("totalCount",projectPage.getTotalRow());

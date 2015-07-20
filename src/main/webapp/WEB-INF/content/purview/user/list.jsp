@@ -38,7 +38,7 @@
         }
     </script>
 
-
+    <%-- 分页查询 js 方法  begin --%>
     <script type="text/javascript">
         function shouye(){
             $("#currentPageHidden").val("1");
@@ -97,17 +97,113 @@
             $("#pageAction").submit();
         }
     </script>
+    <%-- 分页查询 js 方法  end --%>
+
+    <%-- 添加 方法  begin --%>
+    <script>
+        function beforeadd(){
+            $("#input1").val("");
+            $("#input3").val("");
+            $("#input6").val("");
+            $("#input7").val("");
+            $("#input8").val("");
+        }
+
+        function savebtn(){
+            var name = $.trim($("#input1").val());
+            var trueName = $.trim($("#input3").val());
+            var email = $.trim($("#input6").val());
+            var phone = $.trim($("#input7").val());
+            if(name==null||name==''){
+                $("#addusernamespan").html("用户名不能为空！");
+                $("#addusernamespan").css("display","block");
+            }else if(trueName==null||trueName==''){
+                $("#addtruenamespan").html("真实姓名不能为空！");
+                $("#addtruenamespan").css("display","block");
+            }else if(email==null||email==''){
+                $("#addemailspan").html("邮箱地址不能为空！");
+                $("#addemailspan").css("display","block");
+            }else if(phone==null||phone==''){
+                $("#addphonespan").html("联系电话不能为空！");
+                $("#addphonespan").css("display","block");
+            }else{
+                $.ajax({
+                    url:"${pageContext.request.contextPath}/user/userNameSingleAdd",
+                    data:{name:name},
+                    dataType:"json",
+                    type:"post",
+                    success:function(data){
+                        if(data){
+                            $("#input1").val("");
+                            $("#addusernamespan").html("用户名已存在！");
+                            $("#addusernamespan").css("display","block");
+                        }else{
+                            $("#addusernamespan").css("display","none");
+
+                            $("#addIdCurrentPage").val($("#currentPageHidden").val());
+                            $("#addIdpageSizes").val($("#pageSizeHidden").val());
+                            $("#addIdUserName").val($("#souUserName").val());
+                            $("#addIdTrueName").val($("#souTrueName").val());
+                            $("#addIdActorName").val($("#souActorName").val());
+
+                            $("#addForm").submit();
+                        }
+                    }
+                });
+            }
+        }
+
+        function addusernamefocus(){
+            $("#addusernamespan").css("display","none");
+        }
+
+        function addtruenamefocus(){
+            $("#addtruenamespan").css("display","none");
+        }
+
+        function addemailfocus(){
+            $("#addemailspan").css("display","none");
+        }
+
+        function addphonefocus(){
+            $("#addphonespan").css("display","none");
+        }
+    </script>
+    <%-- 添加 方法  end --%>
+
+    <%-- 分配角色 begin --%>
+    <script>
+        function beforeactor(){
+            $("#actorIdCurrentPage").val($("#currentPageHidden").val());
+            $("#actorIdpageSizes").val($("#pageSizeHidden").val());
+            $("#actorIdUserName").val($("#souUserName").val());
+            $("#actorIdTrueName").val($("#souTrueName").val());
+            $("#actorIdActorName").val($("#souActorName").val());
+        }
+    </script>
+    <%-- 分配角色 end --%>
+
+    <%-- 删除 begin --%>
+    <script>
+        function delid(id){
+            $("#deleteIdInput").val(id);
+
+            $("#deleteIdCurrentPage").val($("#currentPageHidden").val());
+            $("#deleteIdpageSizes").val($("#pageSizeHidden").val());
+            $("#deleteIdUserName").val($("#souUserName").val());
+            $("#deleteIdTrueName").val($("#souTrueName").val());
+            $("#deleteIdActorName").val($("#souActorName").val());
+        }
+        function deleteById(){
+            $("#deleteIdFormId").val($("#deleteIdInput").val());
+            $("#deleteIdForm").attr("action","${pageContext.request.contextPath}/user/delete");
+            $("#deleteIdForm").submit();
+        }
+    </script>
+    <%-- 删除 end --%>
 
     <script>
 
-        function delid(id){
-            $("#deleteIdInput").val(id);
-        }
-        function deleteById(){
-                $("#deleteIdFormId").val($("#deleteIdInput").val());
-                $("#deleteIdForm").attr("action","${pageContext.request.contextPath}/user/delete");
-                $("#deleteIdForm").submit();
-        }
 
         function xiugai(id,userName,trueName,email,phone,remark){
             $("#updateId").val(id);
@@ -134,23 +230,6 @@
             });
         }
 
-        function quchongfu(){
-            $.ajax({
-                url:"${pageContext.request.contextPath}/user/quchongfu",
-                data:{name:$.trim($("#input1").val())},
-                dataType:"json",
-                type:"post",
-                success:function(data){
-                    if(data){
-                        $("#input1").val("");
-                        $("#quchongfuspan").css("display","block");
-                    }else{
-                        $("#quchongfuspan").css("display","none");
-                    }
-                }
-            });
-        }
-
         function quchongfuupdate(id,name){
             $.ajax({
                 url:"${pageContext.request.contextPath}/user/quchongfuupdate",
@@ -168,6 +247,7 @@
             });
         }
     </script>
+
     <script type="text/javascript">
         $(window).on('load', function () {
             $('.selectpicker').selectpicker({
@@ -183,34 +263,23 @@
             <div class="span12">
                 <form id="pageAction" action="${pageContext.request.contextPath}/user" method="post">
                     <div>
-                        <button type="button" class="btn btn-success" data-target="#addModel" data-toggle="modal">添加用户</button>
-                        <button type="button" class="btn btn-success" data-target="#actorModel" data-toggle="modal" onclick="chushihuaselect()">分配角色</button>
-                        用户名：<input type="text" name="userName" value="${userName}">
-                        真实姓名：<input type="text" name="trueName" value="${trueName}">
-                        角色：<input type="text" name="actorName" value="${actorName}">
+                        <button type="button" class="btn btn-success" data-target="#addModel" data-toggle="modal" onclick="beforeadd()">添加用户</button>
+                        <button type="button" class="btn btn-success" data-target="#actorModel" data-toggle="modal" onclick="beforeactor()">分配角色</button>
+                        用户名：<input type="text" id="souUserName" name="userName" value="${userName}">
+                        真实姓名：<input type="text" id="souTrueName" name="trueName" value="${trueName}">
+                        角色：<input type="text" id="souActorName" name="actorName" value="${actorName}">
                         <button type="submit" class="btn btn-primary">搜索用户</button>
                     </div>
                     <table class="table">
                         <thead>
                         <tr>
-                            <th>
-                                用户名
-                            </th>
-                            <th>
-                                真实姓名
-                            </th>
-                            <th>
-                                邮箱
-                            </th>
-                            <th>
-                                联系电话
-                            </th>
-                            <th>
-                                角色
-                            </th>
-                            <th>
-                                操作
-                            </th>
+                            <th>用户名</th>
+                            <th>真实姓名</th>
+                            <th>邮箱</th>
+                            <th>联系电话</th>
+                            <th>角色</th>
+                            <th>状态</th>
+                            <th>操作</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -221,10 +290,11 @@
                                 <td>${user.email}</td>
                                 <td>${user.phone}</td>
                                 <td>${user.actorName}</td>
+                                <td>${user.status}</td>
                                 <td>
                                     <button type="button" class="btn btn-xs btn-primary" data-toggle="modal" data-target="#updateModel" onclick="xiugai('${user.id}','${user.userName}','${user.trueName}','${user.email}','${user.phone}','${user.remark}')">修改</button>
                                     <button type="button" class="btn btn-xs btn-primary" data-toggle="modal" data-target="#chushihuaModel" onclick="chushihua('${user.id}')">初始化密码</button>
-                                    <button type="button" class="btn btn-xs btn-danger" data-toggle="modal" onclick="delid(${user.id})" data-target="#delModel">删除</button>
+                                    <button type="button" class="btn btn-xs btn-danger" data-toggle="modal" onclick="delid(${user.id})" data-target="#delModel">离职</button>
                                 </td>
                             </tr>
                         </c:forEach>
@@ -265,11 +335,11 @@
                             <form style="display: none;" id="deleteIdForm" method="post">
                                 <input type="hidden" id="deleteIdFormId" name="id">
 
-                                <input type="hidden" id="deleteIdCurrentPage" name="currentPage" value="${currentPage}">
-                                <input type="hidden" id="deleteIdpageSizes" name="pageSize" value="${pageSize}">
-                                <input type="hidden" id="deleteIdUserName" name="userName" value="${userName}">
-                                <input type="hidden" id="deleteIdTrueName" name="trueName" value="${trueName}">
-                                <input type="hidden" id="deleteIdActorName" name="actorName" value="${actorName}">
+                                <input type="hidden" id="deleteIdCurrentPage" name="currentPage" >
+                                <input type="hidden" id="deleteIdpageSizes" name="pageSize" >
+                                <input type="hidden" id="deleteIdUserName" name="userName" >
+                                <input type="hidden" id="deleteIdTrueName" name="trueName" >
+                                <input type="hidden" id="deleteIdActorName" name="actorName" >
                             </form>
                         </div>
                     </div>
@@ -286,17 +356,17 @@
                             </div>
                             <div class="modal-body">
                                 <form method="post" id="addForm" action="${pageContext.request.contextPath}/user/add">
-                                    <input type="hidden" id="addIdCurrentPage" name="currentPage1" value="${currentPage}">
-                                    <input type="hidden" id="addIdpageSizes" name="pageSize1" value="${pageSize}">
-                                    <input type="hidden" id="addIdUserName" name="userName1" value="${userName}">
-                                    <input type="hidden" id="addIdTrueName" name="trueName1" value="${trueName}">
-                                    <input type="hidden" id="addIdActorName" name="actorName1" value="${actorName}">
+                                    <input type="hidden" id="addIdCurrentPage" name="currentPage1">
+                                    <input type="hidden" id="addIdpageSizes" name="pageSize1" >
+                                    <input type="hidden" id="addIdUserName" name="userName1" >
+                                    <input type="hidden" id="addIdTrueName" name="trueName1" >
+                                    <input type="hidden" id="addIdActorName" name="actorName1" >
                                     <fieldset>
                                         <table style="width: 100%;height: 300px;">
                                             <tr>
                                                 <td><label for="input1" class="control-label">用户名</label></td>
                                                 <td><div class="col-sm-10">
-                                                    <input type="text" class="form-control" id="input1" placeholder="用户名" name="userName"  onblur="quchongfu()" required><span id="quchongfuspan" style="color: red;display: none;">用户名已存在</span>
+                                                    <input type="text" class="form-control" id="input1" placeholder="用户名" name="userName" onfocus="addusernamefocus()" required><span id="addusernamespan" style="color: red;display: none;"></span>
                                                 </div></td>
                                                 <td><label for="input2" class="control-label">密码</label></td>
                                                 <td><div class="col-sm-10">
@@ -306,17 +376,17 @@
                                             <tr>
                                                 <td><label for="input3" class=" control-label">真实姓名</label></td>
                                                 <td><div class="col-sm-10">
-                                                    <input  type="text" class="form-control" id="input3" placeholder="真实姓名" name="trueName"  required/>
+                                                    <input  type="text" class="form-control" id="input3" placeholder="真实姓名" onfocus="addtruenamefocus()" name="trueName"  required/><span id="addtruenamespan" style="color: red;display: none;"></span>
                                                 </div></td>
                                                 <td><label for="input6" class="control-label">邮箱地址</label></td>
                                                 <td><div class="col-sm-10">
-                                                    <input type="email" class="form-control" id="input6" placeholder="邮箱地址" name="email" required >
+                                                    <input type="email" class="form-control" id="input6" placeholder="邮箱地址" name="email" onfocus="addemailfocus()" required ><span id="addemailspan" style="color: red;display: none;"></span>
                                                 </div></td>
                                             </tr>
                                             <tr>
                                                 <td><label for="input7" class=" control-label">联系电话</label></td>
                                                 <td><div class="col-sm-10">
-                                                    <input  type="text" class="form-control" id="input7" placeholder="联系电话" name="phone"  required/>
+                                                    <input  type="text" class="form-control" id="input7" placeholder="联系电话" name="phone" onfocus="addphonefocus()" required/><span id="addphonespan" style="color: red;display: none;"></span>
                                                 </div></td>
                                                 <td>
                                                     <label for="input8" class="control-label">备注</label>
@@ -326,7 +396,7 @@
                                                 </div></td>
                                             </tr>
                                             <tr>
-                                                <td colspan="4"><input type="submit" class="btn btn-primary" style="height: 50px;width: 92%;" value="保存" /></td>
+                                                <td colspan="4"><input type="button" onclick="savebtn()" class="btn btn-primary" style="height: 50px;width: 92%;" value="保存" /></td>
                                             </tr>
                                         </table>
                                     </fieldset>
@@ -417,11 +487,11 @@
                             </div>
                             <div class="modal-body">
                                 <form method="post" id="actorForm" action="${pageContext.request.contextPath}/user/userActor">
-                                    <input type="hidden" id="actorIdCurrentPage" name="currentPage1" value="${currentPage}">
-                                    <input type="hidden" id="actorIdpageSizes" name="pageSize1" value="${pageSize}">
-                                    <input type="hidden" id="actorIdUserName" name="userName1" value="${userName}">
-                                    <input type="hidden" id="actorIdTrueName" name="trueName1" value="${trueName}">
-                                    <input type="hidden" id="actorIdActorName" name="actorName1" value="${actorName}">
+                                    <input type="hidden" id="actorIdCurrentPage" name="currentPage1" >
+                                    <input type="hidden" id="actorIdpageSizes" name="pageSize1" >
+                                    <input type="hidden" id="actorIdUserName" name="userName1" >
+                                    <input type="hidden" id="actorIdTrueName" name="trueName1" >
+                                    <input type="hidden" id="actorIdActorName" name="actorName1" >
                                     <fieldset>
                                         <table style="width: 100%;height: 300px;">
                                             <tr>
