@@ -142,7 +142,8 @@
     <div class="container-fluid" >
         <div class="row-fluid">
             <div class="span12">
-                <form id="pageAction" action="${pageContext.request.contextPath}/invoice" method="post" style="font-size: 5pt;" class="form-horizontal"  role="form">
+                <form id="pageAction" action="${pageContext.request.contextPath}/invoice" method="post" style="font-size: 10pt;" class="form-horizontal"  role="form">
+
                     <div>
                         <button type="button" class="btn btn-success" data-target="#addModel" data-toggle="modal" style="">添加发票</button>
                         内容：<input type="text" name="sou" value="${sou}">

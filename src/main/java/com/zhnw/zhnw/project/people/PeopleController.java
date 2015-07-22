@@ -69,6 +69,8 @@ public class PeopleController extends Controller {
      * 添加
      * */
     public void add() throws ParseException {
+        User user = getSessionAttr("zhnw_loginUser");
+
         String  projectId = getPara("projectId");//项目Id
 
         String  peopleId = getPara("peopleId");//项目负责人Id
@@ -78,6 +80,7 @@ public class PeopleController extends Controller {
                 .set("projectId", projectId)//项目Id
                 .set("peopleId", peopleId)//人员Id
                 .set("name", trueName)//人员真实姓名
+                .set("zhId", user.get("zhId"))//人员真实姓名
                 .save();
 
 

@@ -80,6 +80,8 @@ public class HourController extends Controller {
      * 添加
      * */
     public void add() throws ParseException {
+        User user0 = getSessionAttr("zhnw_loginUser");
+
         String  projectId = getPara("projectId");
 
         String  dates = getPara("dates");
@@ -106,9 +108,35 @@ public class HourController extends Controller {
                 .set("projectId", projectId)
                 .set("checkId", contactId)
                 .set("nameId", name)
+                .set("zhId", user0.get("zhId"))
                 .save();
 
-        redirect("/hour");
+        //redirect("/hour");
+
+
+        String currentPage = getPara("currentPage");
+        String  pageSize = getPara("pageSize");
+
+        String  name0 = getPara("name");
+
+
+
+        if (currentPage == null||currentPage.trim().length()==0) currentPage = "1";
+        if (pageSize == null||pageSize.trim().length()==0) pageSize = "10";
+
+        Page<Hour> hourPage  = Hour.me.paginate(currentPage, pageSize, projectId, "");
+
+        setAttr("hourList",hourPage.getList());
+
+        setAttr("totalCount",hourPage.getTotalRow());
+        setAttr("totalPage",hourPage.getTotalPage());
+        setAttr("pageSize",hourPage.getPageSize());
+        setAttr("currentPage",hourPage.getPageNumber());
+
+        setAttr("projectId",projectId);
+        //setAttr("name",name0);
+
+        renderJsp("/WEB-INF/content/hour/hour.jsp");
     }
 
     /**

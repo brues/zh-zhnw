@@ -202,18 +202,8 @@
     </script>
     <%-- 删除 end --%>
 
+    <%-- 初始化 begin --%>
     <script>
-
-
-        function xiugai(id,userName,trueName,email,phone,remark){
-            $("#updateId").val(id);
-            $("#input101").val(userName);
-            $("#input103").val(trueName);
-            $("#input106").val(email);
-            $("#input107").val(phone);
-            $("#input108").val(remark);
-        }
-
         function chushihua(id){
             $("#hiddenUserIdChushihua").val(id);
         }
@@ -228,6 +218,69 @@
 
                 }
             });
+        }
+    </script>
+    <%-- 初始化 end --%>
+
+    <%-- update begin --%>
+    <script>
+        function xiugai(id,userName,trueName,email,phone,remark){
+            $("#updateId").val(id);
+            $("#input101").val(userName);
+            $("#input103").val(trueName);
+            $("#input106").val(email);
+            $("#input107").val(phone);
+            $("#input108").val(remark);
+
+            $("#updateIdCurrentPage").val($("#currentPageHidden").val());
+            $("#updateIdpageSizes").val($("#pageSizeHidden").val());
+            $("#updateIdUserName").val($("#souUserName").val());
+            $("#updateIdTrueName").val($("#souTrueName").val());
+            $("#updateIdActorName").val($("#souActorName").val());
+        }
+
+        function updatebtn(){
+            var name = $.trim($("#input1").val());
+            var trueName = $.trim($("#input3").val());
+            var email = $.trim($("#input6").val());
+            var phone = $.trim($("#input7").val());
+            if(name==null||name==''){
+                $("#addusernamespan").html("用户名不能为空！");
+                $("#addusernamespan").css("display","block");
+            }else if(trueName==null||trueName==''){
+                $("#addtruenamespan").html("真实姓名不能为空！");
+                $("#addtruenamespan").css("display","block");
+            }else if(email==null||email==''){
+                $("#addemailspan").html("邮箱地址不能为空！");
+                $("#addemailspan").css("display","block");
+            }else if(phone==null||phone==''){
+                $("#addphonespan").html("联系电话不能为空！");
+                $("#addphonespan").css("display","block");
+            }else{
+                $.ajax({
+                    url:"${pageContext.request.contextPath}/user/userNameSingleAdd",
+                    data:{name:name},
+                    dataType:"json",
+                    type:"post",
+                    success:function(data){
+                        if(data){
+                            $("#input1").val("");
+                            $("#addusernamespan").html("用户名已存在！");
+                            $("#addusernamespan").css("display","block");
+                        }else{
+                            $("#addusernamespan").css("display","none");
+
+                            $("#addIdCurrentPage").val($("#currentPageHidden").val());
+                            $("#addIdpageSizes").val($("#pageSizeHidden").val());
+                            $("#addIdUserName").val($("#souUserName").val());
+                            $("#addIdTrueName").val($("#souTrueName").val());
+                            $("#addIdActorName").val($("#souActorName").val());
+
+                            $("#addForm").submit();
+                        }
+                    }
+                });
+            }
         }
 
         function quchongfuupdate(id,name){
@@ -247,7 +300,9 @@
             });
         }
     </script>
+    <%-- update end --%>
 
+    <%-- 下拉框样式 begin --%>
     <script type="text/javascript">
         $(window).on('load', function () {
             $('.selectpicker').selectpicker({
@@ -255,6 +310,7 @@
             });
         });
     </script>
+    <%-- 下拉框样式 end --%>
 </head>
 <body>
 <div class="container" style="width: 100%;max-width:95%;height: 100%;padding-top: 30px;">
@@ -410,8 +466,6 @@
                 </div>
                 <%-- add end --%>
 
-
-
                 <%-- update begin --%>
                 <div class="modal fade bs-example-modal-lg" id="updateModel" tabindex="-1" role="dialog" aria-labelledby="updateModalLabel" aria-hidden="true" style="display: none;">
                     <div class="modal-dialog modal-lg" style="width: 90%;">
@@ -422,11 +476,11 @@
                             </div>
                             <div class="modal-body">
                                 <form method="post" id="updateForm" action="${pageContext.request.contextPath}/user/update">
-                                    <input type="hidden" id="updateIdCurrentPage" name="currentPage1" value="${currentPage}">
-                                    <input type="hidden" id="updateIdpageSizes" name="pageSize1" value="${pageSize}">
-                                    <input type="hidden" id="updateIdUserName" name="userName1" value="${userName}">
-                                    <input type="hidden" id="updateIdTrueName" name="trueName1" value="${trueName}">
-                                    <input type="hidden" id="updateIdActorName" name="actorName1" value="${actorName}">
+                                    <input type="hidden" id="updateIdCurrentPage" name="currentPage1" >
+                                    <input type="hidden" id="updateIdpageSizes" name="pageSize1" >
+                                    <input type="hidden" id="updateIdUserName" name="userName1" >
+                                    <input type="hidden" id="updateIdTrueName" name="trueName1" >
+                                    <input type="hidden" id="updateIdActorName" name="actorName1">
 
                                     <input type="hidden" id="updateId"  name="id" />
                                     <fieldset>
@@ -464,7 +518,7 @@
                                                 </div></td>
                                             </tr>
                                             <tr>
-                                                <td colspan="4"><input type="submit" class="btn btn-primary" style="height: 50px;width: 92%;" value="保存" /></td>
+                                                <td colspan="4"><input type="button" onclick="updatebtn()" class="btn btn-primary" style="height: 50px;width: 92%;" value="保存" /></td>
                                             </tr>
                                         </table>
                                     </fieldset>
@@ -477,6 +531,7 @@
                     </div>
                 </div>
                 <%-- update end --%>
+
                 <%-- actor begin --%>
                 <div class="modal fade bs-example-modal-lg" id="actorModel" tabindex="-1" role="dialog" aria-labelledby="actorModalLabel" aria-hidden="true" style="display: none;">
                     <div class="modal-dialog modal-lg" style="width: 90%;">
@@ -526,6 +581,7 @@
                     </div>
                 </div>
                 <%-- actor end --%>
+
                 <%-- chushihua begin --%>
                 <div class="modal fade" id="chushihuaModel" tabindex="-1" role="dialog" aria-labelledby="chushihuaModalLabel" aria-hidden="true" style="display: none;">
                     <div class="modal-dialog">

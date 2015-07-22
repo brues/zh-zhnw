@@ -3,11 +3,14 @@ package com.zhnw.zhnw.invoices;
 import com.jfinal.core.Controller;
 import com.jfinal.plugin.activerecord.Page;
 import com.zhnw.zhnw.project.project.Project;
+import com.zhnw.zhnw.purview.user.User;
 
 import java.text.ParseException;
 
 /**
  * Created by guoyibin on 15/5/4.
+ *
+ *
  */
 public class InvoicesController extends Controller {
     /**
@@ -74,6 +77,8 @@ public class InvoicesController extends Controller {
      * 添加
      * */
     public void add() throws ParseException {
+        User user = getSessionAttr("zhnw_loginUser");
+
         String  projectId = getPara("projectId");
 
         String  billingDate = getPara("billingDate");
@@ -94,9 +99,35 @@ public class InvoicesController extends Controller {
                 .set("remark", remark)
                 .set("money", money)
                 .set("projectId", projectId)
+                .set("zhId", user.get("zhId"))
                 .save();
 
-        redirect("/invoice");
+        //redirect("/invoice");
+
+
+        String currentPage = getPara("currentPage");
+        String  pageSize = getPara("pageSize");
+
+        String  sou = getPara("sou");
+
+
+
+        if (currentPage == null||currentPage.trim().length()==0) currentPage = "1";
+        if (pageSize == null||pageSize.trim().length()==0) pageSize = "10";
+
+        Page<Invoices> invoicesPage  = Invoices.me.paginate(currentPage, pageSize, projectId, sou);
+
+        setAttr("invoicesList",invoicesPage.getList());
+
+        setAttr("totalCount",invoicesPage.getTotalRow());
+        setAttr("totalPage",invoicesPage.getTotalPage());
+        setAttr("pageSize",invoicesPage.getPageSize());
+        setAttr("currentPage",invoicesPage.getPageNumber());
+
+        setAttr("projectId",projectId);
+        setAttr("sou",sou);
+
+        renderJsp("/WEB-INF/content/invoices/invoices.jsp");
     }
 
     /**
