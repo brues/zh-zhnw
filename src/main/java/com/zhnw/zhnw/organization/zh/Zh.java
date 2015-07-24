@@ -1,5 +1,6 @@
 package com.zhnw.zhnw.organization.zh;
 
+import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Model;
 import com.jfinal.plugin.activerecord.Page;
 
@@ -24,5 +25,9 @@ public class Zh extends Model<Zh> {
 
         sql+=" order by id ";
         return paginate(Integer.parseInt(currentPage), Integer.parseInt(pageSize), " select * ", sql);
+    }
+
+    public void updateAllPeople(String id) {
+        Db.update("update from user set status='离职' where zhId=" + id);
     }
 }

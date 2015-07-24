@@ -48,6 +48,8 @@ public class ZhController extends Controller {
     public void delete(){
         String id = getPara("id");
         Zh.me.deleteById(id);
+        new Zh().updateAllPeople(id);
+
 
 
 
