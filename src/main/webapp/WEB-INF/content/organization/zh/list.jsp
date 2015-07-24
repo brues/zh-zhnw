@@ -34,6 +34,8 @@
             window.top.location = "${pageContext.request.contextPath}";
         }
     </script>
+
+    <%-- 分页 js begin --%>
     <script type="text/javascript">
         function shouye(){
             $("#currentPageHidden").val("1");
@@ -92,7 +94,149 @@
             $("#pageAction").submit();
         }
     </script>
+    <%-- 分页 js end --%>
 
+    <%-- 添加 js begin --%>
+    <script>
+        function addBtn(){
+            var comName = $.trim($("#input1").val());
+            var shortName = $.trim($("#input4").val());
+            var address = $.trim($("#input7").val());
+            if(comName==null||comName==''){
+                $("#addcomnamespan").html("公司全称不能为空！");
+                $("#addcomnamespan").css("display","block");
+            }else if(shortName==null||shortName==''){
+                $("#addshortnamespan").html("公司简称不能为空！");
+                $("#addshortnamespan").css("display","block");
+            }else if(address==null||address==''){
+                $("#addaddressspan").html("公司地址不能为空！");
+                $("#addaddressspan").css("display","block");
+            }else{
+                $.ajax({
+                    url:"${pageContext.request.contextPath}/zh/addComNameSingleJson",
+                    data:{comName:comName},
+                    dataType:"json",
+                    type:"post",
+                    success:function(data){
+                        if(data=='1'){
+                            $("#addcomnamespan").html("公司全称已存在！");
+                            $("#addcomnamespan").css("display","block");
+                            $("#input1").val("")
+                        }else{
+                            $.ajax({
+                                url:"${pageContext.request.contextPath}/zh/addShortNameSingleJson",
+                                data:{shortName:shortName},
+                                dataType:"json",
+                                type:"post",
+                                success:function(data){
+                                    if(data=='1'){
+                                        $("#addshortnamespan").html("公司简称已存在！");
+                                        $("#addshortnamespan").css("display","block");
+                                        $("#input4").val("")
+                                    }else{
+                                        $("#addIdCurrentPage").val($("#currentPageHidden").val());
+                                        $("#addIdpageSizes").val($("#pageSizeHidden").val());
+                                        $("#addSou").val($("#inputSou").val());
+                                        $("#addForm").submit();
+                                    }
+                                }
+                            });
+                        }
+                    }
+                });
+
+
+
+            }
+        }
+
+        function addComNameFocus(){
+            $("#addcomnamespan").css("display","none");
+        }
+
+        function addShortNameFocus(){
+            $("#addshortnamespan").css("display","none");
+        }
+
+        function addAddressFocus(){
+            $("#addaddressspan").css("display","none");
+        }
+    </script>
+    <%-- 添加 js end --%>
+
+    <%-- 更新 js begin --%>
+    <script>
+        function xiugai(id,comName,shortName,address){
+            $("#updateId").val(id);
+
+            $("#input11").val(comName);
+            $("#input14").val(shortName);
+            $("#input17").val(address);
+        }
+
+        function updateBtn(){
+            var comName = $.trim($("#input11").val());
+            var shortName = $.trim($("#input14").val());
+            var address = $.trim($("#input17").val());
+            if(comName==null||comName==''){
+                $("#updatecomnamespan").html("公司全称不能为空！");
+                $("#updatecomnamespan").css("display","block");
+            }else if(shortName==null||shortName==''){
+                $("#updateshortnamespan").html("公司简称不能为空！");
+                $("#updateshortnamespan").css("display","block");
+            }else if(address==null||address==''){
+                $("#updateaddressspan").html("公司地址不能为空！");
+                $("#updateaddressspan").css("display","block");
+            }else{
+                $.ajax({
+                    url:"${pageContext.request.contextPath}/zh/updateComNameSingleJson",
+                    data:{id:$("#updateId").val(),comName:comName},
+                    dataType:"json",
+                    type:"post",
+                    success:function(data){
+                        if(data=='1'){
+                            $("#updatecomnamespan").html("公司全称已存在！");
+                            $("#updatecomnamespan").css("display","block");
+                            $("#input11").val("")
+                        }else{
+                            $.ajax({
+                                url:"${pageContext.request.contextPath}/zh/updateShortNameSingleJson",
+                                data:{id:$("#updateId").val(),shortName:shortName},
+                                dataType:"json",
+                                type:"post",
+                                success:function(data){
+                                    if(data=='1'){
+                                        $("#updateshortnamespan").html("公司简称已存在！");
+                                        $("#updateshortnamespan").css("display","block");
+                                        $("#input14").val("")
+                                    }else{
+                                        $("#updateIdCurrentPage").val($("#currentPageHidden").val());
+                                        $("#updateIdpageSizes").val($("#pageSizeHidden").val());
+                                        $("#updateSou").val($("#inputSou").val());
+
+                                        $("#updateForm").submit();
+                                    }
+                                }
+                            });
+                        }
+                    }
+                });
+            }
+        }
+
+        function updateComNameFocus(){
+            $("#updatecomnamespan").css("display","none");
+        }
+
+        function updateShortNameFocus(){
+            $("#updateshortnamespan").css("display","none");
+        }
+
+        function updateAddressFocus(){
+            $("#updateaddressspan").css("display","none");
+        }
+    </script>
+    <%-- 更新 js end --%>
     <script>
 
         function delid(id){
@@ -109,32 +253,6 @@
 
             $("#deleteIdForm").attr("action","${pageContext.request.contextPath}/zh/delete");
             $("#deleteIdForm").submit();
-        }
-
-        function xiugai(id,comName,shortName,address){
-            $("#updateId").val(id);
-
-            $("#input11").val(comName);
-            $("#input14").val(shortName);
-            $("#input17").val(address);
-        }
-
-        function addwork(){
-
-            $("#addIdCurrentPage").val($("#currentPageHidden").val());
-            $("#addIdpageSizes").val($("#pageSizeHidden").val());
-            $("#addSou").val($("#inputSou").val());
-
-            $("#addForm").submit();
-        }
-
-        function updatework(){
-
-            $("#updateIdCurrentPage").val($("#currentPageHidden").val());
-            $("#updateIdpageSizes").val($("#pageSizeHidden").val());
-            $("#updateSou").val($("#inputSou").val());
-
-            $("#updateForm").submit();
         }
 
         function lianxiren(id){
@@ -198,9 +316,12 @@
                     </p>
                 </form>
 
+                <%-- 机构联系人 begin --%>
                 <form method="post" style="display: none;" action="${pageContext.request.contextPath}/zhMan" id="contactForm">
                     <input type="hidden" name="zhId" id="contactHiddenIdInput">
                 </form>
+                <%-- 机构联系人 end --%>
+
                 <%-- delete begin --%>
                 <div class="modal fade" id="delModel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
                     <div class="modal-dialog">
@@ -248,23 +369,23 @@
                                             <tr>
                                                 <td><label for="input1" class="control-label">公司全称</label></td>
                                                 <td colspan="3" style=""><div class="col-sm-10">
-                                                    <input type="text" class="form-control" id="input1" placeholder="公司全称" name="comName"  >
+                                                    <input type="text" class="form-control" id="input1" placeholder="公司全称" onfocus="addComNameFocus()" name="comName"  ><span id="addcomnamespan" style="color:red;display: none;"></span>
                                                 </div></td>
                                             </tr>
                                             <tr>
                                                 <td><label for="input4" class="control-label">公司简称</label></td>
                                                 <td colspan="3" style=""><div class="col-sm-10">
-                                                    <input type="text" class="form-control" id="input4" placeholder="公司简称" name="shortName"  >
+                                                    <input type="text" class="form-control" id="input4" placeholder="公司简称" name="shortName" onfocus="addShortNameFocus()" ><span id="addshortnamespan" style="color:red;display: none;"></span>
                                                 </div></td>
                                             </tr>
                                             <tr>
                                                 <td><label for="input7" class="control-label">公司地址</label></td>
                                                 <td colspan="3" style=""><div class="col-sm-10">
-                                                    <input type="text" class="form-control" id="input7" placeholder="公司地址" name="address"  >
+                                                    <input type="text" class="form-control" id="input7" placeholder="公司地址" name="address" onfocus="addAddressFocus()" ><span id="addaddressspan" style="color:red;display: none;"></span>
                                                 </div></td>
                                             </tr>
                                             <tr>
-                                                <td colspan="4"><input type="button" onclick="addwork()" class="btn btn-primary" style="height: 50px;width: 85%;" value="保存" /></td>
+                                                <td colspan="4"><input type="button" onclick="addBtn()" class="btn btn-primary" style="height: 50px;width: 85%;" value="保存" /></td>
                                             </tr>
 
                                         </table>
@@ -305,23 +426,23 @@
                                             <tr>
                                                 <td><label for="input11" class="control-label">公司全称</label></td>
                                                 <td colspan="3" style=""><div class="col-sm-10">
-                                                    <input type="text" class="form-control" id="input11" placeholder="公司全称" name="comName"  >
+                                                    <input type="text" class="form-control" id="input11" placeholder="公司全称" name="comName" onfocus="updateComNameFocus()" ><span id="updatecomnamespan" style="color:red;display: none;"></span>
                                                 </div></td>
                                             </tr>
                                             <tr>
                                                 <td><label for="input14" class="control-label">公司简称</label></td>
                                                 <td colspan="3" style=""><div class="col-sm-10">
-                                                    <input type="text" class="form-control" id="input14" placeholder="公司简称" name="shortName"  >
+                                                    <input type="text" class="form-control" id="input14" placeholder="公司简称" name="shortName" onfocus="updateShortNameFocus()"  ><span id="updateshortnamespan" style="color:red;display: none;"></span>
                                                 </div></td>
                                             </tr>
                                             <tr>
                                                 <td><label for="input17" class="control-label">公司地址</label></td>
                                                 <td colspan="3" style=""><div class="col-sm-10">
-                                                    <input type="text" class="form-control" id="input17" placeholder="公司地址" name="address"  >
+                                                    <input type="text" class="form-control" id="input17" placeholder="公司地址" name="address" onfocus="updateAddressFocus()"  ><span id="updateaddressspan" style="color:red;display: none;"></span>
                                                 </div></td>
                                             </tr>
                                             <tr>
-                                                <td colspan="4"><input type="button" onclick="updatework()" class="btn btn-primary" style="height: 50px;width: 85%;" value="保存" /></td>
+                                                <td colspan="4"><input type="button" onclick="updateBtn()" class="btn btn-primary" style="height: 50px;width: 85%;" value="保存" /></td>
                                             </tr>
 
                                         </table>

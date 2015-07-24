@@ -3,8 +3,12 @@ package com.zhnw.zhnw.organization.zh;
 import com.jfinal.core.Controller;
 import com.jfinal.plugin.activerecord.Page;
 
+import java.util.List;
+
 /**
  * Created by guoyibin on 15/7/3.
+ *
+ * 机构管理
  */
 public class ZhController extends Controller {
 
@@ -20,6 +24,7 @@ public class ZhController extends Controller {
 
         if (currentPage == null) currentPage = "1";
         if (pageSize == null) pageSize = "10";
+        if (souContent!=null) souContent = souContent.trim();
 
         Page<Zh> zhPage = Zh.me.paginate(currentPage, pageSize, souContent);
 
@@ -153,6 +158,60 @@ public class ZhController extends Controller {
         setAttr("souContent",souContent);
 
         renderJsp("/WEB-INF/content/organization/zh/list.jsp");
+    }
+
+    /**
+     *
+     * ajax获取列表
+     * */
+    public void addComNameSingleJson(){
+        String  comName = getPara("comName");
+        List<Zh> zhList = Zh.me.find("select * from zh where comName = '"+comName+"'");
+        if (zhList.size()==0)
+            renderJson("0");
+        else
+            renderJson("1");
+    }
+
+    /**
+     *
+     * ajax获取列表
+     * */
+    public void addShortNameSingleJson(){
+        String  shortName = getPara("shortName");
+        List<Zh> zhList = Zh.me.find("select * from zh where shortName = '"+shortName+"'");
+        if (zhList.size()==0)
+            renderJson("0");
+        else
+            renderJson("1");
+    }
+
+    /**
+     *
+     * ajax获取列表
+     * */
+    public void updateComNameSingleJson(){
+        String  id = getPara("id");
+        String  comName = getPara("comName");
+        List<Zh> zhList = Zh.me.find("select * from zh where comName = '"+comName+"' and id!="+id);
+        if (zhList.size()==0)
+            renderJson("0");
+        else
+            renderJson("1");
+    }
+
+    /**
+     *
+     * ajax获取列表
+     * */
+    public void updateShortNameSingleJson(){
+        String  id = getPara("id");
+        String  shortName = getPara("shortName");
+        List<Zh> zhList = Zh.me.find("select * from zh where shortName = '"+shortName+"' and id!="+id);
+        if (zhList.size()==0)
+            renderJson("0");
+        else
+            renderJson("1");
     }
 
 }
