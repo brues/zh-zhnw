@@ -121,7 +121,6 @@
                         if(data=='1'){
                             $("#addcomnamespan").html("公司全称已存在！");
                             $("#addcomnamespan").css("display","block");
-                            $("#input1").val("")
                         }else{
                             $.ajax({
                                 url:"${pageContext.request.contextPath}/zh/addShortNameSingleJson",
@@ -132,7 +131,6 @@
                                     if(data=='1'){
                                         $("#addshortnamespan").html("公司简称已存在！");
                                         $("#addshortnamespan").css("display","block");
-                                        $("#input4").val("")
                                     }else{
                                         $("#addIdCurrentPage").val($("#currentPageHidden").val());
                                         $("#addIdpageSizes").val($("#pageSizeHidden").val());
@@ -197,7 +195,6 @@
                         if(data=='1'){
                             $("#updatecomnamespan").html("公司全称已存在！");
                             $("#updatecomnamespan").css("display","block");
-                            $("#input11").val("")
                         }else{
                             $.ajax({
                                 url:"${pageContext.request.contextPath}/zh/updateShortNameSingleJson",
@@ -208,7 +205,6 @@
                                     if(data=='1'){
                                         $("#updateshortnamespan").html("公司简称已存在！");
                                         $("#updateshortnamespan").css("display","block");
-                                        $("#input14").val("")
                                     }else{
                                         $("#updateIdCurrentPage").val($("#currentPageHidden").val());
                                         $("#updateIdpageSizes").val($("#pageSizeHidden").val());

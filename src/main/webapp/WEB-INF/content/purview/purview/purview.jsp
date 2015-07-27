@@ -149,7 +149,6 @@
                         if(data=='1'){
                             $("#addonepurviewnamespan").html("目录名已存在！");
                             $("#addonepurviewnamespan").css("display","block");
-                            $("#input1").val("")
                         }else{
                             $("#addOneForm").submit();
                         }
@@ -190,7 +189,6 @@
                         if(data=='1'){
                             $("#addtwonamespan").html("目录名已存在！");
                             $("#addtwonamespan").css("display","block");
-                            $("#input101").val("")
                         }else{
                             $.ajax({
                                 url:"${pageContext.request.contextPath}/purview/addTwoUrlSingleJson",
@@ -201,7 +199,6 @@
                                     if(data=='1'){
                                         $("#addtwourlspan").html("链接地址已存在！");
                                         $("#addtwourlspan").css("display","block");
-                                        $("#input102").val("")
                                     }else{
                                         $("#addTwoForm").submit();
                                     }
@@ -246,7 +243,6 @@
                         if(data=='1'){
                             $("#updateonenamespan").html("目录名已存在！");
                             $("#updateonenamespan").css("display","block");
-                            $("#input1001").val("")
                         }else{
                             $("#updateOneForm").submit();
                         }
@@ -290,7 +286,6 @@
                         if(data=='1'){
                             $("#updatetwonamespan").html("目录名已存在！");
                             $("#updatetwonamespan").css("display","block");
-                            $("#input10001").val("")
                         }else{
                             $.ajax({
                                 url:"${pageContext.request.contextPath}/purview/updateTwoUrlSingleJson",
@@ -301,7 +296,6 @@
                                     if(data=='1'){
                                         $("#updatetwourlspan").html("链接地址已存在！");
                                         $("#updatetwourlspan").css("display","block");
-                                        $("#input10002").val("")
                                     }else{
                                         $("#updateTwoForm").submit();
                                     }

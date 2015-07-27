@@ -36,7 +36,26 @@
         }
     </script>
 
+    <%-- 树的展开闭合操作 begin --%>
+    <script>
+        $(function () {
+            $('.tree li:has(ul)').addClass('parent_li').find(' > span').attr('title', 'Collapse this branch');
+            $('.tree li.parent_li > span').on('click', function (e) {
+                var children = $(this).parent('li.parent_li').find(' > ul > li');
+                if (children.is(":visible")) {
+                    children.hide('fast');
+                    $(this).attr('title', 'Expand this branch').find(' > i').addClass('icon-plus-sign').removeClass('icon-minus-sign');
+                } else {
+                    children.show('fast');
+                    $(this).attr('title', 'Collapse this branch').find(' > i').addClass('icon-minus-sign').removeClass('icon-plus-sign');
+                }
+                e.stopPropagation();
+            });
+        });
+    </script>
+    <%-- 树的展开闭合操作 end --%>
 
+    <%-- 分页 begin --%>
     <script type="text/javascript">
         function shouye(){
             $("#currentPageHidden").val("1");
@@ -95,94 +114,106 @@
             $("#pageAction").submit();
         }
     </script>
+    <%-- 分页 end --%>
 
+    <%-- add begin --%>
     <script>
-
-        function delid(id){
-            $("#deleteIdInput").val(id);
+        function addBtn(){
+            var actorName = $.trim($("#input1").val());
+            if(actorName==null||actorName==''){
+                $("#addquchongfuspan").html("角色名不能为空！");
+                $("#addquchongfuspan").css("display","block");
+            }else{
+                $.ajax({
+                    url:"${pageContext.request.contextPath}/actor/addActorNameSingle",
+                    data:{actorName:actorName},
+                    dataType:"json",
+                    type:"post",
+                    success:function(data){
+                        if(data=="1"){
+                            $("#addquchongfuspan").html("角色名已存在！");
+                            $("#addquchongfuspan").css("display","block");
+                        }else{
+                            $("#addCurrentPage").val($("#currentPageHidden").val());
+                            $("#addpageSizes").val($("#pageSizeHidden").val());
+                            $("#addForm").submit();
+                        }
+                    }
+                });
+            }
         }
-        function deleteById(){
-            $("#deleteIdFormId").val($("#deleteIdInput").val());
-            $("#deleteIdForm").attr("action","${pageContext.request.contextPath}/actor/delete");
-            $("#deleteIdForm").submit();
-        }
 
+        function addActorNameFocus(){
+            $("#addquchongfuspan").css("display","none");
+        }
+    </script>
+    <%-- add end --%>
+
+    <%-- update begin --%>
+    <script>
         function xiugai(id,actorName){
             $("#updateId").val(id);
             $("#input101").val(actorName);
         }
 
-        function chushihua(id){
-            $("#hiddenactorIdChushihua").val(id);
-        }
-
-        function chushihuasuccess(){
-            $.ajax({
-                url:"${pageContext.request.contextPath}/actor/initialize",
-                data:{actorId:$("#hiddenactorIdChushihua").val()},
-                dataType:"json",
-                type:"post",
-                success:function(data){
-
-                }
-            });
-        }
-
-        function quchongfu(){
-            $.ajax({
-                url:"${pageContext.request.contextPath}/actor/quchongfu",
-                data:{name:$.trim($("#input1").val())},
-                dataType:"json",
-                type:"post",
-                success:function(data){
-                    if(data){
-                        $("#input1").val("");
-                        $("#quchongfuspan").css("display","block");
-                    }else{
-                        $("#quchongfuspan").css("display","none");
+        function updateBtn(){
+            var id = $.trim($("#updateId").val());
+            var actorName = $.trim($("#input101").val());
+            if(actorName==null||actorName==''){
+                $("#udpatequchongfuupdatespan").html("角色名不能为空！");
+                $("#udpatequchongfuupdatespan").css("display","block");
+            }else{
+                $.ajax({
+                    url:"${pageContext.request.contextPath}/actor/updateActorNameSingle",
+                    data:{id:id,actorName:actorName},
+                    dataType:"json",
+                    type:"post",
+                    success:function(data){
+                        if(data=="1"){
+                            $("#udpatequchongfuupdatespan").html("角色名已存在！");
+                            $("#udpatequchongfuupdatespan").css("display","block");
+                            $("#input1").val("");
+                        }else{
+                            $("#updateCurrentPage").val($("#currentPageHidden").val());
+                            $("#updatepageSizes").val($("#pageSizeHidden").val());
+                            $("#updateForm").submit();
+                        }
                     }
-                }
-            });
+                });
+            }
         }
 
-        function quchongfuupdate(id,name){
-            $.ajax({
-                url:"${pageContext.request.contextPath}/actor/quchongfuupdate",
-                data:{name:$.trim($("#input101").val()),id:$("#updateId").val()},
-                dataType:"json",
-                type:"post",
-                success:function(data){
-                    if(data){
-                        $("#input101").val("");
-                        $("#quchongfuupdatespan").css("display","block");
-                    }else{
-                        $("#quchongfuupdatespan").css("display","none");
-                    }
-                }
-            });
+        function updateActorNameFocus(){
+            $("#udpatequchongfuupdatespan").css("display","none");
         }
     </script>
+    <%-- update end --%>
+
+    <%-- delete begin --%>
     <script>
-        $(function () {
-            $('.tree li:has(ul)').addClass('parent_li').find(' > span').attr('title', 'Collapse this branch');
-            $('.tree li.parent_li > span').on('click', function (e) {
-                var children = $(this).parent('li.parent_li').find(' > ul > li');
-                if (children.is(":visible")) {
-                    children.hide('fast');
-                    $(this).attr('title', 'Expand this branch').find(' > i').addClass('icon-plus-sign').removeClass('icon-minus-sign');
-                } else {
-                    children.show('fast');
-                    $(this).attr('title', 'Collapse this branch').find(' > i').addClass('icon-minus-sign').removeClass('icon-plus-sign');
-                }
-                e.stopPropagation();
-            });
-        });
-    </script>
+        function delid(id){
+            $("#deleteIdInput").val(id);
+        }
+        function deleteById(){
+            $("#deleteIdCurrentPage").val($("#currentPageHidden").val());
+            $("#deleteIdpageSizes").val($("#pageSizeHidden").val());
 
+            $("#deleteIdFormId").val($("#deleteIdInput").val());
+            $("#deleteIdForm").attr("action","${pageContext.request.contextPath}/actor/delete");
+            $("#deleteIdForm").submit();
+        }
+
+    </script>
+    <%-- delete end --%>
+
+    <%-- 树的选择取消操作 begin --%>
     <script>
         function chushihuaselect(id){
             $("#actorIdHidden").val(id);
             $(":checkbox").attr("checked",null);
+
+            $("#purviewIdCurrentPage").val($("#currentPageHidden").val());
+            $("#purviewIdpageSizes").val($("#pageSizeHidden").val());
         }
 
 
@@ -280,6 +311,7 @@
             }
         }
     </script>
+    <%-- 树的选择取消操作 end --%>
 </head>
 <body>
 <div class="container" style="width: 100%;height: 100%;padding-top: 30px;">
@@ -289,8 +321,6 @@
                 <form id="pageAction" action="${pageContext.request.contextPath}/actor" method="post">
                     <div>
                         <button type="button" class="btn btn-success" data-target="#addModel" data-toggle="modal">添加角色</button>
-                        角色：<input type="text" name="actorName" value="${actorName}">
-                        <button type="submit" class="btn btn-primary">搜索角色</button>
                     </div>
                     <table class="table">
                         <thead>
@@ -332,6 +362,7 @@
                         <button type="button" class="btn btn-lg btn-default" onclick="weiye()">尾页</button>
                     </p>
                 </form>
+
                 <%-- delete begin --%>
                 <div class="modal fade" id="delModel" tabindex="-1" role="dialog" aria-labelledby="delModalLabel" aria-hidden="true" style="display: none;">
                     <div class="modal-dialog">
@@ -351,9 +382,8 @@
                             <form style="display: none;" id="deleteIdForm" method="post">
                                 <input type="hidden" id="deleteIdFormId" name="id">
 
-                                <input type="hidden" id="deleteIdCurrentPage" name="currentPage1" value="${currentPage}">
-                                <input type="hidden" id="deleteIdpageSizes" name="pageSize1" value="${pageSize}">
-                                <input type="hidden" id="deleteIdActorName" name="actorName1" value="${actorName}">
+                                <input type="hidden" id="deleteIdCurrentPage" name="currentPage">
+                                <input type="hidden" id="deleteIdpageSizes" name="pageSize" >
                             </form>
                         </div>
                     </div>
@@ -370,20 +400,20 @@
                             </div>
                             <div class="modal-body">
                                 <form method="post" id="addForm" action="${pageContext.request.contextPath}/actor/add">
-                                    <input type="hidden" id="addIdCurrentPage" name="currentPage1" value="${currentPage}">
-                                    <input type="hidden" id="addIdpageSizes" name="pageSize1" value="${pageSize}">
-                                    <input type="hidden" id="addIdActorName" name="actorName1" value="${actorName}">
+
+                                    <input type="hidden" id="addCurrentPage" name="currentPage" >
+                                    <input type="hidden" id="addpageSizes" name="pageSize" >
 
                                     <fieldset>
                                         <table style="width: 100%;height: 300px;">
                                             <tr>
                                                 <td><label for="input1" class="control-label">角色名：</label></td>
                                                 <td><div class="col-sm-10">
-                                                    <input type="text" class="form-control" id="input1" placeholder="角色名" name="actorName"  onblur="quchongfu()" required><span id="quchongfuspan" style="color: red;display: none;">角色名已存在</span>
+                                                    <input type="text" class="form-control" id="input1" placeholder="角色名" name="actorName" onfocus="addActorNameFocus()"  required><span id="addquchongfuspan" style="color: red;display: none;"></span>
                                                 </div></td>
                                             </tr>
                                             <tr>
-                                                <td colspan="4"><input type="submit" id="actoraddsubmit" class="btn btn-primary" style="height: 50px;width: 86%;" value="保存" /></td>
+                                                <td colspan="4"><input type="button" onclick="addBtn()" id="actoraddsubmit" class="btn btn-primary" style="height: 50px;width: 86%;" value="保存" /></td>
                                             </tr>
                                         </table>
                                     </fieldset>
@@ -408,9 +438,8 @@
                             </div>
                             <div class="modal-body">
                                 <form method="post" id="updateForm" action="${pageContext.request.contextPath}/actor/update">
-                                    <input type="hidden" id="updateIdCurrentPage" name="currentPage1" value="${currentPage}">
-                                    <input type="hidden" id="updateIdpageSizes" name="pageSize1" value="${pageSize}">
-                                    <input type="hidden" id="updateIdActorName" name="actorName1" value="${actorName}">
+                                    <input type="hidden" id="updateCurrentPage" name="currentPage">
+                                    <input type="hidden" id="updatepageSizes" name="pageSize">
 
                                     <input type="hidden" id="updateId"  name="id" />
                                     <fieldset>
@@ -418,11 +447,11 @@
                                             <tr>
                                                 <td><label for="input101" class="control-label">角色名：</label></td>
                                                 <td><div class="col-sm-10">
-                                                    <input type="text" class="form-control" id="input101" placeholder="角色名" name="actorName" value="${actorName}" onblur="quchongfuupdate('${id}','${actorName}')" required><span id="quchongfuupdatespan" style="color: red;display: none;">用户名已存在</span>
+                                                    <input type="text" class="form-control" id="input101" placeholder="角色名" name="actorName" onfocus="updateActorNameFocus()" ><span id="udpatequchongfuupdatespan" style="color: red;display: none;"></span>
                                                 </div></td>
                                             </tr>
                                             <tr>
-                                                <td colspan="4"><input type="submit" class="btn btn-primary" style="height: 50px;width: 86%;" value="保存" /></td>
+                                                <td colspan="4"><input type="button" onclick="updateBtn()" class="btn btn-primary" style="height: 50px;width: 86%;" value="保存" /></td>
                                             </tr>
                                         </table>
                                     </fieldset>
@@ -435,6 +464,7 @@
                     </div>
                 </div>
                 <%-- update end --%>
+
                 <%-- purview begin --%>
                 <div class="modal fade bs-example-modal-lg" id="actorModel" tabindex="-1" role="dialog" aria-labelledby="actorModalLabel" aria-hidden="true" style="display: none;">
                     <div class="modal-dialog modal-lg" style="width: 90%;">
@@ -445,9 +475,8 @@
                             </div>
                             <div class="modal-body">
                                 <form method="post" id="actorPurviewForm" action="${pageContext.request.contextPath}/actor/actorPurview">
-                                    <input type="hidden" id="purviewIdCurrentPage" name="currentPage1" value="${currentPage}">
-                                    <input type="hidden" id="purviewIdpageSizes" name="pageSize1" value="${pageSize}">
-                                    <input type="hidden" id="purviewIdActorName" name="actorName1" value="${actorName}">
+                                    <input type="hidden" id="purviewIdCurrentPage" name="currentPage">
+                                    <input type="hidden" id="purviewIdpageSizes" name="pageSize" >
 
                                     <input type="hidden" id="actorIdHidden" name="actorId" >
 
@@ -474,7 +503,7 @@
                                             </li>
                                         </ul>
                                     </div>
-                                    <button type="button" class="btn btn-primary" onclick="$('#actorPurviewForm').submit()">确定</button>
+                                    <button type="submit" class="btn btn-primary">确定</button>
                                 </form>
                             </div>
                             <div class="modal-footer">
