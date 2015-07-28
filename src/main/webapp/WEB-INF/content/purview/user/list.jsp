@@ -134,7 +134,6 @@
                     type:"post",
                     success:function(data){
                         if(data){
-                            $("#input1").val("");
                             $("#addusernamespan").html("用户名已存在！");
                             $("#addusernamespan").css("display","block");
                         }else{
@@ -232,72 +231,66 @@
             $("#input107").val(phone);
             $("#input108").val(remark);
 
-            $("#updateIdCurrentPage").val($("#currentPageHidden").val());
-            $("#updateIdpageSizes").val($("#pageSizeHidden").val());
-            $("#updateIdUserName").val($("#souUserName").val());
-            $("#updateIdTrueName").val($("#souTrueName").val());
-            $("#updateIdActorName").val($("#souActorName").val());
+
         }
 
         function updatebtn(){
-            var name = $.trim($("#input1").val());
-            var trueName = $.trim($("#input3").val());
-            var email = $.trim($("#input6").val());
-            var phone = $.trim($("#input7").val());
+            var name = $.trim($("#input101").val());
+            var trueName = $.trim($("#input103").val());
+            var email = $.trim($("#input106").val());
+            var phone = $.trim($("#input107").val());
             if(name==null||name==''){
-                $("#addusernamespan").html("用户名不能为空！");
-                $("#addusernamespan").css("display","block");
+                $("#updateusernamespan").html("用户名不能为空！");
+                $("#updateusernamespan").css("display","block");
             }else if(trueName==null||trueName==''){
-                $("#addtruenamespan").html("真实姓名不能为空！");
-                $("#addtruenamespan").css("display","block");
+                $("#updatetruenamespan").html("真实姓名不能为空！");
+                $("#updatetruenamespan").css("display","block");
             }else if(email==null||email==''){
-                $("#addemailspan").html("邮箱地址不能为空！");
-                $("#addemailspan").css("display","block");
+                $("#updateemailspan").html("邮箱地址不能为空！");
+                $("#updateemailspan").css("display","block");
             }else if(phone==null||phone==''){
-                $("#addphonespan").html("联系电话不能为空！");
-                $("#addphonespan").css("display","block");
+                $("#updatephonespan").html("联系电话不能为空！");
+                $("#updatephonespan").css("display","block");
             }else{
                 $.ajax({
-                    url:"${pageContext.request.contextPath}/user/userNameSingleAdd",
-                    data:{name:name},
+                    url:"${pageContext.request.contextPath}/user/userNameSingleUpdate",
+                    data:{id:$("#updateId").val(),name:name},
                     dataType:"json",
                     type:"post",
                     success:function(data){
                         if(data){
-                            $("#input1").val("");
-                            $("#addusernamespan").html("用户名已存在！");
-                            $("#addusernamespan").css("display","block");
+                            $("#updateusernamespan").html("用户名已存在！");
+                            $("#updateusernamespan").css("display","block");
                         }else{
-                            $("#addusernamespan").css("display","none");
+                            $("#updateusernamespan").css("display","none");
 
-                            $("#addIdCurrentPage").val($("#currentPageHidden").val());
-                            $("#addIdpageSizes").val($("#pageSizeHidden").val());
-                            $("#addIdUserName").val($("#souUserName").val());
-                            $("#addIdTrueName").val($("#souTrueName").val());
-                            $("#addIdActorName").val($("#souActorName").val());
+                            $("#updateIdCurrentPage").val($("#currentPageHidden").val());
+                            $("#updateIdpageSizes").val($("#pageSizeHidden").val());
+                            $("#updateIdUserName").val($("#souUserName").val());
+                            $("#updateIdTrueName").val($("#souTrueName").val());
+                            $("#updateIdActorName").val($("#souActorName").val());
 
-                            $("#addForm").submit();
+                            $("#updateForm").submit();
                         }
                     }
                 });
             }
         }
 
-        function quchongfuupdate(id,name){
-            $.ajax({
-                url:"${pageContext.request.contextPath}/user/quchongfuupdate",
-                data:{name:$.trim($("#input101").val()),id:id},
-                dataType:"json",
-                type:"post",
-                success:function(data){
-                    if(data){
-                        $("#input101").val("");
-                        $("#quchongfuupdatespan").css("display","block");
-                    }else{
-                        $("#quchongfuupdatespan").css("display","none");
-                    }
-                }
-            });
+        function updateusernamefocus(){
+            $("#updateusernamespan").css("display","none");
+        }
+
+        function updatetruenamefocus(){
+            $("#updatetruenamespan").css("display","none");
+        }
+
+        function updateemailfocus(){
+            $("#updateemailspan").css("display","none");
+        }
+
+        function updatephonefocus(){
+            $("#updatephonespan").css("display","none");
         }
     </script>
     <%-- update end --%>
@@ -488,7 +481,7 @@
                                             <tr>
                                                 <td><label for="input101" class="control-label">用户名</label></td>
                                                 <td><div class="col-sm-10">
-                                                    <input type="text" class="form-control" id="input101" placeholder="用户名" name="userName" value="${userName}" onblur="quchongfuupdate('${id}','${userName}')" required><span id="quchongfuupdatespan" style="color: red;display: none;">用户名已存在</span>
+                                                    <input type="text" class="form-control" id="input101" placeholder="用户名" name="userName" onfocus="updateusernamefocus()" ><span id="updateusernamespan" style="color: red;display: none;"></span>
                                                 </div></td>
                                                 <td><label for="input102" class="control-label">密码</label></td>
                                                 <td><div class="col-sm-10">
@@ -498,17 +491,17 @@
                                             <tr>
                                                 <td><label for="input103" class=" control-label">真实姓名</label></td>
                                                 <td><div class="col-sm-10">
-                                                    <input  type="text" class="form-control" id="input103" placeholder="真实姓名" name="trueName" value="${trueName}" required/>
+                                                    <input  type="text" class="form-control" id="input103" placeholder="真实姓名" name="trueName" onfocus="updatetruenamefocus()"/><span id="updatetruenamespan" style="color: red;display: none;"></span>
                                                 </div></td>
                                                 <td><label for="input106" class="control-label">邮箱地址</label></td>
                                                 <td><div class="col-sm-10">
-                                                    <input type="email" class="form-control" id="input106" placeholder="邮箱地址" name="email" value="${email}" >
+                                                    <input type="email" class="form-control" id="input106" placeholder="邮箱地址" name="email" onfocus="updateemailfocus()" ><span id="updateemailspan" style="color: red;display: none;"></span>
                                                 </div></td>
                                             </tr>
                                             <tr>
                                                 <td><label for="input107" class=" control-label">联系电话</label></td>
                                                 <td><div class="col-sm-10">
-                                                    <input  type="text" class="form-control" id="input107" placeholder="联系电话" name="phone" value="${phone}" />
+                                                    <input  type="text" class="form-control" id="input107" placeholder="联系电话" name="phone" onfocus="updatephonefocus()" /><span id="updatephonespan" style="color: red;display: none;"></span>
                                                 </div></td>
                                                 <td>
                                                     <label for="input108" class="control-label">备注</label>

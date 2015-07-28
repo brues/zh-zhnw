@@ -2,8 +2,14 @@ package com.zhnw.zhnw.purview.user;
 
 import com.jfinal.core.Controller;
 import com.jfinal.plugin.activerecord.Page;
+import com.zhnw.zhnw.hour.Hour;
+import com.zhnw.zhnw.organization.zhMan.ZhMan;
+import com.zhnw.zhnw.project.people.ProjectPeople;
+import com.zhnw.zhnw.project.process.ProjectProcess;
+import com.zhnw.zhnw.project.project.Project;
 import com.zhnw.zhnw.purview.actor.Actor;
 import com.zhnw.zhnw.purview.userActor.UserActor;
+import com.zhnw.zhnw.work.Work;
 
 import java.util.Date;
 import java.util.List;
@@ -44,7 +50,7 @@ public class UserController extends Controller {
         setAttr("trueName",trueName);
         setAttr("actorName",actorName);
 
-        List<User> users = User.me.find("select * from user where zhId="+user.get("zhId"));
+        List<User> users = User.me.find("select * from user where zhId="+user.get("zhId")+" and status='在职'");
         List<Actor> actors = Actor.me.find("select * from actor where zhId="+user.get("zhId"));
         setAttr("users",users);
         setAttr("actors",actors);
@@ -79,7 +85,7 @@ public class UserController extends Controller {
         setAttr("trueName",trueName);
         setAttr("actorName",actorName);
 
-        List<User> users = User.me.find("select * from user where zhId="+user.get("zhId"));
+        List<User> users = User.me.find("select * from user where zhId="+user.get("zhId")+" and status='在职'");
         List<Actor> actors = Actor.me.find("select * from actor where zhId="+user.get("zhId"));
         setAttr("users",users);
         setAttr("actors",actors);
@@ -131,7 +137,7 @@ public class UserController extends Controller {
         setAttr("trueName",trueName1);
         setAttr("actorName",actorName1);
 
-        List<User> users = User.me.find("select * from user where zhId="+user.get("zhId"));
+        List<User> users = User.me.find("select * from user where zhId="+user.get("zhId")+" and status='在职'");
         List<Actor> actors = Actor.me.find("select * from actor where zhId="+user.get("zhId"));
         setAttr("users",users);
         setAttr("actors",actors);
@@ -160,6 +166,60 @@ public class UserController extends Controller {
                 .update();
 
 
+        /*********************************/
+        User user1 = User.me.findById(id);
+
+        List<ZhMan> zhManList = ZhMan.me.find("select * from zhMan where id=" + user1.get("zhManId"));
+        for (ZhMan zhMan : zhManList){
+            zhMan.set("name",trueName).set("phone",phone).set("email",email).update();
+        }
+
+        List<Work> workList1 = Work.me.find("select * from work where nameId=" + id);
+        for (Work work : workList1){
+            work.set("name", trueName).update();
+        }
+
+        List<Work> workList2 = Work.me.find("select * from work where accountableId=" + id);
+        for (Work work : workList2){
+            work.set("accountable",trueName).update();
+        }
+
+        List<Work> workList3 = Work.me.find("select * from work where reviewId=" + id);
+        for (Work work : workList3){
+            work.set("review",trueName).update();
+        }
+
+        List<Hour> hours = Hour.me.find("select * from hours where nameId=" + id);
+        for (Hour hour : hours){
+            hour.set("name",trueName).update();
+        }
+
+        List<Hour> hourList = Hour.me.find("select * from hours where checkId=" + id);
+        for (Hour hour : hourList){
+            hour.set("checkName",trueName).update();
+        }
+
+        List<Project> projectList = Project.me.find("select * from project where contactId=" + id);
+        for (Project project : projectList){
+            project.set("contacts",trueName).update();
+        }
+
+        List<ProjectPeople> projectPeopleList = ProjectPeople.me.find("select * from pp where peopleId=" + id);
+        for (ProjectPeople projectPeople : projectPeopleList){
+            projectPeople.set("name",trueName).update();
+        }
+
+        List<ProjectProcess> projectProcesses = ProjectProcess.me.find("select * from process where principalId=" + id);
+        for (ProjectProcess projectProcess : projectProcesses){
+            projectProcess.set("principal",trueName).update();
+        }
+
+        List<ProjectProcess> projectProcessList = ProjectProcess.me.find("select * from process where reviewerId=" + id);
+        for (ProjectProcess projectProcess : projectProcessList){
+            projectProcess.set("reviewer",trueName).update();
+        }
+
+        /*********************************/
 
         String currentPage1 = getPara("currentPage1");
         String  pageSize1 = getPara("pageCount1");
@@ -179,7 +239,106 @@ public class UserController extends Controller {
         setAttr("trueName",trueName1);
         setAttr("actorName",actorName1);
 
-        List<User> users = User.me.find("select * from user where zhId="+user.get("zhId"));
+        List<User> users = User.me.find("select * from user where zhId="+user.get("zhId")+" and status='在职'");
+        List<Actor> actors = Actor.me.find("select * from actor where zhId="+user.get("zhId"));
+        setAttr("users",users);
+        setAttr("actors",actors);
+
+        renderJsp("/WEB-INF/content/purview/user/list.jsp");
+    }
+
+    /**
+     * 添加用户：验证用户名是否重复(不同机构的用户名也不能重复)
+     * */
+    public void userNameSingleAdd(){
+        String name = getPara("name");
+        List<User> users = User.me.find("select * from user where userName='" + name + "' ");
+        if (users.size()!=0){
+            renderJson(true);
+        }else {
+            renderJson(false);
+        }
+    }
+
+    /**
+     * 更新用户：验证用户名是否重复(不同机构的用户名也不能重复)
+     * */
+    public void userNameSingleUpdate(){
+        String name = getPara("name");
+        String id = getPara("id");
+        List<User> users = User.me.find("select * from user where id!=" + id + " and userName='" + name + "' ");
+        if (users.size()!=0){
+            renderJson(true);
+        }else {
+            renderJson(false);
+        }
+    }
+
+    /**
+     *
+     * ajax获取列表
+     * */
+    public void userJson(){
+        User user = getSessionAttr("zhnw_loginUser");
+        List<User> userList = User.me.find("select * from user where zhId="+user.get("zhId")+" and status='在职' order by id desc");
+        renderJson(userList);
+    }
+
+    /**
+     *
+     * 初始化用户密码为：123456
+     * */
+    public void initialize(){
+        String  userId = getPara("userId");
+        new User().set("id",Long.parseLong(userId)).set("password","123456").update();
+        setSessionAttr("zhnw_loginUser", User.me.findById(userId));
+        renderJson("0");
+    }
+
+    /**
+     * 给用户分配角色
+     * */
+    public void userActor(){
+        User user = getSessionAttr("zhnw_loginUser");
+
+        String  userId = getPara("userId");
+        String  actorId = getPara("actorId");
+        Actor actor = Actor.me.findById(actorId);
+        String actorName = actor.get("actorName");
+        new User().set("id",Long.parseLong(userId)).set("actorName",actorName).update();
+
+        List<UserActor> userActorList = UserActor.me.find("select * from userActor where userId="+userId);
+        if (userActorList.size()==0){
+            new UserActor().set("actorId",actorId).set("userId",userId).save();
+        }else{
+            for (UserActor userActor : userActorList){
+                UserActor.me.deleteById(userActor.get("id"));
+            }
+            new UserActor().set("actorId",actorId).set("userId",userId).save();
+        }
+
+
+
+
+        String currentPage1 = getPara("currentPage1");
+        String  pageSize1 = getPara("pageCount1");
+        String  userName1 = getPara("userName1");
+        String  trueName1 = getPara("trueName1");
+        String  actorName1 = getPara("actorName1");
+
+        if (currentPage1 == null) currentPage1 = "1";
+        if (pageSize1 == null) pageSize1 = "10";
+        Page<User> userPage = User.me.paginate(currentPage1, pageSize1, userName1, trueName1, actorName1, user);
+        setAttr("userList",userPage.getList());
+        setAttr("totalCount",userPage.getTotalRow());
+        setAttr("totalPage",userPage.getTotalPage());
+        setAttr("pageSize",userPage.getPageSize());
+        setAttr("currentPage",userPage.getPageNumber());
+        setAttr("userName",userName1);
+        setAttr("trueName",trueName1);
+        setAttr("actorName",actorName1);
+
+        List<User> users = User.me.find("select * from user where zhId="+user.get("zhId")+" and status='在职'");
         List<Actor> actors = Actor.me.find("select * from actor where zhId="+user.get("zhId"));
         setAttr("users",users);
         setAttr("actors",actors);
@@ -217,127 +376,6 @@ public class UserController extends Controller {
         String  password = getPara("password");
         new User().set("id", id).set("password", password).update();
         setSessionAttr("zhnw_loginUser",User.me.findById(id));
-
-
-        String currentPage1 = getPara("currentPage1");
-        String  pageSize1 = getPara("pageCount1");
-        String  userName1 = getPara("userName1");
-        String  trueName1 = getPara("trueName1");
-        String  actorName1 = getPara("actorName1");
-
-        if (currentPage1 == null) currentPage1 = "1";
-        if (pageSize1 == null) pageSize1 = "10";
-        Page<User> userPage = User.me.paginate(currentPage1, pageSize1, userName1, trueName1, actorName1, user);
-        setAttr("userList",userPage.getList());
-        setAttr("totalCount",userPage.getTotalRow());
-        setAttr("totalPage",userPage.getTotalPage());
-        setAttr("pageSize",userPage.getPageSize());
-        setAttr("currentPage",userPage.getPageNumber());
-        setAttr("userName",userName1);
-        setAttr("trueName",trueName1);
-        setAttr("actorName",actorName1);
-
-        List<User> users = User.me.find("select * from user where zhId="+user.get("zhId"));
-        List<Actor> actors = Actor.me.find("select * from actor where zhId="+user.get("zhId"));
-        setAttr("users",users);
-        setAttr("actors",actors);
-
-        renderJsp("/WEB-INF/content/purview/user/list.jsp");
-        //redirect("/user");
-    }
-
-    /**
-     * 给用户分配角色
-     * */
-    public void userActor(){
-        User user = getSessionAttr("zhnw_loginUser");
-
-        String  userId = getPara("userId");
-        String  actorId = getPara("actorId");
-        Actor actor = Actor.me.findById(actorId);
-        String actorName = actor.get("actorName");
-        new User().set("id",Long.parseLong(userId)).set("actorName",actorName).update();
-
-        List<UserActor> userActorList = UserActor.me.find("select * from userActor where userId="+userId);
-        if (userActorList.size()==0){
-            new UserActor().set("actorId",actorId).set("userId",userId).save();
-        }else{
-            UserActor userActor = userActorList.get(0);
-            userActor.set("actorId", actorId).update();
-        }
-
-
-
-
-        String currentPage1 = getPara("currentPage1");
-        String  pageSize1 = getPara("pageCount1");
-        String  userName1 = getPara("userName1");
-        String  trueName1 = getPara("trueName1");
-        String  actorName1 = getPara("actorName1");
-
-        if (currentPage1 == null) currentPage1 = "1";
-        if (pageSize1 == null) pageSize1 = "10";
-        Page<User> userPage = User.me.paginate(currentPage1, pageSize1, userName1, trueName1, actorName1, user);
-        setAttr("userList",userPage.getList());
-        setAttr("totalCount",userPage.getTotalRow());
-        setAttr("totalPage",userPage.getTotalPage());
-        setAttr("pageSize",userPage.getPageSize());
-        setAttr("currentPage",userPage.getPageNumber());
-        setAttr("userName",userName1);
-        setAttr("trueName",trueName1);
-        setAttr("actorName",actorName1);
-
-        List<User> users = User.me.find("select * from user where zhId="+user.get("zhId"));
-        List<Actor> actors = Actor.me.find("select * from actor where zhId="+user.get("zhId"));
-        setAttr("users",users);
-        setAttr("actors",actors);
-
-        renderJsp("/WEB-INF/content/purview/user/list.jsp");
-    }
-
-    /**
-     *
-     * 初始化用户密码为：123456
-     * */
-    public void initialize(){
-        String  userId = getPara("userId");
-        new User().set("id",Long.parseLong(userId)).set("password","123456").update();
-        renderJson("0");
-    }
-
-
-    /**
-     *
-     * ajax获取列表
-     * */
-    public void userJson(){
-        User user = getSessionAttr("zhnw_loginUser");
-        List<User> userList = User.me.find("select * from user where zhId="+user.get("zhId")+" order by id desc");
-        renderJson(userList);
-    }
-
-    /**
-     * 添加用户：验证用户名是否重复(不同机构的用户名也不能重复)
-     * */
-    public void userNameSingleAdd(){
-        String name = getPara("name");
-        List<User> users = User.me.find("select * from user where userName='" + name + "' ");
-        if (users.size()!=0){
-            renderJson(true);
-        }else {
-            renderJson(false);
-        }
-    }
-
-    /**
-     * 更新用户：验证用户名是否重复(不同机构的用户名也不能重复)
-     * */
-    public void quchongfuupdate(){
-        String name = getPara("name");
-        String id = getPara("id");
-        List<User> users = User.me.find("select * from user where id!=" + id + " and userName='" + name + "' ");
-        if (users.size()>0)
-            renderJson(true);
-        renderJson(false);
+        redirect("/welcome");
     }
 }

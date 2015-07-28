@@ -13,6 +13,10 @@ import java.util.List;
 public class User extends Model<User> {
     public static final User me = new User();
 
+    /**
+     * 分页查询用户
+     *
+     * */
     public Page<User> paginate(String currentPage, String pageSize, String userName, String trueName, String actorName, User user) {
         String sql = " from user where zhId="+user.get("zhId")+" ";
         if (userName!=null&&!userName.trim().equalsIgnoreCase("")){
@@ -30,14 +34,4 @@ public class User extends Model<User> {
         return paginate(Integer.parseInt(currentPage), Integer.parseInt(pageSize), " select * ", sql);
     }
 
-
-
-
-
-    public boolean quchongfuupdate(String id, String name) {
-        List<User> users = find("select * from user where id!="+id+" and userName='"+name+"'");
-        if (users.size()>0)
-            return true;
-        return false;
-    }
 }
