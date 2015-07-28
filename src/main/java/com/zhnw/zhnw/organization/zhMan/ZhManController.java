@@ -5,6 +5,8 @@ import com.jfinal.plugin.activerecord.Page;
 
 /**
  * Created by guoyibin on 15/7/3.
+ *
+ * 机构人员管理
  */
 public class ZhManController extends Controller {
     /**

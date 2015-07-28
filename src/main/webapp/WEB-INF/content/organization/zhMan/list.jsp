@@ -34,6 +34,8 @@
             window.top.location = "${pageContext.request.contextPath}";
         }
     </script>
+
+    <%--  分页 begin  --%>
     <script type="text/javascript">
         function shouye(){
             $("#currentPageHidden").val("1");
@@ -92,6 +94,68 @@
             $("#pageAction").submit();
         }
     </script>
+    <%--  分页 end  --%>
+
+    <%-- add begin --%>
+    <script>
+        function beforeSave(){
+            $("#input1").val("");
+            $("#input2").val("");
+            $("#input8").val("");
+            $("#input9").val("");
+            $("#input3").val("");
+        }
+
+        function saveBtn(){
+            var name = $.trim($("#input1").val());
+            var contactMan = $.trim($("#input2").val());
+            var tel = $.trim($("#input8").val());
+            var phone = $.trim($("#input9").val());
+            var email = $.trim($("#input3").val());
+
+            if(name==null||name==''){
+                $("#addnamespan").html("姓名不能为空！");
+                $("#addnamespan").css("display","block");
+            }else if(contactMan==null||contactMan==''){
+                $("#addcontactManspan").html("身份不能为空！");
+                $("#addcontactManspan").css("display","block");
+            }else if(tel==null||tel==''){
+                $("#addtelspan").html("座机不能为空！");
+                $("#addtelspan").css("display","block");
+            }else if(phone==null||phone==''){
+                $("#addphonespan").html("手机不能为空！");
+                $("#addphonespan").css("display","block");
+            }else if(email==null||email==''){
+                $("#addemailspan").html("邮箱不能为空！");
+                $("#addemailspan").css("display","block");
+            }else{
+                $("#addIdCurrentPage").val($("#currentPageHidden").val());
+                $("#addIdpageSizes").val($("#pageSizeHidden").val());
+                $("#addForm").submit();
+            }
+        }
+
+        function addnamefocus(){
+            $("#addnamespan").css("display","none");
+        }
+
+        function addcontactManfocus(){
+            $("#addcontactManspan").css("display","none");
+        }
+
+        function addtelfocus(){
+            $("#addtelspan").css("display","none");
+        }
+
+        function addphonefocus(){
+            $("#addphonespan").css("display","none");
+        }
+
+        function addemailfocus(){
+            $("#addemailspan").css("display","none");
+        }
+    </script>
+    <%-- add end --%>
 
     <script>
 
@@ -125,10 +189,7 @@
 
         }
 
-        function addZhMan(){
-            $("#addIdCurrentPage").val($("#currentPageHidden").val());
-            $("#addIdpageSizes").val($("#pageSizeHidden").val());
-        }
+
 
 
     </script>
@@ -143,7 +204,7 @@
                 <form id="pageAction" action="${pageContext.request.contextPath}/zhMan" method="post">
                     <div>
                         <input type="hidden" name="zhId" value="${zhId}" />
-                        <button type="button" onclick="addZhMan()" class="btn btn-success" data-target="#addModel" data-toggle="modal">添加机构人员</button>
+                        <button type="button" onclick="beforeSave()" class="btn btn-success" data-target="#addModel" data-toggle="modal">添加机构人员</button>
                     </div>
                     <table class="table">
                         <thead>
@@ -153,6 +214,7 @@
                             <th>座机</th>
                             <th>手机</th>
                             <th>邮箱</th>
+                            <th>备注</th>
                             <th>操作</th>
                         </tr>
                         </thead>
@@ -164,6 +226,7 @@
                                 <td>${zhMan.tel}</td>
                                 <td>${zhMan.phone}</td>
                                 <td>${zhMan.email}</td>
+                                <td>${zhMan.remark}</td>
                                 <td>
                                     <button type="button" class="btn btn-xs btn-primary" data-toggle="modal" data-target="#updateModel" onclick="xiugai('${zhMan.id}','${zhMan.name}','${zhMan.contactMan}','${zhMan.tel}','${zhMan.phone}','${zhMan.email}')">修改</button>
                                     <button type="button" class="btn btn-xs btn-danger" data-toggle="modal" onclick="delid(${zhMan.id})" data-target="#delModel">删除</button>
@@ -238,30 +301,30 @@
                                             <tr>
                                                 <td><label for="input1" class="control-label">姓名</label></td>
                                                 <td style=""><div class="col-sm-10">
-                                                    <input type="text" class="form-control" id="input1" name="name" placeholder="姓名" required>
+                                                    <input type="text" class="form-control" id="input1" onfocus="addnamefocus()" name="name" placeholder="姓名" required><span id="addnamespan" style="color: red;display: none;"></span>
                                                 </div></td>
                                                 <td><label for="input2" class="control-label">身份</label></td>
                                                 <td><div class="col-sm-10">
-                                                    <input type="text" class="form-control" id="input2" name="contactMan" placeholder="身份" required>
+                                                    <input type="text" class="form-control" id="input2" onfocus="addcontactManfocus()" name="contactMan" placeholder="身份" required><span id="addcontactManspan" style="color: red;display: none;"></span>
                                                     </select>
                                                 </div></td>
                                             </tr>
                                             <tr>
                                                 <td><label for="input8" class=" control-label">座机</label></td>
                                                 <td><div class="col-sm-10">
-                                                    <input type="text" class="form-control" id="input8" name="tel" placeholder="座机" required>
+                                                    <input type="text" class="form-control" id="input8" name="tel" onfocus="addtelfocus()" placeholder="座机" required><span id="addtelspan" style="color: red;display: none;"></span>
                                                 </div></td>
                                                 <td><label for="input9" class="control-label">手机</label></td>
                                                 <td><div class="col-sm-10">
-                                                    <input type="text" class="form-control" id="input9" name="phone" placeholder="手机" required>
+                                                    <input type="text" class="form-control" id="input9" name="phone" onfocus="addphonefocus()" placeholder="手机" required><span id="addphonespan" style="color: red;display: none;"></span>
                                                 </div></td>
                                             </tr>
                                             <tr>
                                                 <td><label for="input3" class=" control-label">邮箱</label></td>
                                                 <td><div class="col-sm-10">
-                                                    <input type="email" class="form-control" id="input3" name="email" placeholder="邮箱" required>
+                                                    <input type="email" class="form-control" id="input3" name="email" onfocus="addemailfocus()" placeholder="邮箱" required><span id="addemailspan" style="color: red;display: none;"></span>
                                                 </div></td>
-                                                <td colspan="2"><input type="submit"  class="btn btn-primary" style="height: 50px;width: 85%;" value="保存" /></td>
+                                                <td colspan="2"><input type="button" onclick="saveBtn()" class="btn btn-primary" style="height: 50px;width: 85%;" value="保存" /></td>
                                             </tr>
 
                                         </table>
@@ -299,7 +362,7 @@
                                             <tr>
                                                 <td><label for="input1" class="control-label">姓名</label></td>
                                                 <td style=""><div class="col-sm-10">
-                                                    <input type="text" class="form-control" id="input11" name="name" placeholder="姓名" required>
+                                                    <input type="text" class="form-control" id="input11" name="name" placeholder="姓名" required><span id="updatenamespan" style="color: red;display: none;"></span>
                                                 </div></td>
                                                 <td><label for="input2" class="control-label">身份</label></td>
                                                 <td><div class="col-sm-10">
