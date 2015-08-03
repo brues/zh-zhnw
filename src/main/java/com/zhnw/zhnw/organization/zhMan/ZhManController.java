@@ -39,39 +39,6 @@ public class ZhManController extends Controller {
     }
 
     /**
-     * 删除记录
-     * */
-    public void delete(){
-        String id = getPara("id");
-        ZhMan.me.deleteById(id);
-
-
-
-        String  zhId = getPara("zhId");
-
-        String currentPage = getPara("currentPage");
-        String  pageSize = getPara("pageSize");
-
-        if (currentPage == null) currentPage = "1";
-        if (pageSize == null) pageSize = "10";
-
-        Page<ZhMan> zhManPage = ZhMan.me.paginate(currentPage, pageSize, zhId);
-
-
-
-        setAttr("zhManList",zhManPage.getList());
-
-        setAttr("totalCount",zhManPage.getTotalRow());
-        setAttr("totalPage",zhManPage.getTotalPage());
-        setAttr("pageSize",zhManPage.getPageSize());
-        setAttr("currentPage",zhManPage.getPageNumber());
-
-        setAttr("zhId",zhId);
-
-        renderJsp("/WEB-INF/content/organization/zhMan/list.jsp");
-    }
-
-    /**
      * 添加工作记录
      * */
     public void add(){
@@ -91,11 +58,6 @@ public class ZhManController extends Controller {
                 .set("phone", phone)
                 .set("email", email)
                 .save();
-
-
-
-
-
 
         String currentPage = getPara("currentPage");
         String  pageSize = getPara("pageSize");
@@ -164,4 +126,41 @@ public class ZhManController extends Controller {
 
         renderJsp("/WEB-INF/content/organization/zhMan/list.jsp");
     }
+
+    /**
+     * 删除记录
+     * */
+    public void delete(){
+        String id = getPara("id");
+        ZhMan.me.deleteById(id);
+
+
+
+        String  zhId = getPara("zhId");
+
+        String currentPage = getPara("currentPage");
+        String  pageSize = getPara("pageSize");
+
+        if (currentPage == null) currentPage = "1";
+        if (pageSize == null) pageSize = "10";
+
+        Page<ZhMan> zhManPage = ZhMan.me.paginate(currentPage, pageSize, zhId);
+
+
+
+        setAttr("zhManList",zhManPage.getList());
+
+        setAttr("totalCount",zhManPage.getTotalRow());
+        setAttr("totalPage",zhManPage.getTotalPage());
+        setAttr("pageSize",zhManPage.getPageSize());
+        setAttr("currentPage",zhManPage.getPageNumber());
+
+        setAttr("zhId",zhId);
+
+        renderJsp("/WEB-INF/content/organization/zhMan/list.jsp");
+    }
+
+
+
+
 }

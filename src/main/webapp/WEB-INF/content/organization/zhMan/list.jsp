@@ -157,6 +157,70 @@
     </script>
     <%-- add end --%>
 
+    <%-- update begin  --%>
+    <script>
+        function xiugai(id,name,contactMan,tel,phone,email){
+            $("#updateId").val(id);
+
+            $("#input11").val(name);
+            $("#input12").val(contactMan);
+            $("#input18").val(tel);
+            $("#input19").val(phone);
+            $("#input13").val(email);
+        }
+
+        function updateBtn(){
+            var name = $.trim($("#input11").val());
+            var contactMan = $.trim($("#input12").val());
+            var tel = $.trim($("#input18").val());
+            var phone = $.trim($("#input19").val());
+            var email = $.trim($("#input13").val());
+
+            if(name==null||name==''){
+                $("#updatenamespan").html("姓名不能为空！");
+                $("#updatenamespan").css("display","block");
+            }else if(contactMan==null||contactMan==''){
+                $("#updatecontactManspan").html("身份不能为空！");
+                $("#updatecontactManspan").css("display","block");
+            }else if(tel==null||tel==''){
+                $("#updatetelspan").html("座机不能为空！");
+                $("#updatetelspan").css("display","block");
+            }else if(phone==null||phone==''){
+                $("#updatephonespan").html("手机不能为空！");
+                $("#updatephonespan").css("display","block");
+            }else if(email==null||email==''){
+                $("#updateemailspan").html("邮箱不能为空！");
+                $("#updateemailspan").css("display","block");
+            }else{
+                $("#updateIdCurrentPage").val($("#currentPageHidden").val());
+                $("#updateIdpageSizes").val($("#pageSizeHidden").val());
+                $("#updateForm").submit();
+            }
+        }
+
+        function updatenamefocus(){
+            $("#updatenamespan").css("display","none");
+        }
+
+        function updatecontactManfocus(){
+            $("#updatecontactManspan").css("display","none");
+        }
+
+        function updatetelfocus(){
+            $("#updatetelspan").css("display","none");
+        }
+
+        function updatephonefocus(){
+            $("#updatephonespan").css("display","none");
+        }
+
+        function updateemailfocus(){
+            $("#updateemailspan").css("display","none");
+        }
+    </script>
+    <%-- update end  --%>
+
+    <%-- delete begin --%>
     <script>
 
         function delid(id){
@@ -171,30 +235,16 @@
             $("#deleteIdForm").attr("action","${pageContext.request.contextPath}/zhMan/delete");
             $("#deleteIdForm").submit();
         }
+    </script>
+    <%-- delete end --%>
 
-
-
-        function xiugai(id,name,contactMan,tel,phone,email){
-            $("#updateId").val(id);
-
-            $("#input11").val(name);
-            $("#input12").val(contactMan);
-            $("#input18").val(tel);
-            $("#input19").val(phone);
-            $("#input13").val(email);
-
-            $("#updateIdCurrentPage").val($("#currentPageHidden").val());
-            $("#updateIdpageSizes").val($("#pageSizeHidden").val());
-
+    <%-- admin begin --%>
+    <script>
+        function beforeAdmin(id,name,contactMan,tel,phone,email){
 
         }
-
-
-
-
     </script>
-
-
+    <%-- admin end --%>
 </head>
 <body>
 <div class="container" style="width: 100%;max-width:95%;height: 100%;padding-top: 30px;">
@@ -230,6 +280,7 @@
                                 <td>
                                     <button type="button" class="btn btn-xs btn-primary" data-toggle="modal" data-target="#updateModel" onclick="xiugai('${zhMan.id}','${zhMan.name}','${zhMan.contactMan}','${zhMan.tel}','${zhMan.phone}','${zhMan.email}')">修改</button>
                                     <button type="button" class="btn btn-xs btn-danger" data-toggle="modal" onclick="delid(${zhMan.id})" data-target="#delModel">删除</button>
+                                    <button type="button" class="btn btn-xs btn-success" data-toggle="modal" onclick="beforeAdmin('${zhMan.id}','${zhMan.name}','${zhMan.contactMan}','${zhMan.tel}','${zhMan.phone}','${zhMan.email}')" data-target="#adminModel">设置为管理员</button>
                                 </td>
                             </tr>
                         </c:forEach>
@@ -362,30 +413,30 @@
                                             <tr>
                                                 <td><label for="input1" class="control-label">姓名</label></td>
                                                 <td style=""><div class="col-sm-10">
-                                                    <input type="text" class="form-control" id="input11" name="name" placeholder="姓名" required><span id="updatenamespan" style="color: red;display: none;"></span>
+                                                    <input type="text" class="form-control" id="input11" name="name" placeholder="姓名" onfocus="updatenamefocus()"><span id="updatenamespan" style="color: red;display: none;"></span>
                                                 </div></td>
                                                 <td><label for="input2" class="control-label">身份</label></td>
                                                 <td><div class="col-sm-10">
-                                                    <input type="text" class="form-control" id="input12" name="contactMan" placeholder="身份" required>
+                                                    <input type="text" class="form-control" id="input12" name="contactMan" placeholder="身份" onfocus="updatecontactManfocus()"><span id="updatecontactManspan" style="color: red;display: none;"></span>
                                                     </select>
                                                 </div></td>
                                             </tr>
                                             <tr>
                                                 <td><label for="input8" class=" control-label">座机</label></td>
                                                 <td><div class="col-sm-10">
-                                                    <input type="text" class="form-control" id="input18" name="tel" placeholder="座机" required>
+                                                    <input type="text" class="form-control" id="input18" name="tel" placeholder="座机" onfocus="updatetelfocus()"><span id="updatetelspan" style="color: red;display: none;"></span>
                                                 </div></td>
                                                 <td><label for="input9" class="control-label">手机</label></td>
                                                 <td><div class="col-sm-10">
-                                                    <input type="text" class="form-control" id="input19" name="phone" placeholder="手机" required>
+                                                    <input type="text" class="form-control" id="input19" name="phone" placeholder="手机" onfocus="updatephonefocus()"><span id="updatephonespan" style="color: red;display: none;"></span>
                                                 </div></td>
                                             </tr>
                                             <tr>
                                                 <td><label for="input3" class=" control-label">邮箱</label></td>
                                                 <td><div class="col-sm-10">
-                                                    <input type="email" class="form-control" id="input13" name="email" placeholder="邮箱" required>
+                                                    <input type="email" class="form-control" id="input13" name="email" placeholder="邮箱" onfocus="updateemailfocus()"><span id="updateemailspan" style="color: red;display: none;"></span>
                                                 </div></td>
-                                                <td colspan="2"><input type="submit"  class="btn btn-primary" style="height: 50px;width: 85%;" value="保存" /></td>
+                                                <td colspan="2"><input type="button" onclick="updateBtn()"  class="btn btn-primary" style="height: 50px;width: 85%;" value="保存" /></td>
                                             </tr>
                                         </table>
                                     </fieldset>
@@ -398,6 +449,65 @@
                     </div>
                 </div>
                 <%-- update end --%>
+
+                <%-- 设置管理员 begin --%>
+                <div class="modal fade bs-example-modal-lg" id="adminModel" tabindex="-1" role="dialog" aria-labelledby="adminModalLabel" aria-hidden="true" style="display: none;">
+                    <div class="modal-dialog modal-lg" style="width: 90%;">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                <h4 class="modal-title" id="adminModalLabel">修改工作记录</h4>
+                            </div>
+                            <div class="modal-body">
+                                <form method="post" id="adminForm" action="${pageContext.request.contextPath}/zhMan/update">
+                                    <input type="hidden" id="adminId"  name="id" />
+                                    <input type="hidden" name="zhId" value="${zhId}" />
+                                    <fieldset>
+
+
+                                        <input type="hidden" id="adminIdCurrentPage" name="currentPage" >
+                                        <input type="hidden" id="adminIdpageSizes" name="pageSize" >
+
+                                        <table style="width: 100%;height:350px;">
+                                            <tr>
+                                                <td><label for="input1" class="control-label">姓名</label></td>
+                                                <td style=""><div class="col-sm-10">
+                                                    <input type="text" class="form-control" id="input101" name="name" placeholder="姓名" >
+                                                </div></td>
+                                                <td><label for="input2" class="control-label">身份</label></td>
+                                                <td><div class="col-sm-10">
+                                                    <input type="text" class="form-control" id="input102" name="contactMan" placeholder="身份" >
+                                                    </select>
+                                                </div></td>
+                                            </tr>
+                                            <tr>
+                                                <td><label for="input8" class=" control-label">座机</label></td>
+                                                <td><div class="col-sm-10">
+                                                    <input type="text" class="form-control" id="input108" name="tel" placeholder="座机" >
+                                                </div></td>
+                                                <td><label for="input9" class="control-label">手机</label></td>
+                                                <td><div class="col-sm-10">
+                                                    <input type="text" class="form-control" id="input109" name="phone" placeholder="手机" >
+                                                </div></td>
+                                            </tr>
+                                            <tr>
+                                                <td><label for="input3" class=" control-label">邮箱</label></td>
+                                                <td><div class="col-sm-10">
+                                                    <input type="email" class="form-control" id="input103" name="email" placeholder="邮箱" >
+                                                </div></td>
+                                                <td colspan="2"><input type="button" onclick="updateBtn()"  class="btn btn-primary" style="height: 50px;width: 85%;" value="保存" /></td>
+                                            </tr>
+                                        </table>
+                                    </fieldset>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <%-- 设置管理员 end --%>
             </div>
         </div>
     </div>
