@@ -19,6 +19,7 @@ public class ProjectProcessController extends Controller {
      * 项目
      * */
     public void project(){
+        User user = getSessionAttr("zhnw_loginUser");
 
         String currentPage = getPara("currentPage");
         String  pageSize = getPara("pageSize");
@@ -29,7 +30,7 @@ public class ProjectProcessController extends Controller {
         if (currentPage == null) currentPage = "1";
         if (pageSize == null) pageSize = "10";
 
-        Page<Project> projectPage  = Project.me.paginate(currentPage, pageSize, selectClientSouName, selectBTypeSouName, selectContractSouName);
+        Page<Project> projectPage  = Project.me.paginate(currentPage, pageSize, selectClientSouName, selectBTypeSouName, selectContractSouName, user);
 
         setAttr("projectList",projectPage.getList());
         setAttr("totalCount",projectPage.getTotalRow());

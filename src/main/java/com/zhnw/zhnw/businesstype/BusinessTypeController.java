@@ -2,6 +2,7 @@ package com.zhnw.zhnw.businesstype;
 
 import com.jfinal.core.Controller;
 import com.jfinal.plugin.activerecord.Page;
+import com.zhnw.zhnw.project.project.Project;
 import com.zhnw.zhnw.purview.user.User;
 
 import java.util.List;
@@ -115,6 +116,12 @@ public class BusinessTypeController extends Controller {
                 .set("name", name)
                 .set("enName", enName)
                 .update();
+
+        /* 更新合同信息里的业务类型信息 */
+        List<Project> projectList = Project.me.find("select * from project where businessTypeId=" + id);
+        for (Project project : projectList) {
+            project.set("businessType",name).update();
+        }
 
 
         User user = getSessionAttr("zhnw_loginUser");

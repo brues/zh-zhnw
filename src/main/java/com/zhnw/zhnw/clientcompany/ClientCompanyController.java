@@ -2,6 +2,7 @@ package com.zhnw.zhnw.clientcompany;
 
 import com.jfinal.core.Controller;
 import com.jfinal.plugin.activerecord.Page;
+import com.zhnw.zhnw.project.project.Project;
 import com.zhnw.zhnw.purview.user.User;
 
 import java.util.List;
@@ -117,6 +118,13 @@ public class ClientCompanyController extends Controller {
                 .set("address", address)
                 .update();
 
+        /* 更新合同信息里的客户信息 */
+        List<Project> projectList = Project.me.find("select * from project where clientId=" + id);
+        for (Project project : projectList) {
+            project.set("clientName",comName).update();
+        }
+
+
         User user = getSessionAttr("zhnw_loginUser");
 
         String currentPage = getPara("currentPage");
@@ -152,7 +160,7 @@ public class ClientCompanyController extends Controller {
 
     /**
      *
-     * ajax获取客户列表
+     * ajax获取客户列表：根据公司名称
      * */
     public void nameJson(){
         User user = getSessionAttr("zhnw_loginUser");
@@ -163,7 +171,7 @@ public class ClientCompanyController extends Controller {
 
     /**
      *
-     * ajax获取客户列表
+     * ajax获取客户列表：根据公司名称和id
      * */
     public void updateNameJson(){
         User user = getSessionAttr("zhnw_loginUser");

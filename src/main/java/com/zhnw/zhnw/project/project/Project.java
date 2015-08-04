@@ -15,8 +15,12 @@ import java.text.ParseException;
 public class Project extends Model<Project> {
     public static final Project me = new Project();
 
-    public Page<Project> paginate(String currentPage, String pageSize, String selectClientSouName, String selectBTypeSouName, String selectContractSouName) {
-        String sql = " from project where 1=1 ";
+    /**
+     * 分页查询方法
+     *
+     * */
+    public Page<Project> paginate(String currentPage, String pageSize, String selectClientSouName, String selectBTypeSouName, String selectContractSouName, User user) {
+        String sql = " from project where zhId="+user.get("zhId")+" ";
         if (selectClientSouName!=null&&selectClientSouName.trim().length()!=0&&!selectClientSouName.trim().equals("0")){
             sql+=" and clientId="+selectClientSouName+"";
         }

@@ -4,7 +4,6 @@
     String path = request.getContextPath();
     String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + path + "/";
 %>
-<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <title>中翰内网</title>
@@ -29,6 +28,7 @@
         }
     </script>
 
+    <%-- 分页 js begin --%>
     <script type="text/javascript">
         function shouye(){
             $("#currentPageHidden").val("1");
@@ -87,77 +87,10 @@
             $("#pageAction").submit();
         }
     </script>
+    <%-- 分页 js end --%>
 
-    <script>
-        function delid(id){
-            $("#deleteIdInput").val(id);
-        }
-        function deleteById(){
-            $("#deleteIdFormId").val($("#deleteIdInput").val());
-            $("#deleteIdForm").attr("action","${pageContext.request.contextPath}/project/delete");
-            $("#deleteIdForm").submit();
-        }
 
-        function updateNum(id,num){
-            $("#updateNumId").val(id);
-            $("#input1101").val(num);
-        }
-
-        function xiugai(id,clientId,clientName,contactId,contacts,beginDate,endDate,businessTypeId,businessType,contractMoney,isPigeonhole){
-            $("#updateId").val(id);
-
-            $("#input108").val(beginDate);
-            $("#input109").val(endDate);
-
-            $("#input106").val(contractMoney);
-
-            if(isPigeonhole=="否"){
-                $("#input107").html("");
-                $("#input107").append("<option value='否'>否</option>");
-                $("#input107").append("<option value='是'>是</option>");
-            }else{
-                $("#input107").html("");
-                $("#input107").append("<option value='否'>否</option>");
-                $("#input107").append("<option selected='selected' value='是'>是</option>");
-            }
-
-            $.ajax({
-                url:"${pageContext.request.contextPath}/client/clientJson",
-                dataType:"json",
-                success:function(data){
-                    for(i=0;i<data.length;i++){
-                        if(data[i].id==clientId){
-                            $("#input101").append("<option selected='selected' value='"+data[i].id+"'>"+data[i].comName+"</option>");
-                        }else{
-                            $("#input101").append("<option value='"+data[i].id+"'>"+data[i].comName+"</option>");
-                        }
-                    }
-                    $('#input101').selectpicker({
-                        'selectedText': 'cat'
-                    });
-                }
-            });
-
-            $.ajax({
-                url:"${pageContext.request.contextPath}/btype/btypeJson",
-                dataType:"json",
-                success:function(data){
-                    for(i=0;i<data.length;i++){
-                        if(data[i].id==businessTypeId){
-                            $("#input103").append("<option selected='selected' value='"+data[i].id+"'>"+data[i].name+"</option>");
-                        }else{
-                            $("#input103").append("<option value='"+data[i].id+"'>"+data[i].name+"</option>");
-                        }
-                    }
-                    $('#input103').selectpicker({
-                        'selectedText': 'cat'
-                    });
-                }
-            });
-        }
-    </script>
-
-    <%-- add project script begin--%>
+    <%-- 搜索查询 Ajax begin --%>
     <script>
         $.ajax({
             url:"${pageContext.request.contextPath}/client/clientJson",
@@ -210,6 +143,18 @@
                 });
             }
         });
+    </script>
+    <%-- 搜索查询 Ajax end --%>
+
+    <%--  add begin  --%>
+    <script>
+        function beforeAdd(){
+            $("#addclientinput").val($("#selectClientSou").val());
+            $("#addbtypeinput").val($("#selectBTypeSou").val());
+            $("#addcontractinput").val($("#selectContractSou").val());
+            $("#addcurrentpageinput").val($("#currentPageHidden").val());
+            $("#addpagesizeinput").val($("#pageSizeHidden").val());
+        }
 
         $.ajax({
             url:"${pageContext.request.contextPath}/client/clientJson",
@@ -235,8 +180,102 @@
                 });
             }
         });
+
+
     </script>
-    <%-- add project script end--%>
+    <%--  add end  --%>
+
+    <%-- update begin --%>
+    <script>
+        function xiugai(id,clientId,clientName,contactId,contacts,beginDate,endDate,businessTypeId,businessType,contractMoney,isPigeonhole){
+            $("#updateId").val(id);
+
+            $("#updateclientinput").val($("#selectClientSou").val());
+            $("#updatebtypeinput").val($("#selectBTypeSou").val());
+            $("#updatecontractinput").val($("#selectContractSou").val());
+            $("#updatecurrentpageinput").val($("#currentPageHidden").val());
+            $("#updatepagesizeinput").val($("#pageSizeHidden").val());
+
+
+
+            $("#input108").val(beginDate);
+            $("#input109").val(endDate);
+
+            $("#input106").val(contractMoney);
+
+            if(isPigeonhole=="否"){
+                $("#input107").html("");
+                $("#input107").append("<option value='否'>否</option>");
+                $("#input107").append("<option value='是'>是</option>");
+            }else{
+                $("#input107").html("");
+                $("#input107").append("<option value='否'>否</option>");
+                $("#input107").append("<option selected='selected' value='是'>是</option>");
+            }
+
+            $.ajax({
+                url:"${pageContext.request.contextPath}/client/clientJson",
+                dataType:"json",
+                success:function(data){
+                    for(i=0;i<data.length;i++){
+                        if(data[i].id==clientId){
+                            $("#input101").append("<option selected='selected' value='"+data[i].id+"'>"+data[i].comName+"</option>");
+                        }else{
+                            $("#input101").append("<option value='"+data[i].id+"'>"+data[i].comName+"</option>");
+                        }
+                    }
+                    $('#input101').selectpicker({
+                        'selectedText': 'cat'
+                    });
+                }
+            });
+
+            $.ajax({
+                url:"${pageContext.request.contextPath}/btype/btypeJson",
+                dataType:"json",
+                success:function(data){
+                    for(i=0;i<data.length;i++){
+                        if(data[i].id==businessTypeId){
+                            $("#input103").append("<option selected='selected' value='"+data[i].id+"'>"+data[i].name+"</option>");
+                        }else{
+                            $("#input103").append("<option value='"+data[i].id+"'>"+data[i].name+"</option>");
+                        }
+                    }
+                    $('#input103').selectpicker({
+                        'selectedText': 'cat'
+                    });
+                }
+            });
+        }
+    </script>
+    <%-- update begin --%>
+
+    <%-- update num begin --%>
+    <script>
+
+    </script>
+    <%-- update num end --%>
+
+
+    <script>
+        function delid(id){
+            $("#deleteIdInput").val(id);
+        }
+        function deleteById(){
+            $("#deleteIdFormId").val($("#deleteIdInput").val());
+            $("#deleteIdForm").attr("action","${pageContext.request.contextPath}/project/delete");
+            $("#deleteIdForm").submit();
+        }
+
+        function updateNum(id,num){
+            $("#updateNumId").val(id);
+            $("#input1101").val(num);
+        }
+
+
+    </script>
+
+
 </head>
 <body>
 <div class="container" style="width: 100%;max-width:95%;height: 100%;padding-top: 30px;">
@@ -245,7 +284,7 @@
             <div class="span12">
                 <form id="pageAction" action="${pageContext.request.contextPath}/project" method="post" style="font-size: 10pt;">
                     <div>
-                        <button type="button" class="btn btn-success" data-target="#addModel" data-toggle="modal" style="margin-bottom: 10px;">添加合同</button>
+                        <button type="button" onclick="beforeAdd()" class="btn btn-success" data-target="#addModel" data-toggle="modal" style="margin-bottom: 10px;">添加合同</button>
                         <select id="selectClientSou" name="selectClientSouName" class="selectpicker bla bla bli"  data-live-search="true">
                         </select>
                         <input type="hidden" id="inputClientSou" value="${selectClientSouName}">
@@ -347,6 +386,11 @@
                                     <fieldset>
                                         <input type="hidden"  name="id" value="${id}" />
                                         <input type="hidden"  name="projectId" value="${projectId}" />
+                                        <input type="hidden" id="addclientinput"  name="selectClientSouName" />
+                                        <input type="hidden" id="addbtypeinput"  name="selectBTypeSouName"  />
+                                        <input type="hidden" id="addcontractinput"  name="selectContractSouName" />
+                                        <input type="hidden" id="addcurrentpageinput"  name="currentPage" />
+                                        <input type="hidden" id="addpagesizeinput"  name="pageSize" />
                                         <table style="width: 100%;height:350px;">
                                             <tr>
                                                 <td><label for="input1" class="control-label">客户名称</label></td>
@@ -414,6 +458,13 @@
                             <div class="modal-body">
                                 <form method="post" id="updateForm" action="${pageContext.request.contextPath}/project/update">
                                     <input type="hidden" id="updateId"  name="id" />
+
+                                    <input type="hidden" id="updateclientinput"  name="selectClientSouName" />
+                                    <input type="hidden" id="updatebtypeinput"  name="selectBTypeSouName"  />
+                                    <input type="hidden" id="updatecontractinput"  name="selectContractSouName" />
+                                    <input type="hidden" id="updatecurrentpageinput"  name="currentPage" />
+                                    <input type="hidden" id="updatepagesizeinput"  name="pageSize" />
+
                                     <fieldset>
                                         <table style="width: 100%;height:350px;">
                                             <tr>

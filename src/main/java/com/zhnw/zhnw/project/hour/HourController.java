@@ -4,6 +4,7 @@ import com.jfinal.core.Controller;
 import com.jfinal.plugin.activerecord.Page;
 import com.zhnw.zhnw.hour.Hour;
 import com.zhnw.zhnw.project.project.Project;
+import com.zhnw.zhnw.purview.user.User;
 
 /**
  * Created by guoyibin on 15/5/4.
@@ -14,6 +15,7 @@ public class HourController extends Controller {
      * 管理主页
      * */
     public void project(){
+        User user = getSessionAttr("zhnw_loginUser");
 
         String currentPage = getPara("currentPage");
         String  pageSize = getPara("pageSize");
@@ -24,7 +26,7 @@ public class HourController extends Controller {
         if (currentPage == null) currentPage = "1";
         if (pageSize == null) pageSize = "10";
 
-        Page<Project> projectPage  = Project.me.paginate(currentPage, pageSize, selectClientSouName, selectBTypeSouName, selectContractSouName);
+        Page<Project> projectPage  = Project.me.paginate(currentPage, pageSize, selectClientSouName, selectBTypeSouName, selectContractSouName, user);
 
         setAttr("projectList",projectPage.getList());
         setAttr("totalCount",projectPage.getTotalRow());

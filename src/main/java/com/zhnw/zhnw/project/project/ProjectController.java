@@ -22,6 +22,7 @@ public class ProjectController extends Controller {
      * 管理主页
      * */
     public void index(){
+        User user = getSessionAttr("zhnw_loginUser");
 
         String currentPage = getPara("currentPage");
         String  pageSize = getPara("pageSize");
@@ -32,7 +33,7 @@ public class ProjectController extends Controller {
         if (currentPage == null||currentPage.trim().length()==0) currentPage = "1";
         if (pageSize == null||pageSize.trim().length()==0) pageSize = "10";
 
-        Page<Project> projectPage  = Project.me.paginate(currentPage, pageSize, selectClientSouName, selectBTypeSouName, selectContractSouName);
+        Page<Project> projectPage  = Project.me.paginate(currentPage, pageSize, selectClientSouName, selectBTypeSouName, selectContractSouName, user);
 
         setAttr("projectList",projectPage.getList());
         setAttr("totalCount",projectPage.getTotalRow());
@@ -45,22 +46,6 @@ public class ProjectController extends Controller {
         setAttr("selectContractSouName",selectContractSouName);
 
         renderJsp("/WEB-INF/content/project/project/project.jsp");
-    }
-
-    /**
-     * 删除
-     * */
-    public void delete(){
-        String currentPage = getPara("currentPage");
-        String  pageSize = getPara("pageSize");
-
-        if (currentPage == null) currentPage = "1";
-        if (pageSize == null) pageSize = "10";
-        String id = getPara("id");
-        Project.me.deleteById(id);
-        setAttr("currentPage",currentPage);
-        setAttr("pageSize",pageSize);
-        redirect("/project");
     }
 
     /**
@@ -98,7 +83,8 @@ public class ProjectController extends Controller {
                 .set("isPigeonhole", isPigeonhole)//是否归档
                 .set("clientId", clientId)//客户Id
                 .set("contactId", contactsId)//项目负责人Id
-                .set("businessTypeId", businessTypeId);//业务类型Id
+                .set("businessTypeId", businessTypeId)//业务类型Id
+                .set("zhId", user.get("zhId"));//业务类型Id
         if (beginDate!=null&&!beginDate.equals("")){
             project.set("beginDate", dateUtil.stringToDate("yyyy-MM-dd", beginDate));//开始日期
         }
@@ -107,8 +93,44 @@ public class ProjectController extends Controller {
         }
         project.save();
 
+
+
+
+        String currentPage = getPara("currentPage");
+        String  pageSize = getPara("pageSize");
+        String  selectClientSouName = getPara("selectClientSouName");
+        String  selectBTypeSouName = getPara("selectBTypeSouName");
+        String  selectContractSouName = getPara("selectContractSouName");
+
+        if (currentPage == null||currentPage.trim().length()==0) currentPage = "1";
+        if (pageSize == null||pageSize.trim().length()==0) pageSize = "10";
+
+        Page<Project> projectPage  = Project.me.paginate(currentPage, pageSize, selectClientSouName, selectBTypeSouName, selectContractSouName, user);
+
+        setAttr("projectList",projectPage.getList());
+        setAttr("totalCount",projectPage.getTotalRow());
+        setAttr("totalPage",projectPage.getTotalPage());
+        setAttr("pageSize",projectPage.getPageSize());
+        setAttr("currentPage",projectPage.getPageNumber());
+
+        setAttr("selectClientSouName",selectClientSouName);
+        setAttr("selectBTypeSouName",selectBTypeSouName);
+        setAttr("selectContractSouName", selectContractSouName);
+
+        renderJsp("/WEB-INF/content/project/project/project.jsp");
+
+    }
+
+    /**
+     * 删除
+     * */
+    public void delete(){
+        String id = getPara("id");
+        Project.me.deleteById(id);
         redirect("/project");
     }
+
+
 
     /**
      * 更新
@@ -154,7 +176,32 @@ public class ProjectController extends Controller {
         project.update();
 
 
-        redirect("/project");
+
+
+        User user = getSessionAttr("zhnw_loginUser");
+
+        String currentPage = getPara("currentPage");
+        String  pageSize = getPara("pageSize");
+        String  selectClientSouName = getPara("selectClientSouName");
+        String  selectBTypeSouName = getPara("selectBTypeSouName");
+        String  selectContractSouName = getPara("selectContractSouName");
+
+        if (currentPage == null||currentPage.trim().length()==0) currentPage = "1";
+        if (pageSize == null||pageSize.trim().length()==0) pageSize = "10";
+
+        Page<Project> projectPage  = Project.me.paginate(currentPage, pageSize, selectClientSouName, selectBTypeSouName, selectContractSouName, user);
+
+        setAttr("projectList",projectPage.getList());
+        setAttr("totalCount",projectPage.getTotalRow());
+        setAttr("totalPage",projectPage.getTotalPage());
+        setAttr("pageSize",projectPage.getPageSize());
+        setAttr("currentPage",projectPage.getPageNumber());
+
+        setAttr("selectClientSouName",selectClientSouName);
+        setAttr("selectBTypeSouName",selectBTypeSouName);
+        setAttr("selectContractSouName",selectContractSouName);
+
+        renderJsp("/WEB-INF/content/project/project/project.jsp");
     }
 
     /**
