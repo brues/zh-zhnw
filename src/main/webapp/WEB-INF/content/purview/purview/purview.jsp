@@ -323,7 +323,7 @@
     <div class="tree well">
         <ul>
             <li>
-                <span><i class="icon-folder-open"></i>  中韩内网 </span><a href="javascript:#addOneModel" ata-target="#addOneModel" data-toggle="modal"> 添加 </a>
+                <span><i class="icon-folder-open"></i>  中翰内网 </span><a href="javascript:#addOneModel" ata-target="#addOneModel" data-toggle="modal"> 添加 </a>
                 <ul>
                     <c:forEach var="purview" items="${purviewList}">
                         <li>

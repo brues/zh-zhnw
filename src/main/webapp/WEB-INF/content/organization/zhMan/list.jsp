@@ -241,7 +241,21 @@
     <%-- admin begin --%>
     <script>
         function beforeAdmin(id,name,contactMan,tel,phone,email){
+            $("#adminId").val(id);
 
+            $("#input101").val(name);
+            $("#input102").val(contactMan);
+            $("#input108").val(tel);
+            $("#input109").val(phone);
+            $("#input103").val(email);
+
+            $("#adminIdCurrentPage").val($("#currentPageHidden").val());
+            $("#adminIdpageSizes").val($("#pageSizeHidden").val());
+        }
+
+        function adminBtn(){
+
+            $("#adminForm").submit();
         }
     </script>
     <%-- admin end --%>
@@ -456,10 +470,10 @@
                         <div class="modal-content">
                             <div class="modal-header">
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                <h4 class="modal-title" id="adminModalLabel">修改工作记录</h4>
+                                <h4 class="modal-title" id="adminModalLabel">设置管理员</h4>
                             </div>
                             <div class="modal-body">
-                                <form method="post" id="adminForm" action="${pageContext.request.contextPath}/zhMan/update">
+                                <form method="post" id="adminForm" action="${pageContext.request.contextPath}/zhMan/admin">
                                     <input type="hidden" id="adminId"  name="id" />
                                     <input type="hidden" name="zhId" value="${zhId}" />
                                     <fieldset>
@@ -467,8 +481,8 @@
 
                                         <input type="hidden" id="adminIdCurrentPage" name="currentPage" >
                                         <input type="hidden" id="adminIdpageSizes" name="pageSize" >
-
-                                        <table style="width: 100%;height:350px;">
+                                        确定设置此人为管理员？
+                                        <table style="width: 100%;height:350px;display: none;">
                                             <tr>
                                                 <td><label for="input1" class="control-label">姓名</label></td>
                                                 <td style=""><div class="col-sm-10">
@@ -495,10 +509,11 @@
                                                 <td><div class="col-sm-10">
                                                     <input type="email" class="form-control" id="input103" name="email" placeholder="邮箱" >
                                                 </div></td>
-                                                <td colspan="2"><input type="button" onclick="updateBtn()"  class="btn btn-primary" style="height: 50px;width: 85%;" value="保存" /></td>
+                                                <td colspan="2"></td>
                                             </tr>
                                         </table>
                                     </fieldset>
+                                    <input type="button" onclick="adminBtn()" class="btn btn-primary" style="height: 50px;width: 85%;" value="确定" />
                                 </form>
                             </div>
                             <div class="modal-footer">

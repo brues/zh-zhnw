@@ -36,8 +36,8 @@ public class ActorController extends Controller {
         setAttr("pageSize",actorPage.getPageSize());
         setAttr("currentPage",actorPage.getPageNumber());
 
-        List<Purview> purviewList = Purview.me.find("select * from purview where parentId=1");
-        List<Purview> purviews  = Purview.me.find("select * from purview where isLeaf=1");
+        List<Purview> purviewList = Purview.me.find("select * from purview where parentId=1 and purviewName!='机构管理'");
+        List<Purview> purviews  = Purview.me.find("select * from purview where isLeaf=1 and url!='/purview' and purviewName!='机构信息'");
         setAttr("purviewList",purviewList);
         setAttr("purviews",purviews);
 
@@ -71,8 +71,8 @@ public class ActorController extends Controller {
         setAttr("pageSize",actorPage.getPageSize());
         setAttr("currentPage",actorPage.getPageNumber());
 
-        List<Purview> purviewList = Purview.me.find("select * from purview where parentId=1");
-        List<Purview> purviews  = Purview.me.find("select * from purview where isLeaf=1");
+        List<Purview> purviewList = Purview.me.find("select * from purview where parentId=1 and purviewName!='机构管理'");
+        List<Purview> purviews  = Purview.me.find("select * from purview where isLeaf=1 and url!='/purview' and purviewName!='机构信息'");
         setAttr("purviewList",purviewList);
         setAttr("purviews",purviews);
 
@@ -113,8 +113,8 @@ public class ActorController extends Controller {
         setAttr("pageSize",actorPage.getPageSize());
         setAttr("currentPage",actorPage.getPageNumber());
 
-        List<Purview> purviewList = Purview.me.find("select * from purview where parentId=1");
-        List<Purview> purviews  = Purview.me.find("select * from purview where isLeaf=1");
+        List<Purview> purviewList = Purview.me.find("select * from purview where parentId=1 and purviewName!='机构管理'");
+        List<Purview> purviews  = Purview.me.find("select * from purview where isLeaf=1 and url!='/purview' and purviewName!='机构信息'");
         setAttr("purviewList",purviewList);
         setAttr("purviews",purviews);
 
@@ -162,8 +162,8 @@ public class ActorController extends Controller {
         setAttr("pageSize",actorPage.getPageSize());
         setAttr("currentPage",actorPage.getPageNumber());
 
-        List<Purview> purviewList = Purview.me.find("select * from purview where parentId=1");
-        List<Purview> purviews  = Purview.me.find("select * from purview where isLeaf=1");
+        List<Purview> purviewList = Purview.me.find("select * from purview where parentId=1 and purviewName!='机构管理'");
+        List<Purview> purviews  = Purview.me.find("select * from purview where isLeaf=1 and url!='/purview' and purviewName!='机构信息'");
         setAttr("purviewList",purviewList);
         setAttr("purviews",purviews);
 
@@ -240,8 +240,8 @@ public class ActorController extends Controller {
         setAttr("pageSize",actorPage.getPageSize());
         setAttr("currentPage",actorPage.getPageNumber());
 
-        List<Purview> purviewList = Purview.me.find("select * from purview where parentId=1");
-        List<Purview> purviews  = Purview.me.find("select * from purview where isLeaf=1");
+        List<Purview> purviewList = Purview.me.find("select * from purview where parentId=1 and purviewName!='机构管理'");
+        List<Purview> purviews  = Purview.me.find("select * from purview where isLeaf=1 and url!='/purview' and purviewName!='机构信息'");
         setAttr("purviewList",purviewList);
         setAttr("purviews",purviews);
 

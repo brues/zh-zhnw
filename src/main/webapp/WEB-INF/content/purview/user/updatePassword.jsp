@@ -36,6 +36,15 @@
 
         <script>
 
+            function isLetterAndNum(value){
+                var strExp=/^[A-Za-z0-9]+$/;
+                if(strExp.test(value)){
+                    return true;
+                }else{
+                    return false;
+                }
+            }
+
             function change(){
                 $.ajax({
                     url:"${pageContext.request.contextPath}/user/passwordOk",
@@ -44,19 +53,25 @@
                     type:"post",
                     success:function(data){
                         if($("#newpassword").val()==null||$.trim($("#newpassword").val()).length==0){
-                            $("#password").val("");
+                            $("#xinmimaspan").html("新密码不能为空！");
+                            $("#xinmimaspan").css("display","block");
                             $("#newpassword").val("");
-                            $("#nullbtn").click();
                         }else if(data=="0"){
-                            $("#password").val("");
-                            $("#newpassword").val("");
-                            $("#cuobtn").click();
+                            $("#xinmimaspan").html("原始新密码不正确，请从新输入！");
+                            $("#xinmimaspan").css("display","block");
+                        }else if(!isLetterAndNum($("#newpassword").val())){
+                            $("#xinmimaspan").html("新密码只能是字母或数字！");
+                            $("#xinmimaspan").css("display","block");
                         }else if(data=="1"){
                             $("#chageForm").submit();
                         }
 
                     }
                 });
+            }
+
+            function newpassfocus(){
+                $("#xinmimaspan").css("display","none");
             }
         </script>
     </head>
@@ -65,11 +80,11 @@
             <form id="chageForm" method="post" action="${pageContext.request.contextPath}/user/changes">
                 <div class="form-group">
                     <label for="password">原始密码：</label>
-                    <input type="password" class="form-control" id="password" placeholder="Password" required>
+                    <input type="password" class="form-control" id="password" placeholder="Password" onfocus="newpassfocus()" required>
                 </div>
                 <div class="form-group">
                     <label for="newpassword">新密码：</label>
-                    <input type="password" class="form-control" name="password" id="newpassword" placeholder="New Password"  required>
+                    <input type="password" class="form-control" name="password" onfocus="newpassfocus()" id="newpassword" placeholder="New Password"  required><span id="xinmimaspan" style="display: none;color:red;"></span>
                 </div>
                 <input type="button" value="确定" onclick="change()" class="btn btn-primary" style="width: 100%;height: 50px;">
             </form>

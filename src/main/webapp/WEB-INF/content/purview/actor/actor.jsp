@@ -483,7 +483,7 @@
                                     <div class="tree well">
                                         <ul>
                                             <li>
-                                                <input type="checkbox" id="check" onclick="checkclick()">&nbsp;&nbsp;<span><i class="icon-folder-open"></i> 中韩内网</span>
+                                                <input type="checkbox" id="check" onclick="checkclick()">&nbsp;&nbsp;<span><i class="icon-folder-open"></i> 中翰内网</span>
                                                 <ul>
                                                     <c:forEach var="purview" items="${purviewList}">
                                                         <li>
