@@ -158,7 +158,6 @@
                 <configuration>
                     <stopKey>stop</stopKey>
                     <stopPort>8888</stopPort>
-                    <scanIntervalSeconds>1</scanIntervalSeconds>
                     <contextXml>${project.basedir}/src/main/resources/jetty-context.xml</contextXml>
                     <webAppConfig>
                         <contextPath>/zhnw</contextPath>

@@ -6,10 +6,15 @@ import com.zhnw.util.DateUtil;
 import com.zhnw.util.ProjectUtil;
 import com.zhnw.zhnw.businesstype.BusinessType;
 import com.zhnw.zhnw.clientcompany.ClientCompany;
+import com.zhnw.zhnw.hour.Hour;
+import com.zhnw.zhnw.invoices.Invoices;
+import com.zhnw.zhnw.project.people.ProjectPeople;
+import com.zhnw.zhnw.project.process.ProjectProcess;
 import com.zhnw.zhnw.purview.user.User;
 
 import java.text.ParseException;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by guoyibin on 15/4/27.
@@ -127,7 +132,57 @@ public class ProjectController extends Controller {
     public void delete(){
         String id = getPara("id");
         Project.me.deleteById(id);
-        redirect("/project");
+
+        /*发票删除*/
+        List<Invoices> invoicesList = Invoices.me.find("select * from invoices where projectId="+id);
+        for (Invoices invoices : invoicesList){
+            Invoices.me.deleteById(invoices.get("id"));
+        }
+
+        /*工时删除*/
+        List<Hour> hourList = Hour.me.find("select * from hours where projectId="+id);
+        for (Hour hour : hourList){
+            Hour.me.deleteById(hour.get("id"));
+        }
+
+        /*项目人员删除*/
+        List<ProjectPeople> projectPeopleList = ProjectPeople.me.find("select * from pp where projectId="+id);
+        for (ProjectPeople projectPeople : projectPeopleList){
+            ProjectPeople.me.deleteById(projectPeople.get("id"));
+        }
+
+        /*项目进展删除*/
+        List<ProjectProcess> projectProcessList = ProjectProcess.me.find("select * from process where projectId="+id);
+        for (ProjectProcess projectProcess : projectProcessList){
+            ProjectProcess.me.deleteById(projectProcess.get("id"));
+        }
+
+
+
+        User user = getSessionAttr("zhnw_loginUser");
+
+        String currentPage = getPara("currentPage");
+        String  pageSize = getPara("pageSize");
+        String  selectClientSouName = getPara("selectClientSouName");
+        String  selectBTypeSouName = getPara("selectBTypeSouName");
+        String  selectContractSouName = getPara("selectContractSouName");
+
+        if (currentPage == null||currentPage.trim().length()==0) currentPage = "1";
+        if (pageSize == null||pageSize.trim().length()==0) pageSize = "10";
+
+        Page<Project> projectPage  = Project.me.paginate(currentPage, pageSize, selectClientSouName, selectBTypeSouName, selectContractSouName, user);
+
+        setAttr("projectList",projectPage.getList());
+        setAttr("totalCount",projectPage.getTotalRow());
+        setAttr("totalPage",projectPage.getTotalPage());
+        setAttr("pageSize",projectPage.getPageSize());
+        setAttr("currentPage",projectPage.getPageNumber());
+
+        setAttr("selectClientSouName",selectClientSouName);
+        setAttr("selectBTypeSouName",selectBTypeSouName);
+        setAttr("selectContractSouName", selectContractSouName);
+
+        renderJsp("/WEB-INF/content/project/project/project.jsp");
     }
 
 
@@ -213,6 +268,47 @@ public class ProjectController extends Controller {
         new Project().set("id", id)
                 .set("contractNum", contractNum)
                 .update();
-        redirect("/project");
+
+
+        User user = getSessionAttr("zhnw_loginUser");
+
+        String currentPage = getPara("currentPage");
+        String  pageSize = getPara("pageSize");
+        String  selectClientSouName = getPara("selectClientSouName");
+        String  selectBTypeSouName = getPara("selectBTypeSouName");
+        String  selectContractSouName = getPara("selectContractSouName");
+
+        if (currentPage == null||currentPage.trim().length()==0) currentPage = "1";
+        if (pageSize == null||pageSize.trim().length()==0) pageSize = "10";
+
+        Page<Project> projectPage  = Project.me.paginate(currentPage, pageSize, selectClientSouName, selectBTypeSouName, selectContractSouName, user);
+
+        setAttr("projectList",projectPage.getList());
+        setAttr("totalCount",projectPage.getTotalRow());
+        setAttr("totalPage",projectPage.getTotalPage());
+        setAttr("pageSize",projectPage.getPageSize());
+        setAttr("currentPage",projectPage.getPageNumber());
+
+        setAttr("selectClientSouName",selectClientSouName);
+        setAttr("selectBTypeSouName",selectBTypeSouName);
+        setAttr("selectContractSouName", selectContractSouName);
+
+        renderJsp("/WEB-INF/content/project/project/project.jsp");
+    }
+
+    /**
+     * ajax:更新合同编号，检查合同编号是否存在
+     * */
+    public void updateNumNumSingle(){
+        User user = getSessionAttr("zhnw_loginUser");
+        String id = getPara("id");
+        String num = getPara("num");
+        List<Project> projectList = Project.me.find("select * from project where zhId="+user.get("zhId")+" and id!="+id+" and contractNum='"+num+"'");
+        if (projectList.size()==0){
+            renderJson("0");
+        }else{
+            renderJson("1");
+        }
+
     }
 }

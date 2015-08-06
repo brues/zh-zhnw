@@ -252,29 +252,64 @@
 
     <%-- update num begin --%>
     <script>
+        function updateNum(id,num){
+            $("#updateNumId").val(id);
+            $("#input1101").val(num);
 
+            $("#updatenumclientinput").val($("#selectClientSou").val());
+            $("#updatenumbtypeinput").val($("#selectBTypeSou").val());
+            $("#updatenumcontractinput").val($("#selectContractSou").val());
+            $("#updatenumcurrentpageinput").val($("#currentPageHidden").val());
+            $("#updatenumpagesizeinput").val($("#pageSizeHidden").val());
+        }
+
+        function updateNumBtn(){
+            var num = $.trim($("#input1101").val());
+            if(num==null||num==''){
+                $("#updatenumnumspan").html("合同编号不能为空！");
+                $("#updatenumnumspan").css("display","block");
+            }else{
+                $.ajax({
+                    url:"${pageContext.request.contextPath}/project/updateNumNumSingle",
+                    data:{id:$("#updateNumId").val(),num:num},
+                    dataType:"json",
+                    type:"post",
+                    success:function(data){
+                        if(data=='1'){
+                            $("#updatenumnumspan").html("合同编号已存在！");
+                            $("#updatenumnumspan").css("display","block");
+                        }else{
+                            $("#updateNumForm").submit();
+                        }
+                    }
+                });
+            }
+        }
+
+        function updateNumNumFocus(){
+            $("#updatenumnumspan").css("display","none");
+        }
     </script>
     <%-- update num end --%>
 
-
+    <%-- delete begin --%>
     <script>
         function delid(id){
             $("#deleteIdInput").val(id);
+
+            $("#deleteclientinput").val($("#selectClientSou").val());
+            $("#deletebtypeinput").val($("#selectBTypeSou").val());
+            $("#deletecontractinput").val($("#selectContractSou").val());
+            $("#deletecurrentpageinput").val($("#currentPageHidden").val());
+            $("#deletepagesizeinput").val($("#pageSizeHidden").val());
         }
         function deleteById(){
             $("#deleteIdFormId").val($("#deleteIdInput").val());
             $("#deleteIdForm").attr("action","${pageContext.request.contextPath}/project/delete");
             $("#deleteIdForm").submit();
         }
-
-        function updateNum(id,num){
-            $("#updateNumId").val(id);
-            $("#input1101").val(num);
-        }
-
-
     </script>
-
+    <%-- delete end --%>
 
 </head>
 <body>
@@ -363,10 +398,14 @@
                                 <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="deleteById()">确定</button>
                             </div>
                             <form style="display: none;" id="deleteIdForm" method="post">
+                                <input type="hidden" id="deleteclientinput"  name="selectClientSouName" />
+                                <input type="hidden" id="deletebtypeinput"  name="selectBTypeSouName"  />
+                                <input type="hidden" id="deletecontractinput"  name="selectContractSouName" />
+                                <input type="hidden" id="deletecurrentpageinput"  name="currentPage" />
+                                <input type="hidden" id="deletepagesizeinput"  name="pageSize" />
+
+
                                 <input type="hidden" id="deleteIdFormId" name="id">
-                                <input type="hidden" id="deleteIdCurrentPage" name="currentPage" value="${currentPage}">
-                                <input type="hidden" id="deleteIdpageSizes" name="pageSize" value="${pageSize}">
-                                <input type="hidden" id="deleteIdActorName" name="actorName" value="${actorName}">
                             </form>
                         </div>
                     </div>
@@ -531,13 +570,20 @@
                                 <form method="post" id="updateNumForm" action="${pageContext.request.contextPath}/project/updateNum">
                                     <fieldset>
                                         <input type="hidden" id="updateNumId"  name="id" />
+
+                                        <input type="hidden" id="updatenumclientinput"  name="selectClientSouName" />
+                                        <input type="hidden" id="updatenumbtypeinput"  name="selectBTypeSouName"  />
+                                        <input type="hidden" id="updatenumcontractinput"  name="selectContractSouName" />
+                                        <input type="hidden" id="updatenumcurrentpageinput"  name="currentPage" />
+                                        <input type="hidden" id="updatenumpagesizeinput"  name="pageSize" />
+
                                         <table style="width: 100%;height:350px;">
                                             <tr>
                                                 <td><label for="input1101" class="control-label">合同编号</label></td>
                                                 <td style=""><div class="col-sm-10">
-                                                    <input type="text" class="form-control" id="input1101" placeholder="合同编号" name="contractNum" required >
+                                                    <input type="text" class="form-control" id="input1101" placeholder="合同编号" name="contractNum" onfocus="updateNumNumFocus()" required ><span id="updatenumnumspan" style="color:red;display: none;"></span>
                                                 </div></td>
-                                                <td colspan="2"><input type="submit" class="btn btn-primary" style="height: 50px;width: 85%;" value="保存" /></td>
+                                                <td colspan="2"><input type="button" onclick="updateNumBtn()" class="btn btn-primary" style="height: 50px;width: 85%;" value="保存" /></td>
                                             </tr>
                                         </table>
                                     </fieldset>
