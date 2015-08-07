@@ -8,6 +8,8 @@ import java.util.List;
 
 /**
  * Created by guoyibin on 15/6/25.
+ *
+ * 例会管理：工作记录
  */
 public class WorkController extends Controller {
 
@@ -15,6 +17,7 @@ public class WorkController extends Controller {
      * 工作评估管理主页
      * */
     public void index(){
+        User user = getSessionAttr("zhnw_loginUser");
 
         String  nameId = getPara("nameId");
         String  thing = getPara("thing");
@@ -27,7 +30,7 @@ public class WorkController extends Controller {
         if (currentPage == null) currentPage = "1";
         if (pageSize == null) pageSize = "10";
 
-        Page<Work> workPage = Work.me.paginate(currentPage, pageSize,nameId, thing, forecast, isend);
+        Page<Work> workPage = Work.me.paginate(currentPage, pageSize,nameId, thing, forecast, isend, user);
         
 
 
@@ -46,20 +49,20 @@ public class WorkController extends Controller {
     }
 
     /**
-     *
      * ajax获取列表
      * */
     public void nameJson(){
-        List<Work> works = Work.me.find("select distinct name,nameId from work");
+        User user = getSessionAttr("zhnw_loginUser");
+        List<Work> works = Work.me.find("select distinct name,nameId from work where zhId="+user.get("zhId"));
         renderJson(works);
     }
 
     /**
-     *
      * ajax获取列表
      * */
     public void thingJson(){
-        List<Work> works = Work.me.find("select distinct thing from work");
+        User user = getSessionAttr("zhnw_loginUser");
+        List<Work> works = Work.me.find("select distinct thing from work where zhId="+user.get("zhId"));
         renderJson(works);
     }
 
@@ -68,7 +71,8 @@ public class WorkController extends Controller {
      * ajax获取列表
      * */
     public void forecastJson(){
-        List<Work> works = Work.me.find("select distinct forecast from work");
+        User user = getSessionAttr("zhnw_loginUser");
+        List<Work> works = Work.me.find("select distinct forecast from work where zhId="+user.get("zhId"));
         renderJson(works);
     }
 
@@ -81,11 +85,10 @@ public class WorkController extends Controller {
      * */
     public void delete(){
         String id = getPara("id");
-        System.out.println(id);
         Work.me.deleteById(id);
 
 
-
+        User user = getSessionAttr("zhnw_loginUser");
         String  nameId = getPara("nameId");
         String  thing = getPara("thing");
         String  forecast = getPara("forecast");
@@ -97,7 +100,7 @@ public class WorkController extends Controller {
         if (currentPage == null) currentPage = "1";
         if (pageSize == null) pageSize = "10";
 
-        Page<Work> workPage = Work.me.paginate(currentPage, pageSize,nameId, thing, forecast, isend);
+        Page<Work> workPage = Work.me.paginate(currentPage, pageSize,nameId, thing, forecast, isend, user);
 
 
 
@@ -144,21 +147,24 @@ public class WorkController extends Controller {
             review = User.me.findById(Long.parseLong(reviewId)).get("trueName");
         }
 
+        Work work = new Work();
+        work
+            .set("name", name)
+            .set("nameId", nameId)
+            .set("thing", thing)
+            .set("accountableId", accountableId)
+            .set("accountable", accountable);
 
-        new Work()
-                .set("name", name)
-                .set("nameId", nameId)
-                .set("thing", thing)
-                .set("accountableId", accountableId)
-                .set("accountable", accountable)
-                .set("begin", begin)
-                .set("forecast", forecast)
-                .set("end", end)
-                .set("isend", isend)
-                .set("progress", progress)
-                .set("reviewId", reviewId)
-                .set("review", review)
-                .save();
+        if (begin!=null&&begin.trim().length()!=0){work.set("begin", begin);}
+        if (forecast!=null&&forecast.trim().length()!=0){work.set("forecast", forecast);}
+        if (end!=null&&end.trim().length()!=0){work.set("end", end);}
+
+        work.set("isend", isend)
+            .set("progress", progress)
+            .set("reviewId", reviewId)
+            .set("review", review)
+            .set("zhId", user.get("zhId"))
+            .save();
 
 
 
@@ -176,7 +182,7 @@ public class WorkController extends Controller {
         if (currentPage == null) currentPage = "1";
         if (pageSize == null) pageSize = "10";
 
-        Page<Work> workPage = Work.me.paginate(currentPage, pageSize,addnameId, addthing, addforecast, addisend);
+        Page<Work> workPage = Work.me.paginate(currentPage, pageSize,addnameId, addthing, addforecast, addisend, user);
 
 
 
@@ -259,7 +265,7 @@ public class WorkController extends Controller {
         if (currentPage == null) currentPage = "1";
         if (pageSize == null) pageSize = "10";
 
-        Page<Work> workPage = Work.me.paginate(currentPage, pageSize,addnameId, addthing, addforecast, addisend);
+        Page<Work> workPage = Work.me.paginate(currentPage, pageSize,addnameId, addthing, addforecast, addisend, user);
 
 
 

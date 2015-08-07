@@ -2,17 +2,24 @@ package com.zhnw.zhnw.work;
 
 import com.jfinal.plugin.activerecord.Model;
 import com.jfinal.plugin.activerecord.Page;
+import com.zhnw.zhnw.purview.user.User;
 
 /**
  * Created by guoyibin on 15/6/25.
+ *
+ * 例会管理：工作记录
  *
  */
 public class Work extends Model<Work> {
 
     public static final Work me = new Work();
 
-    public Page<Work> paginate(String currentPage, String pageSize, String nameId, String thing, String forecast, String isend) {
-        String sql = " from work where 1=1 ";
+    /**
+     * 分页搜索
+     *
+     * */
+    public Page<Work> paginate(String currentPage, String pageSize, String nameId, String thing, String forecast, String isend, User user) {
+        String sql = " from work where zhId="+user.get("zhId")+" ";
 
         if (nameId!=null&&!nameId.trim().equalsIgnoreCase("")&&!nameId.equalsIgnoreCase("0")){
             sql+=" and nameId="+nameId+" ";

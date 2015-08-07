@@ -34,6 +34,8 @@
             window.top.location = "${pageContext.request.contextPath}";
         }
     </script>
+
+    <%-- 分页方法 begin --%>
     <script type="text/javascript">
         function shouye(){
             $("#currentPageHidden").val("1");
@@ -92,9 +94,131 @@
             $("#pageAction").submit();
         }
     </script>
+    <%-- 分页方法 end --%>
 
+    <%-- 搜索用ajax begin --%>
     <script>
+        $.ajax({
+            url:"${pageContext.request.contextPath}/work/forecastJson",
+            dataType:"json",
+            success:function(data){
+                $("#selectForecastSou").append("<option value='0'>请选择预计结束日期</option>");
+                for(i=0;i<data.length;i++){
+                    if(data[i].forecast!=null&&data[i].forecast!=""&&data[i].forecast==$("#inputForecastSou").val()){
+                        $("#selectForecastSou").append("<option selected='selected' value='"+data[i].forecast+"'>"+data[i].forecast+"</option>");
+                    }else{
+                        $("#selectForecastSou").append("<option value='"+data[i].forecast+"'>"+data[i].forecast+"</option>");
+                    }
+                }
+                $('#selectForecastSou').selectpicker({
+                    'selectedText': 'cat'
+                });
+            }
+        });
 
+        $.ajax({
+            url:"${pageContext.request.contextPath}/work/nameJson",
+            dataType:"json",
+            success:function(data){
+                $("#selectNameSou").append("<option value='0'>请选择姓名</option>");
+                for(i=0;i<data.length;i++){
+                    if(data[i].nameId!=null&&data[i].nameId!=""&&data[i].nameId==$("#inputNameSou").val()){
+                        $("#selectNameSou").append("<option selected='selected' value='"+data[i].nameId+"'>"+data[i].name+"</option>");
+                    }else{
+                        $("#selectNameSou").append("<option value='"+data[i].nameId+"'>"+data[i].name+"</option>");
+                    }
+                }
+                $('#selectNameSou').selectpicker({
+                    'selectedText': 'cat'
+                });
+                $('#selectIsEndSou').selectpicker({
+                    'selectedText': 'cat'
+                });
+            }
+        });
+
+        $.ajax({
+            url:"${pageContext.request.contextPath}/work/thingJson",
+            dataType:"json",
+            success:function(data){
+                $("#selectThingSou").append("<option value='0'>请选择事项</option>");
+                for(i=0;i<data.length;i++){
+                    if(data[i].thing!=null&&data[i].thing!=""&&data[i].thing==$("#inputThingSou").val()){
+                        $("#selectThingSou").append("<option selected='selected' value='"+data[i].thing+"'>"+data[i].thing+"</option>");
+                    }else{
+                        $("#selectThingSou").append("<option value='"+data[i].thing+"'>"+data[i].thing+"</option>");
+                    }
+                }
+                $('#selectThingSou').selectpicker({
+                    'selectedText': 'cat'
+                });
+            }
+        });
+    </script>
+    <%-- 搜索用ajax end --%>
+
+    <%-- add begin --%>
+    <script>
+        $.ajax({
+            url:"${pageContext.request.contextPath}/user/userJson",
+            dataType:"json",
+            success:function(data){
+                for(i=0;i<data.length;i++){
+                    $("#input2").append("<option value='"+data[i].id+"'>"+data[i].trueName+"</option>");
+                    $("#input3").append("<option value='"+data[i].id+"'>"+data[i].trueName+"</option>");
+                }
+                $('#input2').selectpicker({
+                    'selectedText': 'cat'
+                });
+
+                $('#input3').selectpicker({
+                    'selectedText': 'cat'
+                });
+            }
+        });
+
+        function addwork(){
+            $("#addIdCurrentPage").val($("#currentPageHidden").val());
+            $("#addIdpageSizes").val($("#pageSizeHidden").val());
+            $("#addNameId").val($("#selectNameSou").val());
+            $("#addThing").val($("#selectThingSou").val());
+            $("#addForecast").val($("#selectForecastSou").val());
+            $("#addIsend").val($("#selectIsEndSou").val());
+
+
+            var thing = $.trim($("#input4").val());
+            var forecast = $.trim($("#input9").val());
+            var progress = $.trim($("#input7").val());
+            if(thing==null||thing==''){
+                $("#addthingspan").html("事项不能为空！");
+                $("#addthingspan").css("display","block");
+            }else if(forecast==null||forecast==''){
+                $("#addforecastspan").html("预计结束日期不能为空！");
+                $("#addforecastspan").css("display","block");
+            }else if(progress==null||progress==''){
+                $("#addprogressspan").html("进展不能为空！");
+                $("#addprogressspan").css("display","block");
+            }else{
+                $("#addForm").submit();
+            }
+        }
+
+        function addthingfocus(){
+            $("#addthingspan").css("display","none");
+        }
+
+        function addforecastfocus(){
+            $("#addforecastspan").css("display","none");
+        }
+
+        function addprogressfocus(){
+            $("#addprogressspan").css("display","none");
+        }
+    </script>
+    <%-- add end --%>
+
+    <%-- delete begin --%>
+    <script>
         function delid(id){
             $("#deleteIdInput").val(id);
         }
@@ -113,7 +237,9 @@
             $("#deleteIdForm").attr("action","${pageContext.request.contextPath}/work/delete");
             $("#deleteIdForm").submit();
         }
-
+    </script>
+    <%-- delete end --%>
+    <script>
         function xiugai(id,name,nameId,thing,accountable,accountableId,begin,forecast,end,isend,progress,review,reviewId){
             $("#updateId").val(id);
 
@@ -181,17 +307,7 @@
 
         }
 
-        function addwork(){
 
-            $("#addIdCurrentPage").val($("#currentPageHidden").val());
-            $("#addIdpageSizes").val($("#pageSizeHidden").val());
-            $("#addNameId").val($("#selectNameSou").val());
-            $("#addThing").val($("#selectThingSou").val());
-            $("#addForecast").val($("#selectForecastSou").val());
-            $("#addIsend").val($("#selectIsEndSou").val());
-
-            $("#addForm").submit();
-        }
 
         function updatework(){
 
@@ -207,94 +323,9 @@
     </script>
 
 
-    <%-- 搜索用ajax begin --%>
-    <script>
-        $.ajax({
-            url:"${pageContext.request.contextPath}/work/forecastJson",
-            dataType:"json",
-            success:function(data){
-                $("#selectForecastSou").append("<option value='0'>请选择预计结束日期</option>");
-               for(i=0;i<data.length;i++){
-                    if(data[i].forecast!=null&&data[i].forecast!=""&&data[i].forecast==$("#inputForecastSou").val()){
-                        $("#selectForecastSou").append("<option selected='selected' value='"+data[i].forecast+"'>"+data[i].forecast+"</option>");
-                    }else{
-                        $("#selectForecastSou").append("<option value='"+data[i].forecast+"'>"+data[i].forecast+"</option>");
-                    }
-                }
-                $('#selectForecastSou').selectpicker({
-                    'selectedText': 'cat'
-                });
-            }
-        });
-
-        $.ajax({
-            url:"${pageContext.request.contextPath}/work/nameJson",
-            dataType:"json",
-            success:function(data){
-                $("#selectNameSou").append("<option value='0'>请选择姓名</option>");
-                for(i=0;i<data.length;i++){
-                    if(data[i].nameId!=null&&data[i].nameId!=""&&data[i].nameId==$("#inputNameSou").val()){
-                        $("#selectNameSou").append("<option selected='selected' value='"+data[i].nameId+"'>"+data[i].name+"</option>");
-                    }else{
-                        $("#selectNameSou").append("<option value='"+data[i].nameId+"'>"+data[i].name+"</option>");
-                    }
-                }
-                $('#selectNameSou').selectpicker({
-                    'selectedText': 'cat'
-                });
-                $('#selectIsEndSou').selectpicker({
-                    'selectedText': 'cat'
-                });
-            }
-        });
 
 
 
-        $.ajax({
-            url:"${pageContext.request.contextPath}/work/thingJson",
-            dataType:"json",
-            success:function(data){
-                $("#selectThingSou").append("<option value='0'>请选择事项</option>");
-                for(i=0;i<data.length;i++){
-                    if(data[i].thing!=null&&data[i].thing!=""&&data[i].thing==$("#inputThingSou").val()){
-                        $("#selectThingSou").append("<option selected='selected' value='"+data[i].thing+"'>"+data[i].thing+"</option>");
-                    }else{
-                        $("#selectThingSou").append("<option value='"+data[i].thing+"'>"+data[i].thing+"</option>");
-                    }
-                }
-                $('#selectThingSou').selectpicker({
-                    'selectedText': 'cat'
-                });
-            }
-        });
-
-
-    </script>
-    <%-- 搜索用ajax end --%>
-
-    <%--  add ajax begin  --%>
-    <script>
-        $.ajax({
-            url:"${pageContext.request.contextPath}/user/userJson",
-            dataType:"json",
-            success:function(data){
-                $("#input2").append("<option value='0'>请选择交代人</option>");
-                $("#input3").append("<option value='0'>请选择复核人</option>");
-                for(i=0;i<data.length;i++){
-                    $("#input2").append("<option value='"+data[i].id+"'>"+data[i].trueName+"</option>");
-                    $("#input3").append("<option value='"+data[i].id+"'>"+data[i].trueName+"</option>");
-                }
-                $('#input2').selectpicker({
-                    'selectedText': 'cat'
-                });
-
-                $('#input3').selectpicker({
-                    'selectedText': 'cat'
-                });
-            }
-        });
-    </script>
-    <%--  add ajax end  --%>
 </head>
 <body>
 <div class="container" style="width: 100%;max-width:95%;height: 100%;padding-top: 30px;">
@@ -383,6 +414,7 @@
                         <button type="button" class="btn btn-lg btn-default" onclick="weiye()">尾页</button>
                     </p>
                 </form>
+
                 <%-- delete begin --%>
                 <div class="modal fade" id="delModel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
                     <div class="modal-dialog">
@@ -451,7 +483,7 @@
                                             <tr>
                                                 <td><label for="input4" class="control-label">事项</label></td>
                                                 <td colspan="3" style=""><div class="col-sm-10">
-                                                    <input type="text" class="form-control" id="input4" placeholder="事项" name="thing"  >
+                                                    <input type="text" class="form-control" id="input4" placeholder="事项" name="thing"  onfocus="addthingfocus()"><span id="addthingspan" style="color:red;display:none;"></span>
                                                 </div></td>
                                             </tr>
                                             <tr>
@@ -461,7 +493,7 @@
                                                 </div></td>
                                                 <td><label for="input9" class="control-label">预计结束日期</label></td>
                                                 <td><div class="col-sm-10">
-                                                    <input type="text" class="form-control" id="input9" placeholder="(年年年年-月月-日日)"  name="forecast"  data-date-format="yyyy-mm-dd" readonly required>
+                                                    <input type="text" class="form-control" id="input9" onfocus="addforecastfocus()" placeholder="(年年年年-月月-日日)"  name="forecast"  data-date-format="yyyy-mm-dd" readonly required><span id="addforecastspan" style="color:red;display:none;"></span>
                                                 </div></td>
                                             </tr>
                                             <tr>
@@ -480,7 +512,7 @@
                                             <tr>
                                                 <td><label for="input7" class="control-label">进展</label></td>
                                                 <td colspan="3" style=""><div class="col-sm-10">
-                                                    <input type="text" class="form-control" id="input7" placeholder="进展" name="progress"  >
+                                                    <input type="text" class="form-control" id="input7" placeholder="进展" name="progress"  onfocus="addprogressfocus()"><span id="addprogressspan" style="color:red;display:none;"></span>
                                                 </div></td>
                                             </tr>
                                             <tr>
