@@ -5,8 +5,12 @@ import com.jfinal.plugin.activerecord.Page;
 import com.zhnw.zhnw.purview.user.User;
 import com.zhnw.zhnw.work.Work;
 
+import java.util.Locale;
+
 /**
  * Created by guoyibin on 15/6/26.
+ *
+ * 项目管理：工作评价
  */
 public class WorkController extends Controller {
 
@@ -15,7 +19,6 @@ public class WorkController extends Controller {
      * */
     public void index(){
         User user = getSessionAttr("zhnw_loginUser");
-        Long  userId = user.get("id");
 
         String  nameId = getPara("nameId");
         String  thing = getPara("thing");
@@ -28,9 +31,7 @@ public class WorkController extends Controller {
         if (currentPage == null) currentPage = "1";
         if (pageSize == null) pageSize = "10";
 
-        Page<Work> workPage = Work.me.paginate2(currentPage, pageSize,nameId, thing, forecast, isend,userId);
-
-
+        Page<Work> workPage = Work.me.projectWorkPaginate(currentPage, pageSize, nameId, thing, forecast, isend, user);
 
         setAttr("workList",workPage.getList());
         setAttr("totalCount",workPage.getTotalRow());
@@ -52,14 +53,17 @@ public class WorkController extends Controller {
      * */
     public void update(){
         User user = getSessionAttr("zhnw_loginUser");
-        Long  userId = user.get("id");
 
         String  id = getPara("id");
         String  assess = getPara("assess");
-        new Work()
-                .set("id", id)
-                .set("assess", assess)
-                .update();
+        String  reviewId = getPara("reviewId");
+
+        if (Long.parseLong(reviewId)==Long.parseLong(user.get("id").toString())){//只有审核人才能评价
+            new Work()
+                    .set("id", id)
+                    .set("assess", assess)
+                    .update();
+        }
 
         String  addnameId = getPara("updatenameId");
         String  addthing = getPara("updatething");
@@ -72,8 +76,7 @@ public class WorkController extends Controller {
         if (currentPage == null) currentPage = "1";
         if (pageSize == null) pageSize = "10";
 
-        Page<Work> workPage = Work.me.paginate2(currentPage, pageSize, addnameId, addthing, addforecast, addisend, userId);
-
+        Page<Work> workPage = Work.me.projectWorkPaginate(currentPage, pageSize, addnameId, addthing, addforecast, addisend, user);
 
 
         setAttr("workList",workPage.getList());

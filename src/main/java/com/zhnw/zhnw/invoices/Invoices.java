@@ -6,10 +6,15 @@ import com.jfinal.plugin.activerecord.Page;
 /**
  * Created by guoyibin on 15/5/4.
  *
+ * 发票
  */
 public class Invoices extends Model<Invoices> {
     public static final Invoices me = new Invoices();
 
+    /**
+     * 分页搜索查询
+     *
+     * */
     public Page<Invoices> paginate(String currentPage, String pageSize, String projectId, String sou) {
         String sql = " from invoices where projectId="+projectId+" ";
         if (sou!=null&&sou.trim().length()!=0){

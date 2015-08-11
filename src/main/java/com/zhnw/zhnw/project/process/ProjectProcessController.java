@@ -16,7 +16,7 @@ import java.util.Date;
 public class ProjectProcessController extends Controller {
 
     /**
-     * 项目
+     * 项目进展：项目
      * */
     public void project(){
         User user = getSessionAttr("zhnw_loginUser");
@@ -27,8 +27,8 @@ public class ProjectProcessController extends Controller {
         String  selectBTypeSouName = getPara("selectBTypeSouName");
         String  selectContractSouName = getPara("selectContractSouName");
 
-        if (currentPage == null) currentPage = "1";
-        if (pageSize == null) pageSize = "10";
+        if (currentPage == null||currentPage.trim().length()==0) currentPage = "1";
+        if (pageSize == null||pageSize.trim().length()==0) pageSize = "10";
 
         Page<Project> projectPage  = Project.me.paginate(currentPage, pageSize, selectClientSouName, selectBTypeSouName, selectContractSouName, user);
 
@@ -40,7 +40,7 @@ public class ProjectProcessController extends Controller {
 
         setAttr("selectClientSouName",selectClientSouName);
         setAttr("selectBTypeSouName",selectBTypeSouName);
-        setAttr("selectContractSouName",selectContractSouName);
+        setAttr("selectContractSouName", selectContractSouName);
 
         renderJsp("/WEB-INF/content/project/process/project.jsp");
     }
@@ -49,6 +49,8 @@ public class ProjectProcessController extends Controller {
      * 管理主页
      * */
     public void index(){
+        User user = getSessionAttr("zhnw_loginUser");
+
         String  projectId = getPara("projectId");
 
         String currentPage = getPara("currentPage");
@@ -59,7 +61,7 @@ public class ProjectProcessController extends Controller {
         if (currentPage == null||currentPage.trim().length()==0) currentPage = "1";
         if (pageSize == null||pageSize.trim().length()==0) pageSize = "10";
 
-        Page<ProjectProcess> projectProcessPage  = ProjectProcess.me.paginate(currentPage, pageSize, souContent, projectId);
+        Page<ProjectProcess> projectProcessPage  = ProjectProcess.me.paginate(currentPage, pageSize, souContent, projectId, user);
 
         setAttr("processList",projectProcessPage.getList());
 
@@ -78,6 +80,8 @@ public class ProjectProcessController extends Controller {
      * 添加
      * */
     public void add() throws ParseException {
+        User user = getSessionAttr("zhnw_loginUser");
+
         String  projectId = getPara("projectId");
 
         String  dates = getPara("dates");
@@ -108,6 +112,7 @@ public class ProjectProcessController extends Controller {
                 .set("remark", remark)
                 .set("projectId", projectId)
                 .set("remarkDate", new Date())
+                .set("zhId", user.get("zhId"))
                 .save();
 
 
@@ -124,7 +129,7 @@ public class ProjectProcessController extends Controller {
         if (currentPage == null||currentPage.trim().length()==0) currentPage = "1";
         if (pageSize == null||pageSize.trim().length()==0) pageSize = "10";
 
-        Page<ProjectProcess> projectProcessPage  = ProjectProcess.me.paginate(currentPage, pageSize, souContent, projectId);
+        Page<ProjectProcess> projectProcessPage  = ProjectProcess.me.paginate(currentPage, pageSize, souContent, projectId, user);
 
         setAttr("processList",projectProcessPage.getList());
 
@@ -146,10 +151,7 @@ public class ProjectProcessController extends Controller {
         String id = getPara("id");
         ProjectProcess.me.deleteById(id);
 
-
-
-
-
+        User user = getSessionAttr("zhnw_loginUser");
 
         String  projectId = getPara("projectId");
 
@@ -161,7 +163,7 @@ public class ProjectProcessController extends Controller {
         if (currentPage == null||currentPage.trim().length()==0) currentPage = "1";
         if (pageSize == null||pageSize.trim().length()==0) pageSize = "10";
 
-        Page<ProjectProcess> projectProcessPage  = ProjectProcess.me.paginate(currentPage, pageSize, souContent, projectId);
+        Page<ProjectProcess> projectProcessPage  = ProjectProcess.me.paginate(currentPage, pageSize, souContent, projectId, user);
 
         setAttr("processList",projectProcessPage.getList());
 
@@ -218,7 +220,7 @@ public class ProjectProcessController extends Controller {
 
 
 
-
+        User user = getSessionAttr("zhnw_loginUser");
 
         String currentPage = getPara("currentPage");
         String  pageSize = getPara("pageSize");
@@ -228,7 +230,7 @@ public class ProjectProcessController extends Controller {
         if (currentPage == null||currentPage.trim().length()==0) currentPage = "1";
         if (pageSize == null||pageSize.trim().length()==0) pageSize = "10";
 
-        Page<ProjectProcess> projectProcessPage  = ProjectProcess.me.paginate(currentPage, pageSize, souContent, projectId);
+        Page<ProjectProcess> projectProcessPage  = ProjectProcess.me.paginate(currentPage, pageSize, souContent, projectId, user);
 
         setAttr("processList",projectProcessPage.getList());
 

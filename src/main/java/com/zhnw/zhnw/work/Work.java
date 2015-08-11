@@ -8,7 +8,6 @@ import com.zhnw.zhnw.purview.user.User;
  * Created by guoyibin on 15/6/25.
  *
  * 例会管理：工作记录
- *
  */
 public class Work extends Model<Work> {
 
@@ -42,8 +41,9 @@ public class Work extends Model<Work> {
     }
 
 
-    public Page<Work> paginate2(String currentPage, String pageSize, String nameId, String thing, String forecast, String isend, Long userId) {
-        String sql = " from work where 1=1 ";
+
+    public Page<Work> projectWorkPaginate(String currentPage, String pageSize, String nameId, String thing, String forecast, String isend, User user) {
+        String sql = " from work where zhId="+user.get("zhId")+" ";
 
         if (nameId!=null&&!nameId.trim().equalsIgnoreCase("")&&!nameId.equalsIgnoreCase("0")){
             sql+=" and nameId="+nameId+" ";
@@ -61,7 +61,7 @@ public class Work extends Model<Work> {
             sql+=" and isend='"+isend+"' ";
         }
 
-        sql+=" and (reviewId="+userId+" or ("+userId+" in (select id from user where actorName='管理员' or actorName='超级管理员')))";
+        //sql+=" and (reviewId="+user.get("id")+" or ("+user.get("id")+" in (select id from user where actorName='管理员' or actorName='超级管理员')))";
 
         sql+=" order by id desc ";
         return paginate(Integer.parseInt(currentPage), Integer.parseInt(pageSize), " select * ", sql);

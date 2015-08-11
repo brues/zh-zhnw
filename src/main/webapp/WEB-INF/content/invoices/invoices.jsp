@@ -28,6 +28,7 @@
         }
     </script>
 
+    <%-- 分页 begin --%>
     <script type="text/javascript">
         function shouye(){
             $("#currentPageHidden").val("1");
@@ -86,17 +87,66 @@
             $("#pageAction").submit();
         }
     </script>
+    <%-- 分页 end --%>
 
+    <%-- delete begin --%>
     <script>
         function delid(id){
             $("#deleteIdInput").val(id);
+
+            $("#deleteIdCurrentPage").val($("#currentPageHidden").val());
+            $("#deleteIdpageSizes").val($("#pageSizeHidden").val());
+            $("#deleteIdSou").val($("#sousouinput").val());
         }
         function deleteById(){
             $("#deleteIdFormId").val($("#deleteIdInput").val());
             $("#deleteIdForm").attr("action","${pageContext.request.contextPath}/invoice/delete");
             $("#deleteIdForm").submit();
         }
+    </script>
+    <%-- delete end --%>
 
+    <%-- add begin --%>
+    <script>
+        function saveBtn(){
+            var billingDate = $.trim($("#input1").val());
+            var money = $.trim($("#input9").val());
+
+            var invoiceNum = $.trim($("#input2").val());
+
+            if(billingDate==null||billingDate==''){
+                $("#addbillingdatespan").html("开票日期不能为空！");
+                $("#addbillingdatespan").css("display","block");
+            }else if(money==null||money==''){
+                $("#addmoneyspan").html("发票金额不能为空！");
+                $("#addmoneyspan").css("display","block");
+            }else{
+                $.ajax({
+                    url:"${pageContext.request.contextPath}/invoice/saveInvoiceNumSingle",
+                    data:{invoiceNum:invoiceNum},
+                    dataType:"json",
+                    type:"post",
+                    success:function(data){
+                        if(data){
+                        }else{
+                            $("#addForm").submit();
+                        }
+                    }
+                });
+            }
+        }
+
+        function addbillingdatefocus(){
+            $("#addbillingdatespan").css("display","none");
+        }
+
+        function addmoneyfocus(){
+            $("#addmoneyspan").css("display","none");
+        }
+    </script>
+    <%-- add end --%>
+
+    <script>
         function updateNum(id,num){
             $("#updateNumId").val(id);
             $("#input1101").val(num);
@@ -146,7 +196,7 @@
 
                     <div>
                         <button type="button" class="btn btn-success" data-target="#addModel" data-toggle="modal" style="">添加发票</button>
-                        内容：<input type="text" name="sou" value="${sou}">
+                        内容：<input type="text" id="sousouinput" name="sou" value="${sou}">
                         <button type="submit" class="btn btn-primary" style="">搜索</button>
                     </div>
                     <table class="table">
@@ -198,6 +248,9 @@
                         <button type="button" class="btn btn-lg btn-default" onclick="weiye()">尾页</button>
                     </p>
                 </form>
+
+
+
                 <%-- delete begin --%>
                 <div class="modal fade" id="delModel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
                     <div class="modal-dialog">
@@ -216,9 +269,10 @@
                             </div>
                             <form style="display: none;" id="deleteIdForm" method="post">
                                 <input type="hidden" id="deleteIdFormId" name="id">
-                                <input type="hidden" id="deleteIdCurrentPage" name="currentPage" value="${currentPage}">
-                                <input type="hidden" id="deleteIdpageSizes" name="pageSize" value="${pageSize}">
-                                <input type="hidden" id="deleteIdActorName" name="actorName" value="${actorName}">
+                                <input type="hidden" id="deleteIdCurrentPage" name="currentPage" >
+                                <input type="hidden" id="deleteIdpageSizes" name="pageSize" >
+                                <input type="hidden" id="deleteIdSou" name="sou" >
+                                <input type="hidden" name="projectId" value="${projectId}">
                             </form>
                         </div>
                     </div>
@@ -319,7 +373,7 @@
                                 <tr>
                                     <td><label for="input1" class="control-label">开票日期</label></td>
                                     <td style="width: 50%;"><div class="col-sm-10">
-                                        <input type="text" class="form-control" id="input1" data-date-format="yyyy-mm-dd" readonly required placeholder="开票日期" name="billingDate" >
+                                        <input type="text" class="form-control" id="input1" data-date-format="yyyy-mm-dd" readonly required placeholder="开票日期" name="billingDate" onfocus="addbillingdatefocus()" ><span id="addbillingdatespan" style="color: red;display: none;"></span>
                                     </div></td>
                                     <td><label for="input2" class="control-label">发票编号</label></td>
                                     <td><div class="col-sm-10">
@@ -355,9 +409,9 @@
                                 <tr>
                                     <td><label for="input9" class="control-label">发票金额</label></td>
                                     <td><div class="col-sm-10">
-                                        <input type="text" class="form-control" id="input9" placeholder="发票金额" name="money" />
+                                        <input type="text" class="form-control" id="input9" placeholder="发票金额" name="money" onfocus="addmoneyfocus()" /><span id="addmoneyspan" style="color: red;display: none;"></span>
                                     </div></td>
-                                    <td colspan="2"><input type="submit" class="btn btn-primary" style="height: 50px;width: 85%;" value="保存" /></td>
+                                    <td colspan="2"><input type="button" onclick="saveBtn()" class="btn btn-primary" style="height: 50px;width: 85%;" value="保存" /></td>
                                 </tr>
                             </table>
                         </fieldset>

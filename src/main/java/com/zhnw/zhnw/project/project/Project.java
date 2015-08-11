@@ -34,6 +34,11 @@ public class Project extends Model<Project> {
         return paginate(Integer.parseInt(currentPage), Integer.parseInt(pageSize), " select * ", sql);
     }
 
+
+    /**
+     * 欢迎页面：未付款提醒
+     *
+     * */
     public Page<Project> welcome (String currentPage, String pageSize, String selectClientSouName, String selectBTypeSouName, String selectContractSouName, String days, User user) throws ParseException {
 
         DateUtil dateUtil = new DateUtil();

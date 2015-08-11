@@ -239,6 +239,8 @@
         }
     </script>
     <%-- delete end --%>
+
+    <%-- update begin --%>
     <script>
         function xiugai(id,name,nameId,thing,accountable,accountableId,begin,forecast,end,isend,progress,review,reviewId){
             $("#updateId").val(id);
@@ -318,14 +320,36 @@
             $("#updateForecast").val($("#selectForecastSou").val());
             $("#updateIsend").val($("#selectIsEndSou").val());
 
-            $("#updateForm").submit();
+            var thing = $.trim($("#input14").val());
+            var forecast = $.trim($("#input19").val());
+            var progress = $.trim($("#input17").val());
+            if(thing==null||thing==''){
+                $("#updatethingspan").html("事项不能为空！");
+                $("#updatethingspan").css("display","block");
+            }else if(forecast==null||forecast==''){
+                $("#updateforecastspan").html("预计结束日期不能为空！");
+                $("#updateforecastspan").css("display","block");
+            }else if(progress==null||progress==''){
+                $("#updateprogressspan").html("进展不能为空！");
+                $("#updateprogressspan").css("display","block");
+            }else{
+                $("#updateForm").submit();
+            }
+        }
+
+        function updatethingfocus(){
+            $("#updatethingspan").css("display","none");
+        }
+
+        function updateforecastfocus(){
+            $("#updateforecastspan").css("display","none");
+        }
+
+        function updateprogressfocus(){
+            $("#updateprogressspan").css("display","none");
         }
     </script>
-
-
-
-
-
+    <%-- update begin --%>
 </head>
 <body>
 <div class="container" style="width: 100%;max-width:95%;height: 100%;padding-top: 30px;">
@@ -575,7 +599,7 @@
                                             <tr>
                                                 <td><label for="input14" class="control-label">事项</label></td>
                                                 <td colspan="3" style=""><div class="col-sm-10">
-                                                    <input type="text" class="form-control" id="input14" placeholder="事项" name="thing"  >
+                                                    <input type="text" class="form-control" id="input14" placeholder="事项" name="thing"  onfocus="updatethingfocus()"><span id="updatethingspan" style="color:red;display:none;"></span>
                                                 </div></td>
                                             </tr>
                                             <tr>
@@ -585,7 +609,7 @@
                                                 </div></td>
                                                 <td><label for="input19" class="control-label">预计结束日期</label></td>
                                                 <td><div class="col-sm-10">
-                                                    <input type="text" class="form-control" id="input19" placeholder="(年年年年-月月-日日)"  name="forecast"  data-date-format="yyyy-mm-dd" readonly required>
+                                                    <input type="text" class="form-control" id="input19" placeholder="(年年年年-月月-日日)"  name="forecast"  data-date-format="yyyy-mm-dd" readonly onfocus="updateforecastfocus()"><span id="updateforecastspan" style="color:red;display:none;"></span>
                                                 </div></td>
                                             </tr>
                                             <tr>
@@ -601,7 +625,7 @@
                                             <tr>
                                                 <td><label for="input17" class="control-label">进展</label></td>
                                                 <td colspan="3" style=""><div class="col-sm-10">
-                                                    <input type="text" class="form-control" id="input17" placeholder="进展" name="progress"  >
+                                                    <input type="text" class="form-control" id="input17" placeholder="进展" name="progress" onfocus="updateprogressfocus()" ><span id="updateprogressspan" style="color:red;display:none;"></span>
                                                 </div></td>
                                             </tr>
                                             <tr>

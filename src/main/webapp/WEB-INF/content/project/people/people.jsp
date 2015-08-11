@@ -30,7 +30,7 @@
         }
     </script>
 
-
+    <%-- 分页 begin --%>
     <script type="text/javascript">
         function shouye(){
             $("#currentPageHidden").val("1");
@@ -89,17 +89,71 @@
             $("#pageAction").submit();
         }
     </script>
+    <%-- 分页 end --%>
 
+
+    <%-- add project script begin--%>
+    <script>
+        $.ajax({
+            url:"${pageContext.request.contextPath}/user/userJson",
+            dataType:"json",
+            success:function(data){
+                for(i=0;i<data.length;i++){
+                    $("#input1").append("<option value='"+data[i].id+"'>"+data[i].trueName+"</option>");
+                }
+                $('#input1').selectpicker({
+                    'selectedText': 'cat'
+                });
+            }
+        });
+
+        function beforeadd(){
+            $("#addcurrentPage").val($("#currentPageHidden").val());
+            $("#addpagesize").val($("#pageSizeHidden").val());
+        }
+
+        function saveBtn(){
+            var pId = $("#input1").val();
+
+            $.ajax({
+                url:"${pageContext.request.contextPath}/project/people/addUserSingle",
+                data:{pId:pId,projectId:$("#addprojectId").val()},
+                dataType:"json",
+                type:"post",
+                success:function(data){
+                   if(data=='1'){
+                       $("#addspan").html("此员工已经添加！");
+                       $("#addspan").css("display","block");
+                   }else{
+                       $("#addForm").submit();
+                   }
+                }
+            });
+        }
+
+        function addfocus(){
+            $("#addspan").css("display","none");
+        }
+    </script>
+    <%-- add project script end--%>
+
+    <%-- delete begin --%>
     <script>
         function delid(id){
             $("#deleteIdInput").val(id);
         }
         function deleteById(){
             $("#deleteIdFormId").val($("#deleteIdInput").val());
+            $("#deleteIdCurrentPage").val($("#currentPageHidden").val());
+            $("#deleteIdpageSizes").val($("#pageSizeHidden").val());
             $("#deleteIdForm").attr("action","${pageContext.request.contextPath}/project/people/delete");
             $("#deleteIdForm").submit();
         }
+    </script>
+    <%-- delete end --%>
 
+    <%-- update begin --%>
+    <%--<script>
         function updateNum(id,num){
             $("#updateNumId").val(id);
             $("#input1101").val(num);
@@ -108,10 +162,6 @@
         function xiugai(id,projectId,peopleId,name){
             $("#updateId").val(id);
             $("#updateProjectId").val(projectId);
-
-
-
-
             $.ajax({
                 url:"${pageContext.request.contextPath}/user/userJson",
                 dataType:"json",
@@ -131,44 +181,9 @@
 
 
         }
-    </script>
+    </script>--%>
+    <%-- update begin --%>
 
-    <%-- add project script begin--%>
-    <script>
-
-        $.ajax({
-            url:"${pageContext.request.contextPath}/user/userJson",
-            dataType:"json",
-            success:function(data){
-                $("#selectClientSou").append("<option value='0'>请选择项目人员</option>");
-                for(i=0;i<data.length;i++){
-                    if(data[i].id==$("#inputClientSou").val()){
-                        $("#selectClientSou").append("<option selected='selected' value='"+data[i].id+"'>"+data[i].trueName+"</option>");
-                    }else{
-                        $("#selectClientSou").append("<option value='"+data[i].id+"'>"+data[i].trueName+"</option>");
-                    }
-                }
-                $('#selectClientSou').selectpicker({
-                    'selectedText': 'cat'
-                });
-            }
-        });
-
-        $.ajax({
-            url:"${pageContext.request.contextPath}/user/userJson",
-            dataType:"json",
-            success:function(data){
-                for(i=0;i<data.length;i++){
-                    $("#input1").append("<option value='"+data[i].id+"'>"+data[i].trueName+"</option>");
-                }
-                $('#input1').selectpicker({
-                    'selectedText': 'cat'
-                });
-            }
-        });
-
-    </script>
-    <%-- add project script end--%>
 </head>
 <body>
 <div class="container" style="width: 100%;max-width:95%;height: 100%;padding-top: 30px;">
@@ -177,11 +192,7 @@
             <div class="span12">
                 <form id="pageAction" action="${pageContext.request.contextPath}/project/people/people" method="post" style="font-size: 10pt;">
                     <div>
-                        <button type="button" class="btn btn-success" data-target="#addModel" data-toggle="modal" style="margin-bottom: 10px;">添加人员</button>
-                        <select id="selectClientSou" name="selectClientSouName" class="selectpicker bla bla bli"  data-live-search="true">
-                        </select>
-                        <input type="hidden" id="inputClientSou" value="${peopleId}">
-                        <button type="submit" class="btn btn-primary" style="margin-bottom: 10px;">搜索</button>
+                        <button type="button" onclick="beforeadd()" class="btn btn-success" data-target="#addModel" data-toggle="modal" style="margin-bottom: 10px;">添加人员</button>
                     </div>
                     <table class="table">
                         <thead>
@@ -195,7 +206,7 @@
                             <tr>
                                 <td>${p.name}</td>
                                 <td>
-                                    <button type="button" class="btn btn-xs btn-primary" data-toggle="modal" data-target="#updateModel" onclick="xiugai('${p.id}','${p.projectId}','${p.peopleId}','${p.name}')">修改</button>
+                                    <%--<button type="button" class="btn btn-xs btn-primary" data-toggle="modal" data-target="#updateModel" onclick="xiugai('${p.id}','${p.projectId}','${p.peopleId}','${p.name}')">修改</button>--%>
                                     <button type="button" class="btn btn-xs btn-danger" data-toggle="modal" onclick="delid(${p.id})" data-target="#delModel">删除</button>
                                 </td>
                             </tr>
@@ -220,6 +231,7 @@
                         <button type="button" class="btn btn-lg btn-default" onclick="weiye()">尾页</button>
                     </p>
                 </form>
+
                 <%-- delete begin --%>
                 <div class="modal fade" id="delModel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
                     <div class="modal-dialog">
@@ -238,9 +250,9 @@
                             </div>
                             <form style="display: none;" id="deleteIdForm" method="post">
                                 <input type="hidden" id="deleteIdFormId" name="id">
-                                <input type="hidden" id="deleteIdCurrentPage" name="currentPage" value="${currentPage}">
-                                <input type="hidden" id="deleteIdpageSizes" name="pageSize" value="${pageSize}">
-                                <input type="hidden" id="deleteIdActorName" name="actorName" value="${actorName}">
+                                <input type="hidden" id="deleteIdCurrentPage" name="currentPage" >
+                                <input type="hidden" id="deleteIdpageSizes" name="pageSize" >
+                                <input type="hidden"  name="projectId" value="${projectId}">
                             </form>
                         </div>
                     </div>
@@ -258,15 +270,17 @@
                             <div class="modal-body">
                                 <form method="post" id="addForm" action="${pageContext.request.contextPath}/project/people/add">
                                     <fieldset>
-                                        <input type="hidden"  name="projectId" value="${projectId}" />
+                                        <input type="hidden" id="addprojectId"  name="projectId" value="${projectId}" />
+                                        <input type="hidden" id="addcurrentPage"  name="currentPage"  />
+                                        <input type="hidden" id="addpagesize"  name="pageSize"  />
                                         <table style="width: 100%;height:200px;">
                                             <tr>
                                                 <td style="width: 20%;"><label for="input1" class="control-label">人员姓名</label></td>
                                                 <td style="width: 20%;"><div class="col-sm-10">
-                                                    <select id="input1" class="form-control input-lg" name="peopleId" data-live-search="true">
-                                                    </select>
+                                                    <select onchange="addfocus()" id="input1" class="form-control input-lg" name="peopleId" data-live-search="true">
+                                                    </select><span id="addspan" style="color:red;display: none;"></span>
                                                 </div></td>
-                                                <td colspan="2"><input type="submit" class="btn btn-primary" style="height: 50px;width: 85%;" value="保存" /></td>
+                                                <td colspan="2"><input type="button" onclick="saveBtn()" class="btn btn-primary" style="height: 50px;width: 85%;" value="保存" /></td>
                                             </tr>
                                         </table>
                                     </fieldset>
@@ -282,7 +296,7 @@
 
 
                 <%-- update begin --%>
-                <div class="modal fade bs-example-modal-lg" id="updateModel" tabindex="-1" role="dialog" aria-labelledby="updateModalLabel" aria-hidden="true" style="display: none;">
+                <%--<div class="modal fade bs-example-modal-lg" id="updateModel" tabindex="-1" role="dialog" aria-labelledby="updateModalLabel" aria-hidden="true" style="display: none;">
                     <div class="modal-dialog modal-lg" style="width: 90%;">
                         <div class="modal-content">
                             <div class="modal-header">
@@ -312,7 +326,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div>--%>
                 <%-- update end --%>
 
 
@@ -328,47 +342,5 @@
 <script src="${pageContext.request.contextPath}/common/bootstrap-datetimepicker-master/bootstrap3/bootstrap/js/bootstrap.min.js"></script>
 <script src="${pageContext.request.contextPath}/common/bootstrap-datetimepicker-master/js/bootstrap-datetimepicker.js"></script>
 <script src="${pageContext.request.contextPath}/common/bootstrap-datetimepicker-master/js/locales/bootstrap-datetimepicker.zh-CN.js"></script>
-<script type="text/javascript">
-    $('#input8').datetimepicker({
-        language:  'zh-CN',
-        weekStart: 1,
-        todayBtn:  1,
-        autoclose: 1,
-        todayHighlight: 1,
-        startView: 2,
-        minView: 2,
-        forceParse: 0
-    });
-    $('#input9').datetimepicker({
-        language:  'zh-CN',
-        weekStart: 1,
-        todayBtn:  1,
-        autoclose: 1,
-        todayHighlight: 1,
-        startView: 2,
-        minView: 2,
-        forceParse: 0
-    });
-    $('#input108').datetimepicker({
-        language:  'zh-CN',
-        weekStart: 1,
-        todayBtn:  1,
-        autoclose: 1,
-        todayHighlight: 1,
-        startView: 2,
-        minView: 2,
-        forceParse: 0
-    });
-    $('#input109').datetimepicker({
-        language:  'zh-CN',
-        weekStart: 1,
-        todayBtn:  1,
-        autoclose: 1,
-        todayHighlight: 1,
-        startView: 2,
-        minView: 2,
-        forceParse: 0
-    });
-</script>
 </body>
 </html>

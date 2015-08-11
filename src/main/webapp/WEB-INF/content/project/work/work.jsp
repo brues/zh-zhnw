@@ -34,6 +34,8 @@
             window.top.location = "${pageContext.request.contextPath}";
         }
     </script>
+
+    <%-- 分页 begin --%>
     <script type="text/javascript">
         function shouye(){
             $("#currentPageHidden").val("1");
@@ -92,14 +94,14 @@
             $("#pageAction").submit();
         }
     </script>
+    <%-- 分页 end --%>
 
+    <%-- 评价 begin --%>
     <script>
-
-
-        function xiugai(id,assess){
+        function xiugai(id,assess,reviewId){
             $("#updateId").val(id);
             $("#input14").val(assess);
-
+            $("#updatereviewId").val(reviewId);
         }
 
         function updatework(){
@@ -111,11 +113,21 @@
             $("#updateForecast").val($("#selectForecastSou").val());
             $("#updateIsend").val($("#selectIsEndSou").val());
 
-            $("#updateForm").submit();
+            var assess = $.trim($("#input14").val());
+
+            if(assess==null||assess==''){
+                $("#updateworkspan").html("工作评价不能为空！");
+                $("#updateworkspan").css("display","block");
+            }else{
+                $("#updateForm").submit();
+            }
         }
 
-
+        function updateworkfocus(){
+            $("#updateworkspan").css("display","none");
+        }
     </script>
+    <%-- 评价 end --%>
 
 
     <%-- 搜索用ajax begin --%>
@@ -159,8 +171,6 @@
             }
         });
 
-
-
         $.ajax({
             url:"${pageContext.request.contextPath}/work/thingJson",
             dataType:"json",
@@ -178,8 +188,6 @@
                 });
             }
         });
-
-
     </script>
     <%-- 搜索用ajax end --%>
 
@@ -195,7 +203,6 @@
                         <input type="hidden" id="inputNameSou" value="${nameId}">
                         <input type="hidden" id="inputThingSou" value="${thing}">
                         <input type="hidden" id="inputForecastSou" value="${forecast}">
-                        <%--<button type="button" class="btn btn-success" data-target="#addModel" data-toggle="modal">添加工作记录</button>--%>
 
                         <select id="selectNameSou" name="nameId" class="selectpicker bla bla bli"  data-live-search="true" ></select>
                         <select id="selectThingSou" name="thing" class="selectpicker bla bla bli"  data-live-search="true"></select>
@@ -251,7 +258,7 @@
                                 <td>${work.review}</td>
                                 <td>${work.assess}</td>
                                 <td>
-                                    <button type="button" class="btn btn-xs btn-primary" data-toggle="modal" data-target="#updateModel" onclick="xiugai('${work.id}','${work.assess}')">评价</button>
+                                    <button type="button" class="btn btn-xs btn-primary" data-toggle="modal" data-target="#updateModel" onclick="xiugai('${work.id}','${work.assess}','${work.reviewId}')">评价</button>
                                 </td>
                             </tr>
                         </c:forEach>
@@ -298,12 +305,15 @@
                                         <input type="hidden" id="updateIsend" name="updateisend" >
 
 
+                                        <input type="hidden" id="updatereviewId" name="reviewId" >
+
+
 
                                         <table style="width: 100%;height:350px;">
                                             <tr>
                                                 <td><label for="input14" class="control-label">评价</label></td>
                                                 <td colspan="3" style=""><div class="col-sm-10">
-                                                    <input type="text" class="form-control" id="input14" placeholder="评价" name="assess"  >
+                                                    <input type="text" class="form-control" id="input14" placeholder="评价" name="assess" onfocus="updateworkfocus()" ><span id="updateworkspan" style="color:red;display: none;"></span>
                                                 </div></td>
                                             </tr>
                                             <tr>

@@ -30,6 +30,7 @@
         }
     </script>
 
+    <%-- 分页 begin --%>
     <script type="text/javascript">
         function shouye(){
             $("#currentPageHidden").val("1");
@@ -88,7 +89,56 @@
             $("#pageAction").submit();
         }
     </script>
+    <%-- 分页 begin --%>
 
+    <%-- add project script begin--%>
+    <script>
+        $.ajax({
+            url:"${pageContext.request.contextPath}/user/userJson",
+            dataType:"json",
+            success:function(data){
+                for(i=0;i<data.length;i++){
+                    $("#input4").append("<option value='"+data[i].id+"'>"+data[i].trueName+"</option>");
+                    $("#input6").append("<option value='"+data[i].id+"'>"+data[i].trueName+"</option>");
+                }
+                $('#input4').selectpicker({
+                    'selectedText': 'cat'
+                })
+                $('#input6').selectpicker({
+                    'selectedText': 'cat'
+                });
+            }
+        });
+
+        function addwork(){
+            $("#addSouContentInput").val($("#souContentInput").val());
+            $("#addcurrentpageInput").val($("#currentPageHidden").val());
+            $("#addpagesizeInput").val($("#pageSizeHidden").val());
+
+            var dates= $.trim($("#input1").val());
+            var work= $.trim($("#input2").val());
+            if(dates==null||dates==''){
+                $("#adddatesspan").html("日期不能为空！");
+                $("#adddatesspan").css("display","block");
+            }else if(work==null||work==''){
+                $("#addworkspan").html("工作事项不能为空！");
+                $("#addworkspan").css("display","block");
+            }else{
+                $("#addForm").submit();
+            }
+        }
+
+        function adddatesfocus(){
+            $("#adddatesspan").css("display","none");
+        }
+
+        function addworkfocus(){
+            $("#addworkspan").css("display","none");
+        }
+    </script>
+    <%-- add project script end--%>
+
+    <%-- delete begin --%>
     <script>
         function delid(id){
             $("#deleteIdInput").val(id);
@@ -104,12 +154,11 @@
             $("#deleteIdForm").attr("action","${pageContext.request.contextPath}/project/process/delete");
             $("#deleteIdForm").submit();
         }
+    </script>
+    <%-- delete end --%>
 
-        function addwork(){
-            $("#addSouContentInput").val($("#souContentInput").val());
-            $("#addForm").submit();
-        }
-
+    <%-- update begin --%>
+    <script>
         function xiugai(id,remark,remarkDate,projectId,dates,work,result,waitok,principal,reviewer,principalId,reviewerId){
             $("#updateId").val(id);
             $("#updateSouContentInput").val($("#souContentInput").val());
@@ -123,8 +172,6 @@
                 url:"${pageContext.request.contextPath}/user/userJson",
                 dataType:"json",
                 success:function(data){
-                    $("#input14").append("<option value='0'>请选择具体负责人</option>");
-                    $("#input16").append("<option value='0'>请选择复核人员</option>");
                     for(i=0;i<data.length;i++){
                         if(principalId==data[i].id){
                             $("#input14").append("<option selected='selected' value='"+data[i].id+"'>"+data[i].trueName+"</option>");
@@ -150,35 +197,33 @@
         }
 
         function update(){
-            $("#updateForm").submit();
+            $("#updateSouContentInput").val($("#souContentInput").val());
+            $("#updatecurrentpageInput").val($("#currentPageHidden").val());
+            $("#updatepagesizeInput").val($("#pageSizeHidden").val());
+
+            var dates= $.trim($("#input11").val());
+            var work= $.trim($("#input12").val());
+            if(dates==null||dates==''){
+                $("#updatedatesspan").html("日期不能为空！");
+                $("#updatedatesspan").css("display","block");
+            }else if(work==null||work==''){
+                $("#updateworkspan").html("工作事项不能为空！");
+                $("#updateworkspan").css("display","block");
+            }else{
+                $("#updateForm").submit();
+            }
+        }
+
+        function updatedatesfocus(){
+            $("#updatedatesspan").css("display","none");
+        }
+
+        function updateworkfocus(){
+            $("#updateworkspan").css("display","none");
         }
     </script>
+    <%-- update end --%>
 
-    <%-- add project script begin--%>
-    <script>
-
-        $.ajax({
-            url:"${pageContext.request.contextPath}/user/userJson",
-            dataType:"json",
-            success:function(data){
-                $("#input4").append("<option value='0'>请选择具体负责人</option>");
-                $("#input6").append("<option value='0'>请选择复核人员</option>");
-                for(i=0;i<data.length;i++){
-                    $("#input4").append("<option value='"+data[i].id+"'>"+data[i].trueName+"</option>");
-                    $("#input6").append("<option value='"+data[i].id+"'>"+data[i].trueName+"</option>");
-                }
-                $('#input4').selectpicker({
-                    'selectedText': 'cat'
-                })
-                $('#input6').selectpicker({
-                    'selectedText': 'cat'
-                });
-            }
-        });
-
-
-    </script>
-    <%-- add project script end--%>
 </head>
 <body>
 <div class="container" style="width: 100%;max-width:95%;height: 100%;padding-top: 30px;">
@@ -240,6 +285,7 @@
                         <button type="button" class="btn btn-lg btn-default" onclick="weiye()">尾页</button>
                     </p>
                 </form>
+
                 <%-- delete begin --%>
                 <div class="modal fade" id="delModel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
                     <div class="modal-dialog">
@@ -281,17 +327,19 @@
                                     <fieldset>
                                         <input type="hidden"  name="projectId" value="${projectId}" />
                                         <input type="hidden" id="addSouContentInput"  name="souContent" value="${souContent}" />
+                                        <input type="hidden" id="addcurrentpageInput"  name="currentPage"  />
+                                        <input type="hidden" id="addpagesizeInput"  name="pageSize"  />
                                         <table style="width: 100%;height:350px;">
                                             <tr>
                                                 <td><label for="input1" class="control-label">日期</label></td>
                                                 <td colspan="3" style=""><div class="col-sm-10">
-                                                    <input type="text" class="form-control" id="input1" readonly data-date-format="yyyy-mm-dd" placeholder="日期" name="dates"  >
+                                                    <input type="text" class="form-control" id="input1" onfocus="adddatesfocus()" readonly data-date-format="yyyy-mm-dd" placeholder="日期" name="dates"><span id="adddatesspan" style="color: red;display: none;"></span>
                                                 </div></td>
                                             </tr>
                                             <tr>
                                                 <td><label for="input2" class="control-label">工作事项</label></td>
                                                 <td colspan="3" style=""><div class="col-sm-10">
-                                                    <input type="text" class="form-control" id="input2" placeholder="工作事项" name="work"  >
+                                                    <input type="text" class="form-control" id="input2" placeholder="工作事项" name="work"  onfocus="addworkfocus()"><span id="addworkspan" style="color: red;display: none;"></span>
                                                 </div></td>
                                             </tr>
                                             <tr>
@@ -352,18 +400,21 @@
                                     <input type="hidden" id="updateId"  name="id" />
                                     <input type="hidden"  name="projectId" value="${projectId}" />
                                     <input type="hidden" id="updateSouContentInput"  name="souContent" value="${souContent}" />
+
+                                    <input type="hidden" id="updatecurrentpageInput"  name="currentPage"  />
+                                    <input type="hidden" id="updatepagesizeInput"  name="pageSize"  />
                                     <fieldset>
                                         <table style="width: 100%;height:350px;">
                                             <tr>
                                                 <td><label for="input11" class="control-label">日期</label></td>
                                                 <td colspan="3" style=""><div class="col-sm-10">
-                                                    <input type="text" class="form-control" id="input11" readonly data-date-format="yyyy-mm-dd" placeholder="日期" name="dates"  >
+                                                    <input type="text" class="form-control" id="input11" readonly data-date-format="yyyy-mm-dd" placeholder="日期" name="dates" onfocus="updatedatesfocus()" ><span id="updatedatesspan" style="color: red;display: none;"></span>
                                                 </div></td>
                                             </tr>
                                             <tr>
                                                 <td><label for="input12" class="control-label">工作事项</label></td>
                                                 <td colspan="3" style=""><div class="col-sm-10">
-                                                    <input type="text" class="form-control" id="input12" placeholder="工作事项" name="work"  >
+                                                    <input type="text" class="form-control" id="input12" placeholder="工作事项" name="work" onfocus="updateworkfocus()" ><span id="updateworkspan" style="color: red;display: none;"></span>
                                                 </div></td>
                                             </tr>
                                             <tr>

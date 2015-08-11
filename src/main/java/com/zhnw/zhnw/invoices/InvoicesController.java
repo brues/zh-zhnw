@@ -10,11 +10,11 @@ import java.text.ParseException;
 /**
  * Created by guoyibin on 15/5/4.
  *
- *
+ *  发票管理
  */
 public class InvoicesController extends Controller {
     /**
-     * 管理主页
+     * 项目合同列表
      * */
     public void project(){
         User user = getSessionAttr("zhnw_loginUser");
@@ -44,7 +44,7 @@ public class InvoicesController extends Controller {
     }
 
     /**
-     * 管理主页
+     * 发票管理主页
      * */
     public void index(){
         String  projectId = getPara("projectId");
@@ -103,7 +103,6 @@ public class InvoicesController extends Controller {
                 .set("zhId", user.get("zhId"))
                 .save();
 
-        //redirect("/invoice");
 
 
         String currentPage = getPara("currentPage");
@@ -137,7 +136,33 @@ public class InvoicesController extends Controller {
     public void delete(){
         String id = getPara("id");
         Invoices.me.deleteById(id);
-        redirect("/invoice");
+
+
+        String  projectId = getPara("projectId");
+
+        String currentPage = getPara("currentPage");
+        String  pageSize = getPara("pageSize");
+
+        String  sou = getPara("sou");
+
+
+
+        if (currentPage == null||currentPage.trim().length()==0) currentPage = "1";
+        if (pageSize == null||pageSize.trim().length()==0) pageSize = "10";
+
+        Page<Invoices> invoicesPage  = Invoices.me.paginate(currentPage, pageSize, projectId, sou);
+
+        setAttr("invoicesList",invoicesPage.getList());
+
+        setAttr("totalCount",invoicesPage.getTotalRow());
+        setAttr("totalPage",invoicesPage.getTotalPage());
+        setAttr("pageSize",invoicesPage.getPageSize());
+        setAttr("currentPage",invoicesPage.getPageNumber());
+
+        setAttr("projectId",projectId);
+        setAttr("sou",sou);
+
+        renderJsp("/WEB-INF/content/invoices/invoices.jsp");
     }
 
     /**
@@ -167,5 +192,12 @@ public class InvoicesController extends Controller {
                 .update();
 
         redirect("/invoice");
+    }
+
+    /**
+     * ajax:增加发票，验证发票编号是否存在
+     * */
+    public void saveInvoiceNumSingle(){
+
     }
 }
