@@ -127,8 +127,14 @@
                     dataType:"json",
                     type:"post",
                     success:function(data){
-                        if(data){
+                        if(data=='1'){
+                            $("#addinvoicenumspan").html("发票编号已经存在！");
+                            $("#addinvoicenumspan").css("display","block");
                         }else{
+                            $("#addIdCurrentPage").val($("#currentPageHidden").val());
+                            $("#addIdpageSizes").val($("#pageSizeHidden").val());
+                            $("#addIdSou").val($("#sousouinput").val());
+
                             $("#addForm").submit();
                         }
                     }
@@ -143,9 +149,14 @@
         function addmoneyfocus(){
             $("#addmoneyspan").css("display","none");
         }
+
+        function addinvoicesnumfocus(){
+            $("#addinvoicenumspan").css("display","none");
+        }
     </script>
     <%-- add end --%>
 
+    <%-- update begin --%>
     <script>
         function updateNum(id,num){
             $("#updateNumId").val(id);
@@ -181,11 +192,9 @@
                 $("#input107").append("<option value='普通发票'>普通发票</option>");
                 $("#input107").append("<option value='专用发票'>专用发票</option>");
             }
-
-
-
         }
     </script>
+    <%-- update begin --%>
 </head>
 <body>
 <div class="container" style="width: 100%;max-width:95%;height: 100%;padding-top: 30px;">
@@ -369,6 +378,10 @@
                     <form method="post" id="addForm" action="${pageContext.request.contextPath}/invoice/add">
                         <fieldset>
                             <input type="hidden"  name="projectId" value="${projectId}" />
+
+                            <input type="hidden" id="addIdCurrentPage" name="currentPage" >
+                            <input type="hidden" id="addIdpageSizes" name="pageSize" >
+                            <input type="hidden" id="addIdSou" name="sou" >
                             <table style="width: 100%;height: 300px;">
                                 <tr>
                                     <td><label for="input1" class="control-label">开票日期</label></td>
@@ -377,7 +390,7 @@
                                     </div></td>
                                     <td><label for="input2" class="control-label">发票编号</label></td>
                                     <td><div class="col-sm-10">
-                                        <input type="text" class="form-control" id="input2" placeholder="发票编号" name="invoiceNum"  >
+                                        <input type="text" class="form-control" id="input2" placeholder="发票编号" name="invoiceNum"  onfocus="addinvoicesnumfocus()"><span id="addinvoicenumspan" style="color: red;display: none;"></span>
                                     </div></td>
                                 </tr>
                                 <tr>

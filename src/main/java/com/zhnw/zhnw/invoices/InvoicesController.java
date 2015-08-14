@@ -6,6 +6,7 @@ import com.zhnw.zhnw.project.project.Project;
 import com.zhnw.zhnw.purview.user.User;
 
 import java.text.ParseException;
+import java.util.List;
 
 /**
  * Created by guoyibin on 15/5/4.
@@ -90,18 +91,23 @@ public class InvoicesController extends Controller {
         String  remark = getPara("remark");
         String  money = getPara("money");
 
+        Invoices invoices = new Invoices();
 
-        new Invoices()
-                .set("billingDate", billingDate)
-                .set("invoiceNum", invoiceNum)
-                .set("chargeDate", chargeDate)
-                .set("isCharge", isCharge)
-                .set("type", type)
-                .set("remark", remark)
-                .set("money", money)
-                .set("projectId", projectId)
-                .set("zhId", user.get("zhId"))
-                .save();
+        if (billingDate!=null&&billingDate.trim().length()!=0){
+            invoices.set("billingDate", billingDate);
+        }
+        if (chargeDate!=null&&chargeDate.trim().length()!=0){
+            invoices.set("chargeDate", chargeDate);
+        }
+        invoices
+            .set("invoiceNum", invoiceNum)
+            .set("isCharge", isCharge)
+            .set("type", type)
+            .set("remark", remark)
+            .set("money", money)
+            .set("projectId", projectId)
+            .set("zhId", user.get("zhId"))
+            .save();
 
 
 
@@ -198,6 +204,12 @@ public class InvoicesController extends Controller {
      * ajax:增加发票，验证发票编号是否存在
      * */
     public void saveInvoiceNumSingle(){
-
+        String invoiceNum = getPara("invoiceNum");
+        List<Invoices> invoicesList = Invoices.me.find("select * from invoices where invoiceNum='"+invoiceNum+"'");
+        if (invoicesList.size()==0){
+            renderJson("0");
+        }else{
+            renderJson("1");
+        }
     }
 }
