@@ -47,7 +47,7 @@ public class HourController extends Controller {
 
 
     /**
-     * 管理主页
+     * 工时管理主页
      * */
     public void index(){
         String  projectId = getPara("projectId");
@@ -112,20 +112,19 @@ public class HourController extends Controller {
                 .set("zhId", user0.get("zhId"))
                 .save();
 
-        //redirect("/hour");
 
 
         String currentPage = getPara("currentPage");
         String  pageSize = getPara("pageSize");
 
-        String  name0 = getPara("name");
+        String  name0 = getPara("name0");
 
 
 
         if (currentPage == null||currentPage.trim().length()==0) currentPage = "1";
         if (pageSize == null||pageSize.trim().length()==0) pageSize = "10";
 
-        Page<Hour> hourPage  = Hour.me.paginate(currentPage, pageSize, projectId, "");
+        Page<Hour> hourPage  = Hour.me.paginate(currentPage, pageSize, projectId, name0);
 
         setAttr("hourList",hourPage.getList());
 
@@ -135,7 +134,7 @@ public class HourController extends Controller {
         setAttr("currentPage",hourPage.getPageNumber());
 
         setAttr("projectId",projectId);
-        //setAttr("name",name0);
+        setAttr("name",name0);
 
         renderJsp("/WEB-INF/content/hour/hour.jsp");
     }

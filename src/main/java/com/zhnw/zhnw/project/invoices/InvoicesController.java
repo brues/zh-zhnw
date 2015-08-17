@@ -8,6 +8,7 @@ import com.zhnw.zhnw.purview.user.User;
 
 /**
  * Created by guoyibin on 15/5/4.
+ *
  */
 public class InvoicesController extends Controller {
     /**

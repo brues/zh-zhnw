@@ -28,7 +28,7 @@
         }
     </script>
 
-
+    <%-- 分页 begin --%>
     <script type="text/javascript">
         function shouye(){
             $("#currentPageHidden").val("1");
@@ -87,6 +87,94 @@
             $("#pageAction").submit();
         }
     </script>
+    <%-- 分页 end --%>
+
+    <%-- add project ajax begin--%>
+    <script>
+
+        $.ajax({
+            url:"${pageContext.request.contextPath}/user/userJson",
+            dataType:"json",
+            success:function(data){
+                for(i=0;i<data.length;i++){
+                    if(data[i].id==${zhnw_loginUser.id}){
+                        $("#input2").append("<option selected='selected' value='"+data[i].id+"'>"+data[i].trueName+"</option>");
+                    }else{
+                        $("#input2").append("<option value='"+data[i].id+"'>"+data[i].trueName+"</option>");
+                    }
+                }
+                $('#input2').selectpicker({
+                    'selectedText': 'cat'
+                });
+            }
+        });
+
+
+        $.ajax({
+            url:"${pageContext.request.contextPath}/user/userJson",
+            dataType:"json",
+            success:function(data){
+                for(i=0;i<data.length;i++){
+                    if(data[i].id==$("#inputClientSou").val()){
+                        $("#input8").append("<option selected='selected' value='"+data[i].id+"'>"+data[i].trueName+"</option>");
+                    }else{
+                        $("#input8").append("<option value='"+data[i].id+"'>"+data[i].trueName+"</option>");
+                    }
+                }
+                $('#input8').selectpicker({
+                    'selectedText': 'cat'
+                });
+            }
+        });
+
+    </script>
+    <%-- add project ajax end--%>
+
+    <%-- add begin --%>
+    <script>
+        function saveBtn(){
+            var dates = $.trim($("#input1").val());
+            var begin = $.trim($("#input3").val());
+            var end = $.trim($("#input6").val());
+            var detail = $.trim($("#input9").val());
+
+            if(dates==null||dates==''){
+                $("#adddatesspan").html("日期不能为空！");
+                $("#adddatesspan").css("display","block");
+            }else if(begin==null||begin==''){
+                $("#addbeginspan").html("开始时间不能为空！");
+                $("#addbeginspan").css("display","block");
+            }else if(end==null||end==''){
+                $("#addendspan").html("结束时间不能为空！");
+                $("#addendspan").css("display","block");
+            }else if(detail==null||detail==''){
+                $("#adddetailspan").html("详细描述不能为空！");
+                $("#adddetailspan").css("display","block");
+            }else{
+                $("#addcurrentpagehidden").val($("#currentPageHidden").val());
+                $("#addpagesizehiden").val($("#pageSizeHidden").val());
+                $("#addnamesouhidden").val($("#souNameInput").val());
+                $("#addForm").submit();
+            }
+        }
+
+        function adddatesfocus(){
+            $("#adddatesspan").css("display","none");
+        }
+
+        function addbeginfocus(){
+            $("#addbeginspan").css("display","none");
+        }
+
+        function addendfocus(){
+            $("#addendspan").css("display","none");
+        }
+
+        function adddetailfocus(){
+            $("#adddetailspan").css("display","none");
+        }
+    </script>
+    <%-- add end --%>
 
     <script>
         function delid(id){
@@ -134,46 +222,7 @@
         }
     </script>
 
-    <%-- add project script begin--%>
-    <script>
 
-        $.ajax({
-            url:"${pageContext.request.contextPath}/user/userJson",
-            dataType:"json",
-            success:function(data){
-                for(i=0;i<data.length;i++){
-                    if(data[i].id==${zhnw_loginUser.id}){
-                        $("#input2").append("<option selected='selected' value='"+data[i].id+"'>"+data[i].trueName+"</option>");
-                    }else{
-                        $("#input2").append("<option value='"+data[i].id+"'>"+data[i].trueName+"</option>");
-                    }
-                }
-                $('#input2').selectpicker({
-                    'selectedText': 'cat'
-                });
-            }
-        });
-
-
-        $.ajax({
-            url:"${pageContext.request.contextPath}/user/userJson",
-            dataType:"json",
-            success:function(data){
-                for(i=0;i<data.length;i++){
-                    if(data[i].id==$("#inputClientSou").val()){
-                        $("#input8").append("<option selected='selected' value='"+data[i].id+"'>"+data[i].trueName+"</option>");
-                    }else{
-                        $("#input8").append("<option value='"+data[i].id+"'>"+data[i].trueName+"</option>");
-                    }
-                }
-                $('#input8').selectpicker({
-                    'selectedText': 'cat'
-                });
-            }
-        });
-
-    </script>
-    <%-- add project script end--%>
 </head>
 <body>
 <div class="container" style="width: 100%;max-width:95%;height: 100%;padding-top: 30px;">
@@ -183,7 +232,7 @@
                 <form id="pageAction" action="${pageContext.request.contextPath}/hour" method="post" style="font-size: 10pt;" class="form-horizontal"  role="form">
                     <div>
                         <button type="button" class="btn btn-success" data-target="#addModel" data-toggle="modal" style="">添加记录</button>
-                        姓名：<input type="text" name="name" value="${name}">
+                        姓名：<input type="text" id="souNameInput" name="name" value="${name}">
                         <button type="submit" class="btn btn-primary" style="">搜索</button>
                     </div>
                     <table class="table">
@@ -237,6 +286,7 @@
                         <button type="button" class="btn btn-lg btn-default" onclick="weiye()">尾页</button>
                     </p>
                 </form>
+
                 <%-- delete begin --%>
                 <div class="modal fade" id="delModel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
                     <div class="modal-dialog">
@@ -346,37 +396,40 @@
                     <form method="post" id="addForm" action="${pageContext.request.contextPath}/hour/add">
                         <fieldset>
                             <input type="hidden"  name="projectId" value="${projectId}" />
+
+                            <input type="hidden" id="addcurrentpagehidden"  name="currentPage" />
+                            <input type="hidden"  id="addpagesizehiden" name="pageSize"  />
+                            <input type="hidden" id="addnamesouhidden"  name="name0"  />
                             <table style="width: 100%;height: 300px;">
                                 <tr>
                                     <td><label for="input1" class="control-label">日期</label></td>
                                     <td style="width: 50%;"><div class="col-sm-10">
-                                        <input type="text" class="form-control" id="input1" data-date-format="yyyy-mm-dd" placeholder="(年年年年-月月-日日)" name="dates" value="${dates}" readonly required>
+                                        <input type="text" class="form-control" id="input1" data-date-format="yyyy-mm-dd" placeholder="(年年年年-月月-日日)" name="dates" onfocus="adddatesfocus()" readonly ><span id="adddatesspan" style="color: red;display: none;"></span>
                                     </div></td>
                                     <td><label for="input2" class="control-label">员工姓名</label></td>
                                     <td><div class="col-sm-10">
                                         <select id="input2" class="form-control input-lg" name="name" data-live-search="true">
                                         </select>
-                                        <%--<input type="text" class="form-control" id="input2" placeholder="员工姓名" name="name" value="${name}" required/>--%>
                                     </div></td>
                                 </tr>
                                 <tr>
                                     <td><label for="input3" class=" control-label">开始时间</label></td>
                                     <td><div class="col-sm-10">
-                                        <input  type="text" class="form-control" id="input3" data-date-format="hh:ii"   placeholder="(时时:分分)" name="begin" value="${begin}" readonly required/>
+                                        <input  type="text" class="form-control" id="input3" data-date-format="hh:ii" onfocus="addbeginfocus()"  placeholder="(时时:分分)" name="begin"  readonly /><span id="addbeginspan" style="color: red;display: none;"></span>
                                     </div></td>
                                     <td><label for="input6" class="control-label">结束时间</label></td>
                                     <td><div class="col-sm-10">
-                                        <input type="text" class="form-control" id="input6" data-date="" data-date-format="hh:ii" data-link-field="dtp_input3" data-link-format="hh:ii" placeholder="(时时:分分)" name="end" value="${end}" readonly required/>
+                                        <input type="text" class="form-control" id="input6" onfocus="addendfocus()" data-date="" data-date-format="hh:ii" data-link-field="dtp_input3" data-link-format="hh:ii" placeholder="(时时:分分)" name="end"  readonly /><span id="addendspan" style="color: red;display: none;"></span>
                                     </div></td>
                                 </tr>
                                 <tr>
                                     <td><label for="input9" class=" control-label">详细描述</label></td>
                                     <td colspan="3"><div class="col-sm-11" style="width: 94%;">
-                                        <input  type="text" class="form-control" id="input9" placeholder="详细描述" name="detail" value="${detail}" required/>
+                                        <input  type="text" class="form-control" id="input9" placeholder="详细描述" name="detail" onfocus="adddetailfocus()" required/><span id="adddetailspan" style="color: red;display: none;"></span>
                                     </div></td>
                                 </tr>
                                 <tr>
-                                    <td colspan="4"><input type="submit" class="btn btn-primary" style="height: 50px;width: 93%;" value="保存" /></td>
+                                    <td colspan="4"><input type="button" onclick="saveBtn()" class="btn btn-primary" style="height: 50px;width: 93%;" value="保存" /></td>
                                 </tr>
                             </table>
                         </fieldset>

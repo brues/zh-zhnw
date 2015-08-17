@@ -185,19 +185,51 @@ public class InvoicesController extends Controller {
         String  remark = getPara("remark");
         String  money = getPara("money");
 
+        Invoices invoices = new Invoices();
 
-        new Invoices()
-                .set("id", id)
-                .set("billingDate", billingDate)
-                .set("invoiceNum", invoiceNum)
-                .set("chargeDate", chargeDate)
-                .set("isCharge", isCharge)
-                .set("type", type)
-                .set("remark", remark)
-                .set("money", money)
-                .update();
 
-        redirect("/invoice");
+        if (billingDate!=null&&billingDate.trim().length()!=0){
+            invoices.set("billingDate", billingDate);
+        }
+        if (chargeDate!=null&& chargeDate.trim().length()!=0){
+            invoices.set("chargeDate", chargeDate);
+        }
+
+        invoices
+            .set("id", id)
+            .set("invoiceNum", invoiceNum)
+            .set("isCharge", isCharge)
+            .set("type", type)
+            .set("remark", remark)
+            .set("money", money)
+            .update();
+
+
+
+
+        String  projectId = getPara("projectId");
+
+        String currentPage = getPara("currentPage");
+        String  pageSize = getPara("pageSize");
+
+        String  sou = getPara("sou");
+
+        if (currentPage == null||currentPage.trim().length()==0) currentPage = "1";
+        if (pageSize == null||pageSize.trim().length()==0) pageSize = "10";
+
+        Page<Invoices> invoicesPage  = Invoices.me.paginate(currentPage, pageSize, projectId, sou);
+
+        setAttr("invoicesList",invoicesPage.getList());
+
+        setAttr("totalCount",invoicesPage.getTotalRow());
+        setAttr("totalPage",invoicesPage.getTotalPage());
+        setAttr("pageSize",invoicesPage.getPageSize());
+        setAttr("currentPage",invoicesPage.getPageNumber());
+
+        setAttr("projectId",projectId);
+        setAttr("sou",sou);
+
+        renderJsp("/WEB-INF/content/invoices/invoices.jsp");
     }
 
     /**
@@ -206,6 +238,20 @@ public class InvoicesController extends Controller {
     public void saveInvoiceNumSingle(){
         String invoiceNum = getPara("invoiceNum");
         List<Invoices> invoicesList = Invoices.me.find("select * from invoices where invoiceNum='"+invoiceNum+"'");
+        if (invoicesList.size()==0){
+            renderJson("0");
+        }else{
+            renderJson("1");
+        }
+    }
+
+    /**
+     * ajax:更新发票，验证发票编号是否存在
+     * */
+    public void updateInvoiceNumSingle(){
+        String invoiceNum = getPara("invoiceNum");
+        String id = getPara("id");
+        List<Invoices> invoicesList = Invoices.me.find("select * from invoices where invoiceNum='"+invoiceNum+"' and id!="+id);
         if (invoicesList.size()==0){
             renderJson("0");
         }else{

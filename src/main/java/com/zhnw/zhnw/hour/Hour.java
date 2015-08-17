@@ -11,6 +11,10 @@ import com.jfinal.plugin.activerecord.Page;
 public class Hour extends Model<Hour> {
     public static final Hour me = new Hour();
 
+
+    /**
+     * 分页查询
+     * */
     public Page<Hour> paginate(String currentPage, String pageSize, String projectId, String name) {
         String sql = " from hours where projectId="+projectId+" ";
         if (name!=null&&name.trim().length()!=0){

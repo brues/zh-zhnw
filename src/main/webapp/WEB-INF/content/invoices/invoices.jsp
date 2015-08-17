@@ -193,8 +193,54 @@
                 $("#input107").append("<option value='专用发票'>专用发票</option>");
             }
         }
+
+        function updateBtn(){
+            var billingDate = $.trim($("#input101").val());
+            var money = $.trim($("#input109").val());
+
+            var invoiceNum = $.trim($("#input102").val());
+
+            if(billingDate==null||billingDate==''){
+                $("#updatebillingdatespan").html("开票日期不能为空！");
+                $("#updatebillingdatespan").css("display","block");
+            }else if(money==null||money==''){
+                $("#updatemoneyspan").html("发票金额不能为空！");
+                $("#updatemoneyspan").css("display","block");
+            }else{
+                $.ajax({
+                    url:"${pageContext.request.contextPath}/invoice/updateInvoiceNumSingle",
+                    data:{invoiceNum:invoiceNum,id:$("#updateId").val()},
+                    dataType:"json",
+                    type:"post",
+                    success:function(data){
+                        if(data=='1'){
+                            $("#updateinvoicenumspan").html("发票编号已经存在！");
+                            $("#updateinvoicenumspan").css("display","block");
+                        }else{
+                            $("#updateIdCurrentPage").val($("#currentPageHidden").val());
+                            $("#updateIdpageSizes").val($("#pageSizeHidden").val());
+                            $("#updateIdSou").val($("#sousouinput").val());
+
+                            $("#updateForm").submit();
+                        }
+                    }
+                });
+            }
+        }
+
+        function updatebillingdatefocus(){
+            $("#updatebillingdatespan").css("display","none");
+        }
+
+        function updatemoneyfocus(){
+            $("#updatemoneyspan").css("display","none");
+        }
+
+        function updateinvoicesnumfocus(){
+            $("#updateinvoicenumspan").css("display","none");
+        }
     </script>
-    <%-- update begin --%>
+    <%-- update end --%>
 </head>
 <body>
 <div class="container" style="width: 100%;max-width:95%;height: 100%;padding-top: 30px;">
@@ -302,17 +348,22 @@
                             <div class="modal-body">
                                 <form method="post" id="updateForm" action="${pageContext.request.contextPath}/invoice/update">
                                     <input type="hidden" id="updateId"  name="id" />
-                                    <input type="hidden" id="updateProjectId"  name="projectId" />
+                                    <input type="hidden" id="updateProjectId"  name="projectId" value="${projectId}"/>
+
+                                    <input type="hidden" id="updateIdCurrentPage" name="currentPage" >
+                                    <input type="hidden" id="updateIdpageSizes" name="pageSize" >
+                                    <input type="hidden" id="updateIdSou" name="sou" >
+
                                     <fieldset>
                                         <table style="width: 100%;height: 300px;">
                                             <tr>
                                                 <td><label for="input101" class="control-label">开票日期</label></td>
                                                 <td style="width: 50%;"><div class="col-sm-10">
-                                                    <input type="text" class="form-control" data-date-format="yyyy-mm-dd" readonly required id="input101" placeholder="开票日期" name="billingDate"  >
+                                                    <input type="text" class="form-control" data-date-format="yyyy-mm-dd" readonly required id="input101" placeholder="开票日期" name="billingDate"  onfocus="updatebillingdatefocus()"><span id="updatebillingdatespan" style="color: red;display: none;"></span>
                                                 </div></td>
                                                 <td><label for="input102" class="control-label">发票编号</label></td>
                                                 <td><div class="col-sm-10">
-                                                    <input type="text" class="form-control" id="input102" placeholder="发票编号" name="invoiceNum"  >
+                                                    <input type="text" class="form-control" id="input102" placeholder="发票编号" name="invoiceNum"  onfocus="updateinvoicesnumfocus()"><span id="updateinvoicenumspan" style="color: red;display: none;"></span>
                                                 </div></td>
                                             </tr>
                                             <tr>
@@ -340,9 +391,9 @@
                                             <tr>
                                                 <td><label for="input109" class="control-label">发票金额</label></td>
                                                 <td><div class="col-sm-10">
-                                                    <input type="text" class="form-control" id="input109" placeholder="发票金额" name="money" />
+                                                    <input type="text" class="form-control" id="input109" placeholder="发票金额" name="money" onfocus="updatemoneyfocus()" /><span id="updatemoneyspan" style="color: red;display: none;"></span>
                                                 </div></td>
-                                                <td colspan="2"><input type="submit" class="btn btn-primary" style="height: 50px;width: 85%;" value="保存" /></td>
+                                                <td colspan="2"><input type="button" onclick="updateBtn()" class="btn btn-primary" style="height: 50px;width: 85%;" value="保存" /></td>
                                             </tr>
                                         </table>
                                     </fieldset>
