@@ -145,7 +145,32 @@ public class HourController extends Controller {
     public void delete(){
         String id = getPara("id");
         Hour.me.deleteById(id);
-        redirect("/hour");
+
+        String  projectId = getPara("projectId");
+
+        String currentPage = getPara("currentPage");
+        String  pageSize = getPara("pageSize");
+
+        String  name = getPara("name");
+
+
+
+        if (currentPage == null||currentPage.trim().length()==0) currentPage = "1";
+        if (pageSize == null||pageSize.trim().length()==0) pageSize = "10";
+
+        Page<Hour> hourPage  = Hour.me.paginate(currentPage, pageSize, projectId, name);
+
+        setAttr("hourList",hourPage.getList());
+
+        setAttr("totalCount",hourPage.getTotalRow());
+        setAttr("totalPage",hourPage.getTotalPage());
+        setAttr("pageSize",hourPage.getPageSize());
+        setAttr("currentPage",hourPage.getPageNumber());
+
+        setAttr("projectId",projectId);
+        setAttr("name",name);
+
+        renderJsp("/WEB-INF/content/hour/hour.jsp");
     }
 
     /**
@@ -178,6 +203,29 @@ public class HourController extends Controller {
                 .set("nameId", name)
                 .update();
 
-        redirect("/hour");
+
+        String currentPage = getPara("currentPage");
+        String  pageSize = getPara("pageSize");
+
+        String  name0 = getPara("name0");
+
+
+
+        if (currentPage == null||currentPage.trim().length()==0) currentPage = "1";
+        if (pageSize == null||pageSize.trim().length()==0) pageSize = "10";
+
+        Page<Hour> hourPage  = Hour.me.paginate(currentPage, pageSize, projectId, name0);
+
+        setAttr("hourList",hourPage.getList());
+
+        setAttr("totalCount",hourPage.getTotalRow());
+        setAttr("totalPage",hourPage.getTotalPage());
+        setAttr("pageSize",hourPage.getPageSize());
+        setAttr("currentPage",hourPage.getPageNumber());
+
+        setAttr("projectId",projectId);
+        setAttr("name",name0);
+
+        renderJsp("/WEB-INF/content/hour/hour.jsp");
     }
 }

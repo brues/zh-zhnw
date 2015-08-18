@@ -88,91 +88,21 @@
     </script>
 
     <script>
-        function delid(id){
-            $("#deleteIdInput").val(id);
+        function beforeAgree(id){
+            $("#agreeIdFormId").val(id);
         }
         function deleteById(){
-            $("#deleteIdFormId").val($("#deleteIdInput").val());
-            $("#deleteIdForm").attr("action","${pageContext.request.contextPath}/project/hour/agree");
-            $("#deleteIdForm").submit();
+
+            $("#agreeIdCurrentPage").val($("#currentPageHidden").val());
+            $("#agreeIdpageSizes").val($("#pageSizeHidden").val());
+            $("#agreeIdActorName").val($("#souNameInput").val());
+
+            $("#agreeIdForm").attr("action","${pageContext.request.contextPath}/project/hour/agree");
+            $("#agreeIdForm").submit();
         }
 
-        function updateNum(id,num){
-            $("#updateNumId").val(id);
-            $("#input1101").val(num);
-        }
-
-        function xiugai(id,dates,name,detail,begin,end,hour,checkName,success,projectId,checkId,nameId){
-            $("#updateId").val(id);
-            $("#updateProjectId").val(projectId);
-
-            $("#input101").val(dates);
-            $("#input102").val(name);
-            $("#input103").val(begin);
-            $("#input106").val(end);
-            $("#input108").val(checkName);
-            $("#input109").val(detail);
-
-            $.ajax({
-                url:"${pageContext.request.contextPath}/user/userJson",
-                dataType:"json",
-                success:function(data){
-                    for(i=0;i<data.length;i++){
-                        if(data[i].id==nameId){
-                            $("#input102").append("<option selected='selected' value='"+data[i].id+"'>"+data[i].trueName+"</option>");
-                        }else{
-                            $("#input102").append("<option value='"+data[i].id+"'>"+data[i].trueName+"</option>");
-                        }
-                    }
-                    $('#input102').selectpicker({
-                        'selectedText': 'cat'
-                    });
-                }
-            });
-
-        }
-    </script>
-
-    <%-- add project script begin--%>
-    <script>
-
-        $.ajax({
-            url:"${pageContext.request.contextPath}/user/userJson",
-            dataType:"json",
-            success:function(data){
-                for(i=0;i<data.length;i++){
-                    if(data[i].id==${zhnw_loginUser.id}){
-                        $("#input2").append("<option selected='selected' value='"+data[i].id+"'>"+data[i].trueName+"</option>");
-                    }else{
-                        $("#input2").append("<option value='"+data[i].id+"'>"+data[i].trueName+"</option>");
-                    }
-                }
-                $('#input2').selectpicker({
-                    'selectedText': 'cat'
-                });
-            }
-        });
-
-
-        $.ajax({
-            url:"${pageContext.request.contextPath}/user/userJson",
-            dataType:"json",
-            success:function(data){
-                for(i=0;i<data.length;i++){
-                    if(data[i].id==$("#inputClientSou").val()){
-                        $("#input8").append("<option selected='selected' value='"+data[i].id+"'>"+data[i].trueName+"</option>");
-                    }else{
-                        $("#input8").append("<option value='"+data[i].id+"'>"+data[i].trueName+"</option>");
-                    }
-                }
-                $('#input8').selectpicker({
-                    'selectedText': 'cat'
-                });
-            }
-        });
 
     </script>
-    <%-- add project script end--%>
 </head>
 <body>
 <div class="container" style="width: 100%;max-width:95%;height: 100%;padding-top: 30px;">
@@ -182,7 +112,7 @@
                 <form id="pageAction" action="${pageContext.request.contextPath}/project/hour" method="post" style="font-size: 10pt;" class="form-horizontal"  role="form">
                     <div>
                         <%--<button type="button" class="btn btn-success" data-target="#addModel" data-toggle="modal" style="">添加记录</button>--%>
-                        姓名：<input type="text" name="name" value="${name}">
+                        姓名：<input type="text" id="souNameInput" name="name" value="${name}">
                         <button type="submit" class="btn btn-primary" style="">搜索</button>
                     </div>
                     <table class="table">
@@ -213,7 +143,7 @@
                                 <td>
                                     <%--<button type="button" class="btn btn-xs btn-primary" data-toggle="modal" data-target="#updateModel" onclick="xiugai('${hours.id}','${hours.dates}','${hours.name}','${hours.detail}','${hours.begin}','${hours.end}','${hours.hour}','${hours.checkName}','${hours.success}','${hours.projectId}','${hours.checkId}','${hours.nameId}')">修改</button>
                                     <button type="button" class="btn btn-xs btn-danger" data-toggle="modal" onclick="delid(${hours.id})" data-target="#delModel">删除</button>--%>
-                                    <button type="button" class="btn btn-xs btn-danger" data-toggle="modal" onclick="delid(${hours.id})" data-target="#delModel">批准</button>
+                                    <button type="button" class="btn btn-xs btn-danger" data-toggle="modal" onclick="beforeAgree(${hours.id})" data-target="#delModel">批准</button>
                                 </td>
                             </tr>
                         </c:forEach>
@@ -237,7 +167,7 @@
                         <button type="button" class="btn btn-lg btn-default" onclick="weiye()">尾页</button>
                     </p>
                 </form>
-                <%-- delete begin --%>
+                <%-- agree begin --%>
                 <div class="modal fade" id="delModel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
                     <div class="modal-dialog">
                         <div class="modal-content">
@@ -253,16 +183,17 @@
                                 <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
                                 <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="deleteById()">确定</button>
                             </div>
-                            <form style="display: none;" id="deleteIdForm" method="post">
-                                <input type="hidden" id="deleteIdFormId" name="id">
-                                <input type="hidden" id="deleteIdCurrentPage" name="currentPage" value="${currentPage}">
-                                <input type="hidden" id="deleteIdpageSizes" name="pageSize" value="${pageSize}">
-                                <input type="hidden" id="deleteIdActorName" name="actorName" value="${actorName}">
+                            <form style="display: none;" id="agreeIdForm" method="post">
+                                <input type="hidden" id="agreeIdFormId" name="id">
+                                <input type="hidden"  name="projectId" value="${projectId}" >
+                                <input type="hidden" id="agreeIdCurrentPage" name="currentPage" >
+                                <input type="hidden" id="agreeIdpageSizes" name="pageSize" >
+                                <input type="hidden" id="agreeIdActorName" name="name0" >
                             </form>
                         </div>
                     </div>
                 </div>
-                <%-- delete end --%>
+                <%-- agree end --%>
 
             </div>
         </div>

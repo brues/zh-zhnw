@@ -97,7 +97,7 @@
         }
     </script>
 
-    <%-- add project script begin--%>
+    <%-- sou project ajax begin--%>
     <script>
         $.ajax({
             url:"${pageContext.request.contextPath}/client/clientJson",
@@ -150,33 +150,8 @@
                 });
             }
         });
-
-        $.ajax({
-            url:"${pageContext.request.contextPath}/client/clientJson",
-            dataType:"json",
-            success:function(data){
-                for(i=0;i<data.length;i++){
-                    $("#input1").append("<option value='"+data[i].id+"'>"+data[i].comName+"</option>");
-                }
-                $('#input1').selectpicker({
-                    'selectedText': 'cat'
-                });
-            }
-        });
-        $.ajax({
-            url:"${pageContext.request.contextPath}/btype/btypeJson",
-            dataType:"json",
-            success:function(data){
-                for(i=0;i<data.length;i++){
-                    $("#input3").append("<option value='"+data[i].id+"'>"+data[i].name+"</option>");
-                }
-                $('#input3').selectpicker({
-                    'selectedText': 'cat'
-                });
-            }
-        });
     </script>
-    <%-- add project script end--%>
+    <%-- sou project ajax end--%>
 </head>
 <body>
 <div class="container" style="width: 100%;max-width:95%;height: 100%;padding-top: 30px;">
@@ -261,27 +236,6 @@
 <script src="${pageContext.request.contextPath}/common/bootstrap-datetimepicker-master/bootstrap3/bootstrap/js/bootstrap.min.js"></script>
 <script src="${pageContext.request.contextPath}/common/bootstrap-datetimepicker-master/js/bootstrap-datetimepicker.js"></script>
 <script src="${pageContext.request.contextPath}/common/bootstrap-datetimepicker-master/js/locales/bootstrap-datetimepicker.zh-CN.js"></script>
-<script type="text/javascript">
-    $('#input8').datetimepicker({
-        language:  'zh-CN',
-        weekStart: 1,
-        todayBtn:  1,
-        autoclose: 1,
-        todayHighlight: 1,
-        startView: 2,
-        minView: 2,
-        forceParse: 0
-    });
-    $('#input9').datetimepicker({
-        language:  'zh-CN',
-        weekStart: 1,
-        todayBtn:  1,
-        autoclose: 1,
-        todayHighlight: 1,
-        startView: 2,
-        minView: 2,
-        forceParse: 0
-    });
-</script>
+
 </body>
 </html>

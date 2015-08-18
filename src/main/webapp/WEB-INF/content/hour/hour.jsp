@@ -91,7 +91,6 @@
 
     <%-- add project ajax begin--%>
     <script>
-
         $.ajax({
             url:"${pageContext.request.contextPath}/user/userJson",
             dataType:"json",
@@ -176,16 +175,9 @@
     </script>
     <%-- add end --%>
 
-    <script>
-        function delid(id){
-            $("#deleteIdInput").val(id);
-        }
-        function deleteById(){
-            $("#deleteIdFormId").val($("#deleteIdInput").val());
-            $("#deleteIdForm").attr("action","${pageContext.request.contextPath}/hour/delete");
-            $("#deleteIdForm").submit();
-        }
 
+    <%-- update begin --%>
+    <script>
         function updateNum(id,num){
             $("#updateNumId").val(id);
             $("#input1101").val(num);
@@ -218,8 +210,70 @@
                     });
                 }
             });
-
         }
+
+        function updateBtn(){
+            var dates = $.trim($("#input101").val());
+            var begin = $.trim($("#input103").val());
+            var end = $.trim($("#input106").val());
+            var detail = $.trim($("#input109").val());
+
+            if(dates==null||dates==''){
+                $("#updatedatesspan").html("日期不能为空！");
+                $("#updatedatesspan").css("display","block");
+            }else if(begin==null||begin==''){
+                $("#updatebeginspan").html("开始时间不能为空！");
+                $("#updatebeginspan").css("display","block");
+            }else if(end==null||end==''){
+                $("#updateendspan").html("结束时间不能为空！");
+                $("#updateendspan").css("display","block");
+            }else if(detail==null||detail==''){
+                $("#updatedetailspan").html("详细描述不能为空！");
+                $("#updatedetailspan").css("display","block");
+            }else{
+                $("#udpatecurrentpagehidden").val($("#currentPageHidden").val());
+                $("#udpatepagesizehiden").val($("#pageSizeHidden").val());
+                $("#udpatenamesouhidden").val($("#souNameInput").val());
+                $("#updateForm").submit();
+            }
+        }
+
+        function updatedatesfocus(){
+            $("#updatedatesspan").css("display","none");
+        }
+
+        function updatebeginfocus(){
+            $("#updatebeginspan").css("display","none");
+        }
+
+        function updateendfocus(){
+            $("#updateendspan").css("display","none");
+        }
+
+        function updatedetailfocus(){
+            $("#updatedetailspan").css("display","none");
+        }
+    </script>
+    <%-- update end --%>
+
+    <%--  --%>
+    <script>
+        function delid(id){
+            $("#deleteIdInput").val(id);
+        }
+        function deleteById(){
+            $("#deleteIdFormId").val($("#deleteIdInput").val());
+
+
+            $("#deletecurrentpagehidden").val($("#currentPageHidden").val());
+            $("#deletepagesizehiden").val($("#pageSizeHidden").val());
+            $("#deletenamesouhidden").val($("#souNameInput").val());
+
+            $("#deleteIdForm").attr("action","${pageContext.request.contextPath}/hour/delete");
+            $("#deleteIdForm").submit();
+        }
+
+
     </script>
 
 
@@ -305,9 +359,11 @@
                             </div>
                             <form style="display: none;" id="deleteIdForm" method="post">
                                 <input type="hidden" id="deleteIdFormId" name="id">
-                                <input type="hidden" id="deleteIdCurrentPage" name="currentPage" value="${currentPage}">
-                                <input type="hidden" id="deleteIdpageSizes" name="pageSize" value="${pageSize}">
-                                <input type="hidden" id="deleteIdActorName" name="actorName" value="${actorName}">
+                                <input type="hidden" id="deleteProjectId"  name="projectId" value="${projectId}" />
+
+                                <input type="hidden" id="deletecurrentpagehidden"  name="currentPage" />
+                                <input type="hidden"  id="deletepagesizehiden" name="pageSize"  />
+                                <input type="hidden" id="deletenamesouhidden"  name="name0"  />
                             </form>
                         </div>
                     </div>
@@ -328,39 +384,42 @@
                             <div class="modal-body">
                                 <form method="post" id="updateForm" action="${pageContext.request.contextPath}/hour/update">
                                     <input type="hidden" id="updateId"  name="id" />
-                                    <input type="hidden" id="updateProjectId"  name="projectId" />
+                                    <input type="hidden" id="updateProjectId"  name="projectId" value="${projectId}" />
+
+                                    <input type="hidden" id="udpatecurrentpagehidden"  name="currentPage" />
+                                    <input type="hidden"  id="udpatepagesizehiden" name="pageSize"  />
+                                    <input type="hidden" id="udpatenamesouhidden"  name="name0"  />
                                     <fieldset>
                                         <table style="width: 100%;height: 300px;">
                                             <tr>
                                                 <td><label for="input101" class="control-label">日期</label></td>
                                                 <td style="width: 50%;"><div class="col-sm-10">
-                                                    <input type="text" class="form-control" id="input101" data-date-format="yyyy-mm-dd" placeholder="(年年年年-月月-日日)" name="dates" value="${dates}" readonly required>
+                                                    <input type="text" class="form-control" id="input101" data-date-format="yyyy-mm-dd" placeholder="(年年年年-月月-日日)" name="dates" onfocus="updatedatesfocus()" readonly ><span id="updatedatesspan" style="color: red;display: none;"></span>
                                                 </div></td>
                                                 <td><label for="input102" class="control-label">员工姓名</label></td>
                                                 <td><div class="col-sm-10">
                                                     <select id="input102" class="form-control input-lg" name="name" data-live-search="true">
                                                     </select>
-                                                    <%--<input type="text" class="form-control" id="input102" placeholder="员工姓名" name="name" value="${name}" required/>--%>
                                                 </div></td>
                                             </tr>
                                             <tr>
                                                 <td><label for="input103" class=" control-label">开始时间</label></td>
                                                 <td><div class="col-sm-10">
-                                                    <input  type="text" class="form-control" id="input103" data-date-format="hh:ii" placeholder="(时时:分分:秒秒)" name="begin" value="${begin}" readonly required/>
+                                                    <input  type="text" class="form-control" id="input103" data-date-format="hh:ii" placeholder="(时时:分分:秒秒)" name="begin" onfocus="updatebeginfocus()" readonly /><span id="updatebeginspan" style="color: red;display: none;"></span>
                                                 </div></td>
                                                 <td><label for="input106" class="control-label">结束时间</label></td>
                                                 <td><div class="col-sm-10">
-                                                    <input type="text" class="form-control" id="input106" data-date-format="hh:ii" placeholder="(时时:分分:秒秒)" name="end" value="${end}" readonly required/>
+                                                    <input type="text" class="form-control" id="input106" data-date-format="hh:ii" placeholder="(时时:分分:秒秒)" name="end" onfocus="updateendfocus()" readonly/><span id="updateendspan" style="color: red;display: none;"></span>
                                                 </div></td>
                                             </tr>
                                             <tr>
                                                 <td><label for="input109" class=" control-label">详细描述</label></td>
                                                 <td colspan="3"><div class="col-sm-11" style="width: 94%;">
-                                                    <input  type="text" class="form-control" id="input109" placeholder="详细描述" name="detail" value="${detail}" required/>
+                                                    <input  type="text" class="form-control" id="input109" placeholder="详细描述" name="detail" onfocus="updatedetailfocus()" required/><span id="updatedetailspan" style="color: red;display: none;"></span>
                                                 </div></td>
                                             </tr>
                                             <tr>
-                                                <td colspan="4"><input type="submit" class="btn btn-primary" style="height: 50px;width: 95%;" value="保存" /></td>
+                                                <td colspan="4"><input type="button" onclick="updateBtn()" class="btn btn-primary" style="height: 50px;width: 95%;" value="保存" /></td>
                                             </tr>
                                         </table>
                                     </fieldset>

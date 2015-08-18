@@ -8,11 +8,13 @@ import com.zhnw.zhnw.purview.user.User;
 
 /**
  * Created by guoyibin on 15/5/4.
+ *
+ * 项目管理：员工工时
  */
 public class HourController extends Controller {
 
     /**
-     * 管理主页
+     * 项目管理主页
      * */
     public void project(){
         User user = getSessionAttr("zhnw_loginUser");
@@ -42,7 +44,7 @@ public class HourController extends Controller {
     }
 
     /**
-     * 管理主页
+     * 工时管理主页
      * */
     public void index(){
         String  projectId = getPara("projectId");
@@ -73,13 +75,40 @@ public class HourController extends Controller {
     }
 
 
+    /**
+     * 工时批准功能
+     * */
     public void agree(){
-        String  projectId = getPara("projectId");
         String  id = getPara("id");
         new Hour()
                 .set("id", id)
                 .set("success", "是")
                 .update();
-        redirect("/project/hour");
+
+        String  projectId = getPara("projectId");
+
+        String currentPage = getPara("currentPage");
+        String  pageSize = getPara("pageSize");
+
+        String  name0 = getPara("name0");
+
+
+
+        if (currentPage == null||currentPage.trim().length()==0) currentPage = "1";
+        if (pageSize == null||pageSize.trim().length()==0) pageSize = "10";
+
+        Page<Hour> hourPage  = Hour.me.paginate(currentPage, pageSize, projectId, name0);
+
+        setAttr("hourList",hourPage.getList());
+
+        setAttr("totalCount",hourPage.getTotalRow());
+        setAttr("totalPage",hourPage.getTotalPage());
+        setAttr("pageSize",hourPage.getPageSize());
+        setAttr("currentPage",hourPage.getPageNumber());
+
+        setAttr("projectId",projectId);
+        setAttr("name",name0);
+
+        renderJsp("/WEB-INF/content/project/hour/hour.jsp");
     }
 }
