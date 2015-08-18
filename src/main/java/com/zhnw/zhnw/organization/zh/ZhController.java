@@ -2,6 +2,7 @@ package com.zhnw.zhnw.organization.zh;
 
 import com.jfinal.core.Controller;
 import com.jfinal.plugin.activerecord.Page;
+import com.zhnw.zhnw.purview.user.User;
 
 import java.util.List;
 
@@ -48,7 +49,10 @@ public class ZhController extends Controller {
     public void delete(){
         String id = getPara("id");
         Zh.me.deleteById(id);
-        new Zh().updateAllPeople(id);
+        List<User> users = User.me.find("select * from user where zhId="+id);
+        for (User user : users){
+            User.me.deleteById(user.get("id"));
+        }
 
 
 

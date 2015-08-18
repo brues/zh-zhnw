@@ -27,7 +27,4 @@ public class Zh extends Model<Zh> {
         return paginate(Integer.parseInt(currentPage), Integer.parseInt(pageSize), " select * ", sql);
     }
 
-    public void updateAllPeople(String id) {
-        Db.update("update from user set status='离职' where zhId=" + id);
-    }
 }
