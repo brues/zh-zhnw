@@ -10,7 +10,7 @@
     <version>2.0</version>
 
     <packaging>war</packaging>
-    <name>zh-zhnw(中翰内网-new)</name>
+    <name>zh-zhnw(中翰内网)</name>
     <url>http://maven.apache.org</url>
 
     <properties>

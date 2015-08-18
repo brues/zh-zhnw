@@ -51,7 +51,7 @@ public class ZhnwConfig extends JFinalConfig {
      */
     public void configConstant(Constants me) {
         // 加载少量必要配置，随后可用getProperty(...)获取值
-        loadPropertyFile("zhnw_config.txt");
+        loadPropertyFile("zh_zhnw_config.txt");
         me.setDevMode(getPropertyToBoolean("devMode", true));
         me.setViewType(ViewType.JSP);
         me.setEncoding("utf-8");
