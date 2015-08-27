@@ -152,7 +152,7 @@ public class WorkController extends Controller {
             .set("name", name)
             .set("nameId", nameId)
             .set("thing", thing)
-            .set("accountableId", accountableId)
+            .set("accountableId", Long.parseLong(accountableId))
             .set("accountable", accountable);
 
         if (begin!=null&&begin.trim().length()!=0){work.set("begin", begin);}
@@ -161,7 +161,7 @@ public class WorkController extends Controller {
 
         work.set("isend", isend)
             .set("progress", progress)
-            .set("reviewId", reviewId)
+            .set("reviewId", Long.parseLong(reviewId))
             .set("review", review)
             .set("zhId", user.get("zhId"))
             .save();
@@ -233,21 +233,24 @@ public class WorkController extends Controller {
         }
 
 
-        new Work()
-                .set("id", id)
-                .set("name", name)
-                .set("nameId", nameId)
-                .set("thing", thing)
-                .set("accountableId", accountableId)
-                .set("accountable", accountable)
-                .set("begin", begin)
-                .set("forecast", forecast)
-                .set("end", end)
-                .set("isend", isend)
-                .set("progress", progress)
-                .set("reviewId", reviewId)
-                .set("review", review)
-                .update();
+        Work work = new Work();
+        work
+            .set("id", id)
+            .set("name", name)
+            .set("nameId", nameId)
+            .set("thing", thing)
+            .set("accountableId", Long.parseLong(accountableId))
+            .set("accountable", accountable)
+            .set("begin", begin)
+            .set("forecast", forecast)
+            .set("isend", isend)
+            .set("progress", progress)
+            .set("reviewId", Long.parseLong(reviewId))
+            .set("review", review);
+        if (end!=null&&end.trim().length()!=0){
+            work.set("end", end);
+        }
+        work.update();
 
 
 
