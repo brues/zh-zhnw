@@ -398,6 +398,7 @@
                             <th>是否完成</th>
                             <th>进展</th>
                             <th>复核人</th>
+
                             <th>操作</th>
                         </tr>
                         </thead>
@@ -415,8 +416,10 @@
                                     <td>${work.progress}</td>
                                     <td>${work.review}</td>
                                     <td>
-                                        <button type="button" class="btn btn-xs btn-primary" data-toggle="modal" data-target="#updateModel" onclick="xiugai('${work.id}','${work.name}','${work.nameId}','${work.thing}','${work.accountable}','${work.accountableId}','${work.begin}','${work.forecast}','${work.end}','${work.isend}','${work.progress}','${work.review}','${work.reviewId}')">修改</button>
-                                        <button type="button" class="btn btn-xs btn-danger" data-toggle="modal" onclick="delid(${work.id})" data-target="#delModel">删除</button>
+                                        <c:if test="${zhnw_loginUser.id==work.nameId}">
+                                            <button type="button" class="btn btn-xs btn-primary" data-toggle="modal" data-target="#updateModel" onclick="xiugai('${work.id}','${work.name}','${work.nameId}','${work.thing}','${work.accountable}','${work.accountableId}','${work.begin}','${work.forecast}','${work.end}','${work.isend}','${work.progress}','${work.review}','${work.reviewId}')">修改</button>
+                                            <button type="button" class="btn btn-xs btn-danger" data-toggle="modal" onclick="delid(${work.id})" data-target="#delModel">删除</button>
+                                        </c:if>
                                     </td>
                                 </tr>
                         </c:forEach>
