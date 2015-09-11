@@ -704,7 +704,7 @@
         forceParse: 0
     })
 
-    $('#input19').datetimepicker({
+    /*$('#input19').datetimepicker({
         language:  'zh-CN',
         weekStart: 1,
         todayBtn:  1,
@@ -713,7 +713,7 @@
         startView: 2,
         minView: 2,
         forceParse: 0
-    });
+    });*/
 
     $('#input18').datetimepicker({
         language:  'zh-CN',

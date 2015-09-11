@@ -99,8 +99,8 @@ public class ZhnwConfig extends JFinalConfig {
         arp.addMapping("user", User.class);	// 映射user表到User模型
         arp.addMapping("actor", Actor.class);
         arp.addMapping("purview", Purview.class);
-        arp.addMapping("userActor", UserActor.class);
-        arp.addMapping("actorPurview", ActorPurview.class);
+        arp.addMapping("useractor", UserActor.class);
+        arp.addMapping("actorpurview", ActorPurview.class);
         arp.addMapping("businesstype", BusinessType.class);
         arp.addMapping("clientcompany", ClientCompany.class);
         arp.addMapping("hours", Hour.class);
@@ -110,7 +110,7 @@ public class ZhnwConfig extends JFinalConfig {
         arp.addMapping("process", ProjectProcess.class);
         arp.addMapping("work", Work.class);
         arp.addMapping("zh", Zh.class);
-        arp.addMapping("zhMan", ZhMan.class);
+        arp.addMapping("zhman", ZhMan.class);
         arp.addMapping("clientpeople", ClientPeople.class);
     }
 

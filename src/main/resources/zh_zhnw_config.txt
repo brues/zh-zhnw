@@ -1,4 +1,4 @@
-jdbcUrl = jdbc:mysql://localhost:3306/zh-zhnw?characterEncoding=utf8&zeroDateTimeBehavior=convertToNull
+jdbcUrl = jdbc:mysql://localhost:3306/zhnw?characterEncoding=utf8&zeroDateTimeBehavior=convertToNull
 user = root
-password =
+password = zhlh5822
 devMode = true

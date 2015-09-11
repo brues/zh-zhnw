@@ -315,8 +315,10 @@
                                 <td>${hours.checkName}</td>
                                 <td>${hours.success}</td>
                                 <td>
+                                    <c:if test="${zhnw_loginUser.id==hours.nameId&&hours.success=='否'}">
                                     <button type="button" class="btn btn-xs btn-primary" data-toggle="modal" data-target="#updateModel" onclick="xiugai('${hours.id}','${hours.dates}','${hours.name}','${hours.detail}','${hours.begin}','${hours.end}','${hours.hour}','${hours.checkName}','${hours.success}','${hours.projectId}','${hours.checkId}','${hours.nameId}')">修改</button>
                                     <button type="button" class="btn btn-xs btn-danger" data-toggle="modal" onclick="delid(${hours.id})" data-target="#delModel">删除</button>
+                                    </c:if>
                                 </td>
                             </tr>
                         </c:forEach>
