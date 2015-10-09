@@ -288,4 +288,81 @@ public class WorkController extends Controller {
 
 
 
+    /**
+     * 给员工分配工作
+     * */
+    public void pwork(){
+        User user = getSessionAttr("zhnw_loginUser");
+
+        String  nameId = getPara("name");
+        String  name = User.me.findById(Long.parseLong(nameId)).get("trueName");
+
+        String  thing = getPara("thing");
+
+        String  accountableId = getPara("accountableId");
+        String  accountable = User.me.findById(Long.parseLong(accountableId)).get("trueName");
+
+        String  begin = getPara("begin");
+        String  forecast = getPara("forecast");
+        String  end = getPara("end");
+        String  isend = getPara("isend");
+
+        String  progress = getPara("progress");
+
+        String  reviewId = getPara("reviewId");
+        String  review = User.me.findById(Long.parseLong(reviewId)).get("trueName");
+
+        Work work = new Work();
+        work
+                .set("name", name)
+                .set("nameId", nameId)
+                .set("thing", thing)
+                .set("accountableId", Long.parseLong(accountableId))
+                .set("accountable", accountable);
+
+        if (begin!=null&&begin.trim().length()!=0){work.set("begin", begin);}
+        if (forecast!=null&&forecast.trim().length()!=0){work.set("forecast", forecast);}
+        if (end!=null&&end.trim().length()!=0){work.set("end", end);}
+
+        work.set("isend", isend)
+                .set("progress", progress)
+                .set("reviewId", Long.parseLong(reviewId))
+                .set("review", review)
+                .set("zhId", user.get("zhId"))
+                .save();
+
+
+
+
+
+
+        String  addnameId = getPara("addnameId");
+        String  addthing = getPara("addthing");
+        String  addforecast = getPara("addforecast");
+        String  addisend = getPara("addisend");
+
+        String currentPage = getPara("currentPage");
+        String  pageSize = getPara("pageSize");
+
+        if (currentPage == null) currentPage = "1";
+        if (pageSize == null) pageSize = "10";
+
+        Page<Work> workPage = Work.me.paginate(currentPage, pageSize,addnameId, addthing, addforecast, addisend, user);
+
+
+
+        setAttr("workList",workPage.getList());
+        setAttr("totalCount",workPage.getTotalRow());
+        setAttr("totalPage",workPage.getTotalPage());
+        setAttr("pageSize",workPage.getPageSize());
+        setAttr("currentPage",workPage.getPageNumber());
+
+        setAttr("nameId",addnameId);
+        setAttr("thing",addthing);
+        setAttr("forecast",addforecast);
+        setAttr("isend",addisend);
+
+        renderJsp("/WEB-INF/content/work/work.jsp");
+    }
+
 }

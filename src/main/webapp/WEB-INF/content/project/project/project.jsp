@@ -312,7 +312,7 @@
     <%-- delete end --%>
 
 </head>
-<body>
+<body style="margin: 0;padding: 0;border: 0;">
 <div class="container" style="width: 100%;max-width:95%;height: 100%;padding-top: 30px;">
     <div class="container-fluid" >
         <div class="row-fluid">

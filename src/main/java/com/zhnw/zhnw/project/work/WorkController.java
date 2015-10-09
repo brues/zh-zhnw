@@ -5,6 +5,7 @@ import com.jfinal.plugin.activerecord.Page;
 import com.zhnw.zhnw.purview.user.User;
 import com.zhnw.zhnw.work.Work;
 
+import java.util.Date;
 import java.util.Locale;
 
 /**
@@ -62,6 +63,7 @@ public class WorkController extends Controller {
             new Work()
                     .set("id", id)
                     .set("assess", assess)
+                    .set("end", new Date())
                     .update();
         }
 
