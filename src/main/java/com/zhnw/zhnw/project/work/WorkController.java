@@ -64,6 +64,7 @@ public class WorkController extends Controller {
                     .set("id", id)
                     .set("assess", assess)
                     .set("end", new Date())
+                    .set("isend", "是")
                     .update();
         }
 
