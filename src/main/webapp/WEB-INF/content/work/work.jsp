@@ -211,10 +211,7 @@
                                                 </div></td>
                                                 <td><label for="input0" class="control-label">是否结束</label></td>
                                                 <td><div class="col-sm-10">
-                                                    <select id="input0" class="form-control input-lg" name="isend" data-live-search="true">
-                                                        <option value="否">否</option>
-                                                        <option value="是">是</option>
-                                                    </select>
+                                                    <input type="text" class="form-control" id="input0"  name="isend" value="否" readonly="readonly" />
                                                 </div></td>
                                             </tr>
                                             <tr>
@@ -391,7 +388,7 @@
                                                 </div></td>
                                                 <td><label for="input10" class="control-label">是否结束</label></td>
                                                 <td><div class="col-sm-10">
-                                                    <select id="input10" class="form-control input-lg" name="isend" data-live-search="true"></select>
+                                                    <input type="text" class="form-control" id="input10"  name="isend" readonly="readonly" />
                                                 </div></td>
                                             </tr>
                                             <tr>
@@ -770,17 +767,9 @@
         $("#input15").val(end);
 
         if(isend=='是'){
-            $("#input10").append("<option value='否'>否</option>");
-            $("#input10").append("<option selected='selected' value='是'>是</option>");
-            $('#input10').selectpicker({
-                'selectedText': 'cat'
-            });
+            $("#input10").val("是");
         }else{
-            $("#input10").append("<option value='否'>否</option>");
-            $("#input10").append("<option value='是'>是</option>");
-            $('#input10').selectpicker({
-                'selectedText': 'cat'
-            });
+            $("#input10").val("否");
         }
 
         $("#input17").val(progress);
