@@ -43,7 +43,7 @@ public class Work extends Model<Work> {
 
 
     public Page<Work> projectWorkPaginate(String currentPage, String pageSize, String nameId, String thing, String forecast, String isend, User user) {
-        String sql = " from work where zhId="+user.get("zhId")+" ";
+        String sql = " from work where zhId="+user.get("zhId")+" and reviewId="+user.get("id")+" ";
 
         if (nameId!=null&&!nameId.trim().equalsIgnoreCase("")&&!nameId.equalsIgnoreCase("0")){
             sql+=" and nameId="+nameId+" ";
